@@ -1,0 +1,21 @@
+{
+  "menu.gilding.button": "Gilding Mods",
+  "menu.gilding.title": "Gilding Mods",
+  "menu.gilding.gilding_config.button": "Gilding Configuration",
+  "menu.gilding.gilding_config.title": "Gilding Configuration",
+  "menu.gilding.inactive_mod.tooltip": "This mod is not installed.",
+  "menu.gilding.gilded_config.button": "Gilded Mod",
+  "menu.gilding.icing_config.button": "Icing Mod",
+  "menu.gilding.verdure_config.button": "Verdure Mod",
+  "menu.gilding.holiday_config.button": "Holiday Mods",
+  "menu.gilding.other_mods.button": "Other Mods",
+  "option.gilding.mmConfigButtonOffsetX": "Main Menu Button offset",
+  "option.gilding.mmConfigButtonRow": "Main Menu Button Row",
+  "option.gilding.inGameMenuConfigButtonOffsetX": "Game Menu Button offset",
+  "option.gilding.inGameMenuConfigButtonRow": "Game Menu Button Row",
+  "argument.gilding.unloaded": "%s mod is not currently installed",
+  "argument.gilding.incompatible_mod": "%s mod is not currently compatible",
+  "argument.gilding.not_option": "%s option is not available in the specified od",
+  "argument.gilding.settings": "%s settings",
+  "argument.gilding.set_success": "%s's %s set to %s"
+}
