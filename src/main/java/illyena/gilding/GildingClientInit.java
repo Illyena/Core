@@ -3,6 +3,7 @@ package illyena.gilding;
 import illyena.gilding.compat.Mod;
 import illyena.gilding.config.network.ConfigNetworking;
 import illyena.gilding.core.client.gui.screen.GildingConfigMenu;
+import illyena.gilding.core.event.ClientEvents;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -18,6 +19,7 @@ public class GildingClientInit implements ClientModInitializer {
     public void onInitializeClient() {
         ConfigNetworking.registerS2CPackets();
 
+        ClientEvents.registerClientEvents();
     }
 
 }
