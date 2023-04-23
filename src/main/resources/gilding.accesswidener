@@ -1,0 +1,7 @@
+accessWidener v1 named
+
+## config
+# for TitleScreen ButtonWidget
+# Mixin can't handle an invoker here thanks to weird generics, so we need this AW'd
+accessible method net/minecraft/client/gui/screen/Screen addDrawableChild (Lnet/minecraft/client/gui/Element;)Lnet/minecraft/client/gui/Element;
+

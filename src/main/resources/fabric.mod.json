@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "id": "gilding",
+  "version": "${version}",
+
+  "name": "Gilding",
+  "description": "Core mod that all Gilding based mods are structured around.",
+  "authors": [
+    "Illyena"
+  ],
+  "contact": {},
+
+  "license": "Apache-2.0",
+  "icon": "assets/Gilding-core/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+    "illyena.gilding.GildingInit"
+    ],
+    "client": [
+      "illyena.gilding.GildingClientInit"
+    ],
+    "fabric-datagen": [
+      "illyena.gilding.GildingDataGeneration"
+    ],
+    "mm:early_risers": [
+      "illyena.gilding.GildingEarlyRiser"
+    ]
+  },
+  "mixins": [
+    "gilding.mixins.json"
+  ],
+  "accessWidener": "gilding.accesswidener",
+
+  "depends": {
+    "fabricloader": ">=0.14.19",
+    "fabric": "*",
+    "minecraft": "1.18.2"
+  },
+  "suggests": {
+    "another-mod": "*"
+  }
+}
