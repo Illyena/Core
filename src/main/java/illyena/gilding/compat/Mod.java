@@ -14,10 +14,7 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.SimpleRegistry;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Supplier;
 
 import static illyena.gilding.GildingInit.SUPER_MOD_ID;
@@ -41,11 +38,14 @@ public class Mod {
     public String getModId() { return this.modId; }
 
     public boolean isLoaded() {
-        GildingInit.LOGGER.error("mod {} isgroupParent {}, getSubs {}", this.getModId(), this.isSubGroupParent, getModsWithSubGroups(this.getModId()));
+        GildingInit.LOGGER.warn("mod {} isGroupParent {}, getSubs {}, ids {}", this.getModId(), this.isSubGroupParent, getModsWithSubGroups(this.getModId()), loadedModIds());
         if (this.isSubGroupParent && getModsWithSubGroups(this.getModId()).isEmpty()) {
+            GildingInit.LOGGER.info("return false");
             return false;
-        } else
+        } else {
+            GildingInit.LOGGER.info("isModLoaded {}", FabricLoader.getInstance().isModLoaded(this.modId));
             return FabricLoader.getInstance().isModLoaded(this.modId);
+        }
     }
 
     public Mod getParentMod() { return this.parent; }
