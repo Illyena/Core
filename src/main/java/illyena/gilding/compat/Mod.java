@@ -40,10 +40,10 @@ public class Mod {
     public boolean isLoaded() {
         GildingInit.LOGGER.warn("mod {} isGroupParent {}, getSubs {}, ids {}", this.getModId(), this.isSubGroupParent, getModsWithSubGroups(this.getModId()), loadedModIds());
         if (this.isSubGroupParent && getModsWithSubGroups(this.getModId()).isEmpty()) {
-            GildingInit.LOGGER.info("return false");
+//            GildingInit.LOGGER.info("return false");
             return false;
         } else {
-            GildingInit.LOGGER.info("isModLoaded {}", FabricLoader.getInstance().isModLoaded(this.modId));
+//            GildingInit.LOGGER.info("isModLoaded {}", FabricLoader.getInstance().isModLoaded(this.modId));
             return FabricLoader.getInstance().isModLoaded(this.modId);
         }
     }
@@ -115,17 +115,17 @@ public class Mod {
      * @return List of all Mods with Mod as mod.parent and its subMods;
      */
     public static List<Mod> getModsWithSubGroups(String modId) {
-        GildingInit.LOGGER.error("getModsWithSubs for {}", modId);
+     //   GildingInit.LOGGER.error("getModsWithSubs for {}", modId);
         List<Mod> mods = new ArrayList<>();
         for (Mod mod : MODS) {;
             if (mod.getParentMod() != null && mod.getParentMod().getModId().equals(modId)) {
-                GildingInit.LOGGER.warn("child {}", mod.getModId());
+    //            GildingInit.LOGGER.warn("child {}", mod.getModId());
                 mods.add(mod);
             }
         }
         for (Mod subMod : mods) {
             if (subMod.isSubGroupParent) {
-                GildingInit.LOGGER.info("recursive {}", subMod.getModId());
+   //             GildingInit.LOGGER.info("recursive {}", subMod.getModId());
                 mods.addAll(getModsWithSubGroups(modId));
             }
         }
