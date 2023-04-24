@@ -38,8 +38,9 @@ public class Mod {
     public String getModId() { return this.modId; }
 
     public boolean isLoaded() {
-        GildingInit.LOGGER.warn("mod {} isGroupParent {}, getSubs {}, ids {}", this.getModId(), this.isSubGroupParent, getModsWithSubGroups(this.getModId()), loadedModIds());
-        if (this.isSubGroupParent && getModsWithSubGroups(this.getModId()).isEmpty()) {
+        List<Mod> mods = getModsWithSubGroups(this.getModId());
+        GildingInit.LOGGER.warn("mod {} isGroupParent {}, getSubs {}, ids {}", this.getModId(), this.isSubGroupParent, mods, loadedModIds());
+        if (this.isSubGroupParent && mods.isEmpty()) {
             GildingInit.LOGGER.info("return false");
             return false;
         } else {
@@ -103,7 +104,7 @@ public class Mod {
     public static List<String> loadedModIds() {
         List<String> loadedModIds = new ArrayList<>();
         MODS.forEach((mod -> {
-            if (mod.isLoaded()) {
+            if (FabricLoader.getInstance().isModLoaded(mod.getModId())) {
                 loadedModIds.add(mod.getModId());
             }
         }));
