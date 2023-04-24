@@ -120,8 +120,8 @@ public class Mod {
             if (mod.getParentMod() != null && mod.getParentMod().getModId().equals(modId)) {
                 if (mod.isSubGroupParent) {
                     for (Mod subMod : MODS) {
-                        GildingInit.LOGGER.error("subMod {}", subMod.getModId());
-                        if (mod.getParentMod() != null && subMod.getParentMod().equals(mod)) {
+                        GildingInit.LOGGER.error("subMod {}, {}", subMod.getModId(), subMod.getParentMod());
+                        if (mod.getParentMod() != null ) {//&& subMod.getParentMod().equals(mod)) {
                             mods.add(subMod);
                         }
                     }
