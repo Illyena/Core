@@ -115,21 +115,27 @@ public class Mod {
      * @return List of all Mods with Mod as mod.parent and its subMods;
      */
 
-    public static List<Mod> getModsWithSubGroups(String modId, int i) {
+    public static List<Mod> getModsWithSubGroups(String modId) {
         List<Mod> mods = getModsWithSubGroups(modId);
         List<Mod> parentMods = MODS.stream().filter(mod -> mod.isSubGroupParent).toList();
         GildingInit.LOGGER.error("parentMods {}", Arrays.toString(parentMods.toArray()));
 
-        for (Mod parentMod : parentMods) {
-            if (parentMod.getParentMod() != null && mods.contains(parentMod)) {
-                mods.addAll(getModsWithSubGroups(parentMod.getModId()));
+        int i = parentMods.size();
+        do {
+            for (Mod parentMod : parentMods) {
+                if (parentMod.getParentMod() != null && mods.contains(parentMod.getParentMod())) {
+                    mods.addAll(getModsWithSubGroups(parentMod.getModId()));
+                }
+
             }
-        }
+            --i;
+        } while (i > 0);
+
 
        return mods;
     }
 
-
+/*
     public static List<Mod> getModsWithSubGroups(String modId) {
      //   GildingInit.LOGGER.error("getModsWithSubs for {}", modId);
         List<Mod> mods = getModsSansSubGroups(modId);
