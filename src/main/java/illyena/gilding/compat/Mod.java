@@ -38,12 +38,12 @@ public class Mod {
     public String getModId() { return this.modId; }
 
     public boolean isLoaded() {
-//        GildingInit.LOGGER.warn("mod {} isGroupParent {}, getSubs {}, ids {}", this.getModId(), this.isSubGroupParent, getModsWithSubGroups(this.getModId()), loadedModIds());
+        GildingInit.LOGGER.warn("mod {} isGroupParent {}, getSubs {}, ids {}", this.getModId(), this.isSubGroupParent, getModsWithSubGroups(this.getModId()), loadedModIds());
         if (this.isSubGroupParent && getModsWithSubGroups(this.getModId()).isEmpty()) {
-//            GildingInit.LOGGER.info("return false");
+            GildingInit.LOGGER.info("return false");
             return false;
         } else {
-//            GildingInit.LOGGER.info("isModLoaded {}", FabricLoader.getInstance().isModLoaded(this.modId));
+            GildingInit.LOGGER.info("isModLoaded {}", FabricLoader.getInstance().isModLoaded(this.modId));
             return FabricLoader.getInstance().isModLoaded(this.modId);
         }
     }
@@ -120,9 +120,13 @@ public class Mod {
 
         int i = parentMods.size();
         do {
+            GildingInit.LOGGER.warn("do {}", i);
             for (Mod parentMod : parentMods) {
+                GildingInit.LOGGER.info("parent {}", parentMod.getModId());
                 if (parentMod.getParentMod() != null && mods.contains(parentMod.getParentMod())) {
-                    mods.addAll(getModsWithSubGroups(parentMod.getModId()));
+                    GildingInit.LOGGER.error("ADD");
+
+                    mods.addAll(getModsSansSubGroups(parentMod.getModId()));
                 }
             }
             --i;
