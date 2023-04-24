@@ -1,5 +1,6 @@
 package illyena.gilding.compat;
 
+import illyena.gilding.GildingInit;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
@@ -40,6 +41,7 @@ public class Mod {
     public String getModId() { return this.modId; }
 
     public boolean isLoaded() {
+        GildingInit.LOGGER.error("mod {} isgroupParent {}, getSubs {}", this.getModId(), this.isSubGroupParent, getModsWithSubGroups(this.getModId()));
         if (this.isSubGroupParent && getModsWithSubGroups(this.getModId()).isEmpty()) {
             return false;
         } else

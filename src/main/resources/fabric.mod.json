@@ -4,7 +4,7 @@
   "version": "${version}",
 
   "name": "Gilding",
-  "description": "Core mod that all Gilding based mods are structured around.",
+  "description": "The core mod that all Gilding based mods are structured around.",
   "authors": [
     "Illyena"
   ],
