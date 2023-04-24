@@ -38,7 +38,7 @@ public class Mod {
     public String getModId() { return this.modId; }
 
     public boolean isLoaded() {
-        GildingInit.LOGGER.warn("mod {} isGroupParent {}, getSubs {}, ids {}", this.getModId(), this.isSubGroupParent, getModsWithSubGroups(this.getModId()), loadedModIds());
+//        GildingInit.LOGGER.warn("mod {} isGroupParent {}, getSubs {}, ids {}", this.getModId(), this.isSubGroupParent, getModsWithSubGroups(this.getModId()), loadedModIds());
         if (this.isSubGroupParent && getModsWithSubGroups(this.getModId()).isEmpty()) {
 //            GildingInit.LOGGER.info("return false");
             return false;
@@ -114,11 +114,9 @@ public class Mod {
      * @param modId identifies Mod
      * @return List of all Mods with Mod as mod.parent and its subMods;
      */
-
     public static List<Mod> getModsWithSubGroups(String modId) {
-        List<Mod> mods = getModsWithSubGroups(modId);
+        List<Mod> mods = getModsSansSubGroups(modId);
         List<Mod> parentMods = MODS.stream().filter(mod -> mod.isSubGroupParent).toList();
-        GildingInit.LOGGER.error("parentMods {}", Arrays.toString(parentMods.toArray()));
 
         int i = parentMods.size();
         do {
@@ -126,11 +124,9 @@ public class Mod {
                 if (parentMod.getParentMod() != null && mods.contains(parentMod.getParentMod())) {
                     mods.addAll(getModsWithSubGroups(parentMod.getModId()));
                 }
-
             }
             --i;
         } while (i > 0);
-
 
        return mods;
     }
