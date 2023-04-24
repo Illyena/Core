@@ -98,7 +98,7 @@ public class GildingMenuScreen extends Screen {
         return new ModButtonWidget(mod, x, y, width, height, text, (button) -> {
             LOGGER.error("mod loaded {} : {}", mod.getModId(), mod.isLoaded());
             if (mod.isLoaded()) {
-                this.client.setScreen(Mod.ModScreens.getScreen(mod.getModId(), this.parent));
+                this.client.setScreen(Mod.ModScreens.getScreen(mod.getModId(), this));
             }
         }, mod.isLoaded() ? ButtonWidget.EMPTY : tooltipSupplier);
     }

@@ -1,6 +1,5 @@
 package illyena.gilding.compat;
 
-import illyena.gilding.GildingInit;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
@@ -38,15 +37,10 @@ public class Mod {
     public String getModId() { return this.modId; }
 
     public boolean isLoaded() {
-        List<Mod> mods = getModsWithSubGroups(this.getModId());
-        GildingInit.LOGGER.warn("mod {} isGroupParent {}, getSubs {}, ids {}", this.getModId(), this.isSubGroupParent, mods, loadedModIds());
-        if (this.isSubGroupParent && mods.isEmpty()) {
-            GildingInit.LOGGER.info("return false");
+        if (this.isSubGroupParent && getModsWithSubGroups(this.getModId()).isEmpty()) {
             return false;
-        } else {
-            GildingInit.LOGGER.info("isModLoaded {}", FabricLoader.getInstance().isModLoaded(this.modId));
-            return FabricLoader.getInstance().isModLoaded(this.modId);
-        }
+        } else return FabricLoader.getInstance().isModLoaded(this.modId);
+
     }
 
     public Mod getParentMod() { return this.parent; }
@@ -121,12 +115,8 @@ public class Mod {
 
         int i = parentMods.size();
         do {
-            GildingInit.LOGGER.warn("do {}", i);
             for (Mod parentMod : parentMods) {
-                GildingInit.LOGGER.info("parent {}", parentMod.getModId());
                 if (parentMod.getParentMod() != null && (parentMod.getParentMod().equals(getFromId(modId)) || mods.contains(parentMod.getParentMod()))) {
-                    GildingInit.LOGGER.error("ADD");
-
                     mods.addAll(getModsSansSubGroups(parentMod.getModId()));
                 }
             }
