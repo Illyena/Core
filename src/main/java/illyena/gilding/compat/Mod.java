@@ -114,19 +114,29 @@ public class Mod {
      * @param modId identifies Mod
      * @return List of all Mods with Mod as mod.parent and its subMods;
      */
-    public static List<Mod> getModsWithSubGroups(String modId) {
-     //   GildingInit.LOGGER.error("getModsWithSubs for {}", modId);
-        List<Mod> mods = new ArrayList<>();
-        for (Mod mod : MODS) {;
-            if (mod.getParentMod() != null && mod.getParentMod().getModId().equals(modId)) {
-    //            GildingInit.LOGGER.warn("child {}", mod.getModId());
-                mods.add(mod);
+
+    public static List<Mod> getModsWithSubGroups(String modId, int i) {
+        List<Mod> mods = getModsWithSubGroups(modId);
+        List<Mod> parentMods = MODS.stream().filter(mod -> mod.isSubGroupParent).toList();
+        GildingInit.LOGGER.error("parentMods {}", Arrays.toString(parentMods.toArray()));
+
+        for (Mod parentMod : parentMods) {
+            if (parentMod.getParentMod() != null && mods.contains(parentMod)) {
+                mods.addAll(getModsWithSubGroups(parentMod.getModId()));
             }
         }
+
+       return mods;
+    }
+
+
+    public static List<Mod> getModsWithSubGroups(String modId) {
+     //   GildingInit.LOGGER.error("getModsWithSubs for {}", modId);
+        List<Mod> mods = getModsSansSubGroups(modId);
         for (Mod subMod : mods) {
             if (subMod.isSubGroupParent) {
    //             GildingInit.LOGGER.info("recursive {}", subMod.getModId());
-                mods.addAll(getModsWithSubGroups(modId));
+                mods.addAll(getModsSansSubGroups(subMod.getModId()));
             }
         }
         return mods;
