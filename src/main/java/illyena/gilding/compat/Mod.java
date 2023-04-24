@@ -123,7 +123,7 @@ public class Mod {
             GildingInit.LOGGER.warn("do {}", i);
             for (Mod parentMod : parentMods) {
                 GildingInit.LOGGER.info("parent {}", parentMod.getModId());
-                if (parentMod.getParentMod() != null && mods.contains(parentMod.getParentMod())) {
+                if (parentMod.getParentMod() != null && (parentMod.getParentMod().equals(getFromId(modId)) || mods.contains(parentMod.getParentMod()))) {
                     GildingInit.LOGGER.error("ADD");
 
                     mods.addAll(getModsSansSubGroups(parentMod.getModId()));
