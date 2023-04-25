@@ -33,7 +33,7 @@ public class GildingConfigMenu extends ConfigScreen {
         assert this.client != null;
         int l = this.height / 4 + 48;
 
-        this.initMultiWidgets(true);
+        this.initMultiWidgets(this.modId, true);
         this.initBackWidget(l);
         this.initReturnWidget(l);
     }
