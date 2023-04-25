@@ -26,7 +26,7 @@ import java.util.function.Consumer;
 import static illyena.gilding.GildingInit.SUPER_MOD_ID;
 
 @Environment(EnvType.CLIENT)
-public class ConfigScreen extends Screen {
+public abstract class ConfigScreen extends Screen {
     protected final boolean isMinecraft;
     protected Screen parent;
     protected String modId;

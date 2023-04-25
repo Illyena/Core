@@ -2,7 +2,6 @@ package illyena.gilding.core.client.gui.screen;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import illyena.gilding.GildingInit;
 import illyena.gilding.compat.Mod;
 import illyena.gilding.config.gui.OtherModsScreen;
 import illyena.gilding.config.gui.widget.ModButtonWidget;
@@ -96,7 +95,6 @@ public class GildingMenuScreen extends Screen {
         };
 
         return new ModButtonWidget(mod, x, y, width, height, text, (button) -> {
-            LOGGER.error("mod loaded {} : {}", mod.getModId(), mod.isLoaded());
             if (mod.isLoaded()) {
                 this.client.setScreen(Mod.ModScreens.getScreen(mod.getModId(), this));
             }

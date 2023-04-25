@@ -13,6 +13,7 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.SimpleRegistry;
 import org.jetbrains.annotations.Nullable;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.function.Supplier;
 
@@ -250,6 +251,7 @@ public class Mod {
      */
     @Environment(EnvType.CLIENT)
     public static class ModScreens {
+        public static Map<String, Class<? extends Screen>> map = new HashMap<>();
         private static final SimpleRegistry<Screen> SCREENS = FabricRegistryBuilder.createSimple(Screen.class, new Identifier(SUPER_MOD_ID, "screens")).buildAndRegister();
 
         /**
@@ -260,6 +262,7 @@ public class Mod {
          * @return the @param screen that was passed in
          */
         public static Screen registerConfigScreen(String modId, Screen screen) {
+            map.put(modId, screen.getClass());
             Registry.register(SCREENS, new Identifier(SUPER_MOD_ID, modId), screen);
             return screen;
         }
@@ -269,7 +272,17 @@ public class Mod {
          * @param parent instance of the previous Screen
          * @return a new instance of a Mod's config Screen by its modId
          */
-        public static Screen getScreen(String modId, Screen parent) { return getFromId(modId).getScreen(parent); }
+ //      public static Screen getScreen(String modId, Screen parent) { return getFromId(modId).getScreen(parent); }
+
+        public static Screen getScreen(String modId, Screen parent) {
+            try {
+                return map.get(modId).getConstructor(Screen.class).newInstance(parent);
+            } catch (InvocationTargetException | InstantiationException | IllegalAccessException | NoSuchMethodException e) {
+                return getFromId(modId).getScreen(parent);
+            }
+        }
+
     }
+
 
 } //todo protect from NullPointerException
