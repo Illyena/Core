@@ -2,6 +2,7 @@ package illyena.gilding.config.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import illyena.gilding.compat.Compat;
 import illyena.gilding.compat.Mod;
 import illyena.gilding.config.gui.widget.ModButtonWidget;
 import illyena.gilding.core.util.time.GildingCalendar;
@@ -93,8 +94,8 @@ public class OtherModsScreen extends Screen{
         };
 
         ButtonWidget buttonWidget = new ModButtonWidget(mod, x, y, width, height, text, (button) -> {
-            if (mod.isLoaded()) {
-                this.client.setScreen((Screen) Mod.ModScreens.getScreen(mod.getModId(), this.parent));
+            if (mod.isLoaded() && mod instanceof Compat.CompatMod compatMod) {
+                this.client.setScreen(compatMod.getScreen(this.parent));
             }
         }, mod.isLoaded() ? ButtonWidget.EMPTY : tooltipSupplier);
 
@@ -143,6 +144,6 @@ public class OtherModsScreen extends Screen{
             }
 
             super.render(matrices, mouseX, mouseY, delta);
-        }
+        } //todo trim renderer
     }
 }

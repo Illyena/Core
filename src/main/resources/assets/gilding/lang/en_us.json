@@ -9,6 +9,7 @@
   "menu.gilding.verdure_config.button": "Verdure Mod",
   "menu.gilding.holidays_config.button": "Holiday Mods",
   "menu.gilding.other_mods.button": "Other Mods",
+  "menu.gilding.no_server.tooltip": "This options is not available while not connected to a game.",
   "option.gilding.mmConfigButtonOffsetX": "Main Menu Button offset",
   "option.gilding.mmConfigButtonRow": "Main Menu Button Row",
   "option.gilding.inGameMenuConfigButtonOffsetX": "Game Menu Button offset",

@@ -1,5 +1,6 @@
 package illyena.gilding.compat;
 
+import illyena.gilding.config.gui.PlaceHolderScreen;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
@@ -49,7 +50,7 @@ public class Mod {
     public Class<?> getConfigClass() { return this.configClass; }
 
     @Environment(EnvType.CLIENT)
-    private Screen getScreen(Screen parent) { return ModScreens.SCREENS.get(new Identifier(SUPER_MOD_ID, this.modId)); } //todo implement parent
+    public Screen getScreen(Screen parent) { return ModScreens.SCREENS.get(new Identifier(SUPER_MOD_ID, this.modId)); } //todo implement parent
 
 
 
@@ -126,40 +127,6 @@ public class Mod {
 
        return mods;
     }
-
-/*
-    public static List<Mod> getModsWithSubGroups(String modId) {
-     //   GildingInit.LOGGER.error("getModsWithSubs for {}", modId);
-        List<Mod> mods = getModsSansSubGroups(modId);
-        for (Mod subMod : mods) {
-            if (subMod.isSubGroupParent) {
-   //             GildingInit.LOGGER.info("recursive {}", subMod.getModId());
-                mods.addAll(getModsSansSubGroups(subMod.getModId()));
-            }
-        }
-        return mods;
-    }
-    /*
-    public static List<Mod> getModsWithSubGroups(String modId) {
-        List<Mod> mods = new ArrayList<>();
-        for (Mod mod : MODS) {
-            if (mod.getParentMod() != null && mod.getParentMod().getModId().equals(modId)) {
-                GildingInit.LOGGER.error("isGroupParent {}", mod.isSubGroupParent);
-                if (mod.isSubGroupParent) {
-
-                    for (Mod subMod : MODS) {
-                        GildingInit.LOGGER.error("subMod {}, {}", subMod.getModId(), subMod.getParentMod().getModId());
-                        if (subMod.getParentMod() != null && subMod.getParentMod().equals(mod)) {
-                            GildingInit.LOGGER.warn("mod {} = modChild {}",subMod.getModId(), subMod.getParentMod().getModId());
-                            mods.add(subMod);
-                        }
-                    }
-                }
-                mods.add(mod);
-            }
-        }
-        return mods;
-    }*/
 
     /**
      * @param modId identifies Mod
@@ -252,7 +219,7 @@ public class Mod {
     @Environment(EnvType.CLIENT)
     public static class ModScreens {
         public static Map<String, Class<? extends Screen>> map = new HashMap<>();
-        private static final SimpleRegistry<Screen> SCREENS = FabricRegistryBuilder.createSimple(Screen.class, new Identifier(SUPER_MOD_ID, "screens")).buildAndRegister();
+        public static final SimpleRegistry<Screen> SCREENS = FabricRegistryBuilder.createSimple(Screen.class, new Identifier(SUPER_MOD_ID, "screens")).buildAndRegister();
 
         /**
          * Registers a new instance of a Mod's config Screen in the SCREENS registry
@@ -262,8 +229,8 @@ public class Mod {
          * @return the @param screen that was passed in
          */
         public static Screen registerConfigScreen(String modId, Screen screen) {
-            map.put(modId, screen.getClass());
-            Registry.register(SCREENS, new Identifier(SUPER_MOD_ID, modId), screen);
+            map.put(modId, screen == null ? PlaceHolderScreen.class : screen.getClass());
+            Registry.register(SCREENS, new Identifier(SUPER_MOD_ID, modId), screen == null ? new PlaceHolderScreen(modId) : screen);
             return screen;
         }
 
@@ -272,12 +239,10 @@ public class Mod {
          * @param parent instance of the previous Screen
          * @return a new instance of a Mod's config Screen by its modId
          */
- //      public static Screen getScreen(String modId, Screen parent) { return getFromId(modId).getScreen(parent); }
-
         public static Screen getScreen(String modId, Screen parent) {
             try {
-                return map.get(modId).getConstructor(Screen.class).newInstance(parent);
-            } catch (InvocationTargetException | InstantiationException | IllegalAccessException | NoSuchMethodException e) {
+                return map.get(modId).getConstructor(String.class, Screen.class).newInstance(modId, parent);
+            } catch (NullPointerException | InvocationTargetException | InstantiationException | IllegalAccessException | NoSuchMethodException e) {
                 return getFromId(modId).getScreen(parent);
             }
         }
