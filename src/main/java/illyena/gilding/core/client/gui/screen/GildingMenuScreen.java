@@ -2,10 +2,9 @@ package illyena.gilding.core.client.gui.screen;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.terraformersmc.modmenu.gui.ModsScreen;
 import illyena.gilding.compat.Mod;
-import illyena.gilding.config.gui.OtherModsScreen;
 import illyena.gilding.config.gui.widget.ModButtonWidget;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.CubeMapRenderer;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.RotatingCubeMapRenderer;
@@ -18,7 +17,6 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.Util;
 import net.minecraft.util.math.MathHelper;
 
 import java.util.List;
@@ -32,25 +30,14 @@ public class GildingMenuScreen extends Screen {
     private static final Identifier PANORAMA_OVERLAY = new Identifier("textures/gui/title/background/panorama_overlay.png");
     private final boolean isMinceraft;
     private final RotatingCubeMapRenderer backgroundRenderer;
-    private final boolean doBackgroundFade;
-    private long backgroundFadeStart;
 
     private final Screen parent;
 
-    public GildingMenuScreen() { this(MinecraftClient.getInstance().currentScreen, false); }
-
-    public GildingMenuScreen(Screen parent, boolean doBackgroundFade) {
+    public GildingMenuScreen(Screen parent) {
         super(new TranslatableText("menu." + SUPER_MOD_ID + ".title"));
         this.backgroundRenderer = new RotatingCubeMapRenderer(PANORAMA_CUBE_MAP);
-        this.doBackgroundFade = doBackgroundFade;
         this.isMinceraft = (double)(new Random()).nextFloat() < 1.0E-4;
         this.parent = parent;
-    }
-
-    public void tick() {  }
-
-    public boolean shouldCloseOnEsc() {
-        return false;
     }
 
     protected void init() {
@@ -66,7 +53,7 @@ public class GildingMenuScreen extends Screen {
                 ScreenTexts.BACK, (button) -> this.client.setScreen(this.parent)));
 
         this.addDrawableChild(new ButtonWidget(this.width / 2 + 2, l + 72 + 12, 98, 20,
-                new TranslatableText("menu." + SUPER_MOD_ID + ".other_mods.button"), (button) -> this.client.setScreen(new OtherModsScreen(this.parent))));
+                new TranslatableText("menu." + SUPER_MOD_ID + ".modmenu.button"), (button) -> this.client.setScreen(new ModsScreen(this.parent))));
     }
 
     private void initMultiWidgets() {
@@ -102,20 +89,16 @@ public class GildingMenuScreen extends Screen {
     }
 
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        if (this.backgroundFadeStart == 0L && this.doBackgroundFade) {
-            this.backgroundFadeStart = Util.getMeasuringTimeMs();
-        }
-
-        float f = this.doBackgroundFade ? (float)(Util.getMeasuringTimeMs() - this.backgroundFadeStart) / 1000.0F : 1.0F;
+        float f = 1.0F;
         this.backgroundRenderer.render(delta, MathHelper.clamp(f, 0.0F, 1.0F));
         int j = this.width / 2 - 137;
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, PANORAMA_OVERLAY);
         RenderSystem.enableBlend();
         RenderSystem.blendFunc(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, this.doBackgroundFade ? (float)MathHelper.ceil(MathHelper.clamp(f, 0.0F, 1.0F)) : 1.0F);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         drawTexture(matrices, 0, 0, this.width, this.height, 0.0F, 0.0F, 16, 128, 16, 128);
-        float g = this.doBackgroundFade ? MathHelper.clamp(f - 1.0F, 0.0F, 1.0F) : 1.0F;
+        float g = 1.0F;
         int l = MathHelper.ceil(g * 255.0F) << 24;
         if ((l & -67108864) != 0) {
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
