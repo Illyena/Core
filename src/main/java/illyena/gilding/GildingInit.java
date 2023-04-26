@@ -1,6 +1,5 @@
 package illyena.gilding;
 
-import illyena.gilding.compat.Compat;
 import illyena.gilding.compat.Mod;
 import illyena.gilding.config.command.ConfigArguments;
 import illyena.gilding.config.command.ConfigCommand;
@@ -25,8 +24,6 @@ public class GildingInit implements ModInitializer {
         ConfigNetworking.registerC2SPackets();
         ConfigArguments.registerArgumentTypes();
         ConfigCommand.registerConfigCommand();
-
-        Compat.registerCompatMods();
 
         LOGGER.info("Welcome to the {} Mod!", SUPER_MOD_NAME);
 

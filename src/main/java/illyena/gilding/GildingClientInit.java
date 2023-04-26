@@ -1,6 +1,5 @@
 package illyena.gilding;
 
-import illyena.gilding.compat.Compat;
 import illyena.gilding.compat.Mod;
 import illyena.gilding.config.network.ConfigNetworking;
 import illyena.gilding.core.client.gui.screen.GildingConfigMenu;
@@ -19,7 +18,6 @@ public class GildingClientInit implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         ConfigNetworking.registerS2CPackets();
-        Compat.CompatMod.CompatScreens.registerCompatModScreens();
 
         ClientEvents.registerClientEvents();
     }
