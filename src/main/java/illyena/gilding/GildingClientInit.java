@@ -4,6 +4,9 @@ import illyena.gilding.compat.Mod;
 import illyena.gilding.config.network.ConfigNetworking;
 import illyena.gilding.core.client.gui.screen.GildingConfigMenu;
 import illyena.gilding.core.event.ClientEvents;
+import illyena.gilding.core.event.KeyInputHandler;
+import illyena.gilding.core.networking.GildingPackets;
+import illyena.gilding.core.particle.GildingParticles;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -18,8 +21,12 @@ public class GildingClientInit implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         ConfigNetworking.registerS2CPackets();
-
+        GildingPackets.registerS2CPackets();
+        KeyInputHandler.register();
         ClientEvents.registerClientEvents();
+
+        GildingParticles.registerParticles();
+
     }
 
 }

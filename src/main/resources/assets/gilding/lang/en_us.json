@@ -22,5 +22,11 @@
   "menu.gilding.modmenu.button": "Mod Menu",
   "modmenu.nameTranslation.gilding": "Gilding",
   "modmenu.descriptionTranslation.gilding": "The core mod that all Gilding based mods are structured around.",
-  "modmenu.summaryTranslation.gilding": " s"
+  "modmenu.summaryTranslation.gilding": " s",
+
+  "key.category.gilding.gilding": "Gilding KeyBindings",
+  "key.gilding.throw": "Throw",
+
+  "enchantment.gilding.ricochet": "Ricochet"
+
 }
