@@ -39,7 +39,7 @@ public class GildingMenuButton extends ButtonWidget {
     
     public static void click(ButtonWidget button) {
         MinecraftClient.getInstance().send(() ->
-                MinecraftClient.getInstance().setScreen(new GildingMenuScreen(MinecraftClient.getInstance().currentScreen, false)));
+                MinecraftClient.getInstance().setScreen(new GildingMenuScreen(MinecraftClient.getInstance().currentScreen)));
     }
 
     public static class SingleMenuRow {

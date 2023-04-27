@@ -13,10 +13,8 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.SimpleRegistry;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.lang.reflect.InvocationTargetException;
+import java.util.*;
 import java.util.function.Supplier;
 
 import static illyena.gilding.GildingInit.SUPER_MOD_ID;
@@ -42,8 +40,7 @@ public class Mod {
     public boolean isLoaded() {
         if (this.isSubGroupParent && getModsWithSubGroups(this.getModId()).isEmpty()) {
             return false;
-        } else
-            return FabricLoader.getInstance().isModLoaded(this.modId);
+        } else return FabricLoader.getInstance().isModLoaded(this.modId);
     }
 
     public Mod getParentMod() { return this.parent; }
@@ -51,7 +48,9 @@ public class Mod {
     public Class<?> getConfigClass() { return this.configClass; }
 
     @Environment(EnvType.CLIENT)
-    private Screen getScreen(Screen parent) { return ModScreens.SCREENS.get(new Identifier(SUPER_MOD_ID, this.modId)); } //todo implement parent
+    private Screen getScreen(Screen parent) {
+        return ModScreens.SCREENS.get(new Identifier(SUPER_MOD_ID, this.modId));
+    } //todo implement parent
 
 
 
@@ -82,7 +81,13 @@ public class Mod {
      */
     public static Class<?> getConfigClass(String modId) { return getFromId(modId).getConfigClass(); }
 
-
+    /**
+     * @param modId identifies Mod
+     * @return the Fabric ModContainer of this @param modId
+     */
+    public static ModContainer getModContainer(String modId) {
+        return FabricLoader.getInstance().getModContainer(modId).orElse(null);
+    }
 
     //LISTS
 
@@ -101,32 +106,11 @@ public class Mod {
     public static List<String> loadedModIds() {
         List<String> loadedModIds = new ArrayList<>();
         MODS.forEach((mod -> {
-            if (mod.isLoaded()) {
+            if (FabricLoader.getInstance().isModLoaded(mod.getModId())) {
                 loadedModIds.add(mod.getModId());
             }
         }));
         return loadedModIds;
-    }
-
-    /**
-     * @param modId identifies Mod
-     * @return List of all Mods with Mod as mod.parent and its subMods;
-     */
-    public static List<Mod> getModsWithSubGroups(String modId) {
-        List<Mod> mods = new ArrayList<>();
-        for (Mod mod : MODS) {
-            if (mod.getParentMod() != null && mod.getParentMod().getModId().equals(modId)) {
-                if (mod.isSubGroupParent) {
-                    for (Mod subMod : MODS) {
-                        if (subMod.getParentMod().equals(mod)) {
-                            mods.add(subMod);
-                        }
-                    }
-                }
-                mods.add(mod);
-            }
-        }
-        return mods;
     }
 
     /**
@@ -144,11 +128,31 @@ public class Mod {
     }
 
     /**
+     * @param modId identifies Mod
+     * @return List of all Mods with Mod as mod.parent and its subMods;
+     */
+    public static List<Mod> getModsWithSubGroups(String modId) {
+        List<Mod> mods = getModsSansSubGroups(modId);
+        List<Mod> parentMods = MODS.stream().filter(mod -> mod.isSubGroupParent).toList();
+
+        int i = parentMods.size();
+        do {
+            for (Mod parentMod : parentMods) {
+                if (parentMod.getParentMod() != null && (parentMod.getParentMod().equals(getFromId(modId)) || mods.contains(parentMod.getParentMod()))) {
+                    mods.addAll(getModsSansSubGroups(parentMod.getModId()));
+                }
+            }
+            --i;
+        } while (i > 0);
+
+       return mods;
+    }
+
+    /**
      * @param modId identifies excluded Mod group
      * @return a List of loaded ModContainers excluding registered Mods with a parent of identified Mod and their subMods.
      */
     public static List<ModContainer> getOtherModContainers(String modId) {
-        List<ModContainer> list = List.of();
         List<String> ids = new ArrayList<>();
         for (Mod mod : getModsWithSubGroups(modId)) {
             ids.add(mod.getModId());
@@ -175,7 +179,7 @@ public class Mod {
      * @return String of Mod's version.
      */
     public static String getModVersion (String modId) {
-        return FabricLoader.getInstance().getModContainer(modId).get().getMetadata().getVersion().getFriendlyString();
+        return getModContainer(modId) == null ? "" : getModContainer(modId).getMetadata().getVersion().getFriendlyString();
     }
 
     /**
@@ -183,7 +187,7 @@ public class Mod {
      * @return String of combined gameVersion and modVersion.
      */
     public static String getVersion(String modId) {
-        return SharedConstants.getGameVersion().toString() + " : " + getModVersion(modId);
+        return SharedConstants.getGameVersion().getName() + ":" + getModContainer(modId).getMetadata().getVersion();
     }
 
 
@@ -219,6 +223,7 @@ public class Mod {
      */
     @Environment(EnvType.CLIENT)
     public static class ModScreens {
+        public static Map<String, Class<? extends Screen>> map = new HashMap<>();
         private static final SimpleRegistry<Screen> SCREENS = FabricRegistryBuilder.createSimple(Screen.class, new Identifier(SUPER_MOD_ID, "screens")).buildAndRegister();
 
         /**
@@ -229,6 +234,7 @@ public class Mod {
          * @return the @param screen that was passed in
          */
         public static Screen registerConfigScreen(String modId, Screen screen) {
+            map.put(modId, screen.getClass());
             Registry.register(SCREENS, new Identifier(SUPER_MOD_ID, modId), screen);
             return screen;
         }
@@ -238,7 +244,15 @@ public class Mod {
          * @param parent instance of the previous Screen
          * @return a new instance of a Mod's config Screen by its modId
          */
-        public static Screen getScreen(String modId, Screen parent) { return getFromId(modId).getScreen(parent); }
+        public static Screen getScreen(String modId, Screen parent) {
+            try {
+                return map.get(modId).getConstructor(Screen.class).newInstance(parent);
+            } catch (InvocationTargetException | InstantiationException | IllegalAccessException | NoSuchMethodException e) {
+                return getFromId(modId).getScreen(parent);
+            }
+        }
+
     }
+
 
 } //todo protect from NullPointerException

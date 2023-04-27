@@ -24,7 +24,7 @@ public class GildingConfigMenu extends ConfigScreen {
 
     public GildingConfigMenu() { this(MinecraftClient.getInstance().currentScreen); }
 
-    protected GildingConfigMenu(Screen parent) {
+    public GildingConfigMenu(Screen parent) {
         super(SUPER_MOD_ID, parent);
         this.backgroundRenderer = new RotatingCubeMapRenderer(PANORAMA_CUBE_MAP);
     }
@@ -33,7 +33,7 @@ public class GildingConfigMenu extends ConfigScreen {
         assert this.client != null;
         int l = this.height / 4 + 48;
 
-        this.initMultiWidgets(true);
+        this.initMultiWidgets(this.modId, true);
         this.initBackWidget(l);
         this.initReturnWidget(l);
     }

@@ -19,6 +19,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.function.Consumer;
@@ -26,7 +27,7 @@ import java.util.function.Consumer;
 import static illyena.gilding.GildingInit.SUPER_MOD_ID;
 
 @Environment(EnvType.CLIENT)
-public class ConfigScreen extends Screen {
+public abstract class ConfigScreen extends Screen {
     protected final boolean isMinecraft;
     protected Screen parent;
     protected String modId;
@@ -38,9 +39,10 @@ public class ConfigScreen extends Screen {
         this.modId = modId;
     }
 
-    protected List<ConfigOption<?>> getConfigs() {
+    protected List<ConfigOption<?>> getConfigs(String modId) {
         List<ConfigOption<?>> list = new ArrayList<>();
-        List<Identifier> ids = ConfigOption.CONFIG.getIds().stream().filter(id -> id.getNamespace().equals(this.modId)).toList();
+        List<Identifier> ids = new ArrayList<>(ConfigOption.CONFIG.getIds().stream().filter(id -> id.getNamespace().equals(modId)).toList());
+        Collections.sort(ids);
         for (Identifier id : ids) {
             list.add(ConfigOption.getConfig(id));
         }
@@ -51,7 +53,7 @@ public class ConfigScreen extends Screen {
         this.initSync();
 
         int l = this.height / 4 + 48;
-        this.initMultiWidgets(false);
+        this.initMultiWidgets(this.modId,false);
         this.initBackWidget(l);
         this.initReturnWidget(l);
 
@@ -74,10 +76,10 @@ public class ConfigScreen extends Screen {
         }
     }
 
-    protected void initMultiWidgets(boolean clientOnly) {
+    protected void initMultiWidgets(String modId, boolean clientOnly) {
         assert this.client != null;
         int i = 0;
-        for (ConfigOption<?> config : getConfigs()) {
+        for (ConfigOption<?> config : getConfigs(modId)) {
             int j = this.width / 2 - 155 + i % 2 * 160;
             int k = this.height / 6 - 12 + 24 * (i >> 1) + 48;
             if (clientOnly || this.client.world != null) {

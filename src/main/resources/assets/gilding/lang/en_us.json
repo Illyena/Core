@@ -6,9 +6,7 @@
   "menu.gilding.inactive_mod.tooltip": "This mod is not installed.",
   "menu.gilding.gilded_config.button": "Gilded Mod",
   "menu.gilding.icing_config.button": "Icing Mod",
-  "menu.gilding.verdure_config.button": "Verdure Mod",
-  "menu.gilding.holiday_config.button": "Holiday Mods",
-  "menu.gilding.other_mods.button": "Other Mods",
+  "menu.gilding.no_server.tooltip": "This options is not available while not connected to a game.",
   "option.gilding.mmConfigButtonOffsetX": "Main Menu Button offset",
   "option.gilding.mmConfigButtonRow": "Main Menu Button Row",
   "option.gilding.inGameMenuConfigButtonOffsetX": "Game Menu Button offset",
@@ -17,5 +15,10 @@
   "argument.gilding.incompatible_mod": "%s mod is not currently compatible",
   "argument.gilding.not_option": "%s option is not available in the specified od",
   "argument.gilding.settings": "%s settings",
-  "argument.gilding.set_success": "%s's %s set to %s"
+  "argument.gilding.set_success": "%s's %s set to %s",
+
+  "menu.gilding.modmenu.button": "Mod Menu",
+  "modmenu.nameTranslation.gilding": "Gilding",
+  "modmenu.descriptionTranslation.gilding": "The core mod that all Gilding based mods are structured around.",
+  "modmenu.summaryTranslation.gilding": " s"
 }
