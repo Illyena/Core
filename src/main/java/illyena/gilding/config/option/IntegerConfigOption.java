@@ -80,7 +80,7 @@ public class IntegerConfigOption extends ConfigOption<Integer> {
 
     public Integer getValue() { return ConfigOptionStorage.getInteger(key); }
 
-    public int getDefaultValue() { return defaultValue; }
+    public Integer getDefaultValue() { return defaultValue; }
 
     public int getMinValue() { return minValue; }
 

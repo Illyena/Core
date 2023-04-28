@@ -60,6 +60,8 @@ public abstract class ConfigOption<T> {
 
     public Type getType() { return this.type; }
 
+    public abstract T getDefaultValue();
+
     @Environment(EnvType.CLIENT)
     @Deprecated
     public abstract Option asOption();
