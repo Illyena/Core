@@ -41,8 +41,7 @@
   "depends": {
     "fabricloader": ">=0.14.19",
     "fabric": "*",
-    "minecraft": "1.18.2",
-    "modmenu": ">3.2.5"
+    "minecraft": "1.18.2"
   },
   "suggests": {
     "another-mod": "*"
