@@ -14,7 +14,7 @@ import net.minecraft.util.math.Vec3d;
  * INSERT
  *
  * insert fields:
- *      {@code private static final TrackedData<Byte> LOYALTY;
+ *      {@code private static final TrackedData<Integer> LOYALTY;
  * private static final TrackedData<Boolean> ENCHANTED;
  * private boolean dealtDamage;
  * private int returnTimer;}
@@ -37,7 +37,7 @@ public interface ILoyalty {
 
     public abstract DataTracker getDataTracker();
 
-    public abstract TrackedData<Byte> getLoyalty();
+    public abstract TrackedData<Integer> getLoyalty();
 
     public abstract boolean getDealtDamage();
 

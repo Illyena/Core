@@ -17,7 +17,7 @@ import java.util.function.Predicate;
  * INSERT
  *
  * insert fields:
- *      {@code private static final TrackedData<Byte> RICOCHET;
+ *      {@code private static final TrackedData<Integer> RICOCHET;
  * private static final TrackedData<Boolean> ENCHANTED;
  *
  * private int bounces;
@@ -62,7 +62,7 @@ public interface IRicochet {
 
     public abstract DataTracker getDataTracker();
 
-    public abstract TrackedData<Byte> getRicochet();
+    public abstract TrackedData<Integer> getRicochet();
 
     abstract int getHangTime();
 
