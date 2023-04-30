@@ -27,7 +27,7 @@
       "illyena.gilding.GildingDataGeneration"
     ],
     "mm:early_risers": [
-      "illyena.gilding.GildingEarlyRiser"
+
     ],
     "modmenu": [
       "illyena.gilding.compat.ModMenuCompat"
