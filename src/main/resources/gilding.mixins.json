@@ -5,10 +5,7 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "block.FlowableFluidAccessor",
-    "block.FlowableFluidMixin",
-    "enchantment.LoyaltyEnchantmentMixin",
-    "enchantment.PowerEnchantmentMixin",
-    "enchantment.PunchEnchantmentMixin"
+    "block.FlowableFluidMixin"
   ],
   "client": [
     "client.gui.screen.CreateWorldScreenAccessor",
