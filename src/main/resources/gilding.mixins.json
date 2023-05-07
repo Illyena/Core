@@ -11,6 +11,8 @@
     "enchantment.PunchEnchantmentMixin"
   ],
   "client": [
+    "client.gui.screen.CreateWorldScreenAccessor",
+    "client.gui.screen.MoreOptionsDialogMixin",
     "client.gui.screen.ScreenAccessor"
   ],
   "injectors": {

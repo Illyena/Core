@@ -9,6 +9,7 @@ import illyena.gilding.core.enchantment.GildingEnchantments;
 import illyena.gilding.core.networking.GildingPackets;
 import illyena.gilding.core.particle.GildingParticles;
 import illyena.gilding.core.util.data.GildingTags;
+import illyena.gilding.worldgen.ModdedWordGen;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.minecraft.item.Item;
@@ -37,10 +38,11 @@ public class GildingInit implements ModInitializer {
         LOGGER.info("Welcome to the {} Mod!", SUPER_MOD_NAME);
 
         GildingTags.callGildingTags();
-        GildingEnchantments.callEnchantments();
+//        GildingEnchantments.callEnchantments();
         GildingParticles.callGildingParticles();
 
         GildingPackets.registerC2SPackets();
+        ModdedWordGen.registerWorldGen();
 
 
     }
