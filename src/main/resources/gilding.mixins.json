@@ -5,7 +5,9 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "block.FlowableFluidAccessor",
-    "block.FlowableFluidMixin"
+    "block.FlowableFluidMixin",
+    "worldgen.SimpleStructurePieceAccessor",
+    "worldgen.StructureFeatureAccessor"
   ],
   "client": [
     "client.gui.screen.CreateWorldScreenAccessor",
