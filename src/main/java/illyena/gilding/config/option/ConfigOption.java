@@ -31,14 +31,16 @@ public abstract class ConfigOption<T> {
             .attribute(RegistryAttribute.SYNCED).attribute(RegistryAttribute.PERSISTED).buildAndRegister();
     private boolean dirty;
     protected Type type;
+    protected AccessType accessType;
     protected final String key;
     protected final String modId;
     protected final Identifier id;
 
-    public ConfigOption(String modId, String key) {
+    public ConfigOption(String modId, String key, AccessType accessType) {
         this.key = key;
         this.modId = modId;
         this.id = new Identifier(modId, key.toLowerCase());
+        this.accessType = accessType;
         Registry.register(CONFIG, id, this);
     }
 
@@ -59,6 +61,8 @@ public abstract class ConfigOption<T> {
     public String getKey() { return this.key; }
 
     public Type getType() { return this.type; }
+
+    public AccessType getAccessType() { return this.accessType; }
 
     public abstract T getDefaultValue();
 
@@ -132,6 +136,15 @@ public abstract class ConfigOption<T> {
 
         Type() { }
 
+    }
+
+    public enum AccessType {
+        SERVER,
+        CLIENT,
+        BOTH,
+        WORLD_GEN;
+
+        AccessType() { }
     }
 
     public static class ConfigOptionStorage {

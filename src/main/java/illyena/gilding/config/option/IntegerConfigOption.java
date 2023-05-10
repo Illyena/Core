@@ -25,20 +25,19 @@ public class IntegerConfigOption extends ConfigOption<Integer> {
     protected final int maxValue;
     protected List<OrderedText> tooltip;
 
-    public IntegerConfigOption(String modId, String key, int defaultValue, int min, int max, List<OrderedText> tooltip) {
-        this(modId, key, defaultValue, min, max);
-        this.tooltip = tooltip;
+    public IntegerConfigOption(String modId, String key, int defaultValue, int min, int max, AccessType accessType) {
+        this(modId, key, defaultValue, min, max, accessType, List.of());
     }
 
-    public IntegerConfigOption(String modId, String key, int defaultValue, int min, int max) {
-        super(modId, key);
+    public IntegerConfigOption(String modId, String key, int defaultValue, int min, int max, AccessType accessType, List<OrderedText> tooltip) {
+        super(modId, key, accessType);
         ConfigOptionStorage.setInteger(key, defaultValue);
         this.type = Type.INT;
         this.translationKey = "option." + modId + "." + key;
         this.defaultValue = defaultValue;
         this.minValue = min;
         this.maxValue = max;
-        this.tooltip = List.of();
+        this.tooltip = tooltip;
     }
 
     public void setValue(Integer value) {

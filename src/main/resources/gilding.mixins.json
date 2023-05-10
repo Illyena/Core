@@ -10,6 +10,7 @@
     "worldgen.StructureFeatureAccessor"
   ],
   "client": [
+    "client.KeyboardMixin",
     "client.gui.screen.CreateWorldScreenAccessor",
     "client.gui.screen.MoreOptionsDialogMixin",
     "client.gui.screen.ScreenAccessor"

@@ -25,13 +25,13 @@ public class EnumConfigOption<E extends Enum<E>> extends ConfigOption<Enum<E>> {
     private final Enum<E> defaultValue;
     private List<OrderedText> tooltips = ImmutableList.of();
 
-    public EnumConfigOption(String modId, String key, Enum<E> defaultValue, List<OrderedText> tooltips) {
-        this(modId, key, defaultValue);
+    public EnumConfigOption(String modId, String key, Enum<E> defaultValue, AccessType accessType, List<OrderedText> tooltips) {
+        this(modId, key, defaultValue, accessType);
         this.tooltips = tooltips;
     }
 
-    public EnumConfigOption(String modId, String key, Enum<E> defaultValue) {
-        super(modId, key);
+    public EnumConfigOption(String modId, String key, Enum<E> defaultValue, AccessType accessType) {
+        super(modId, key, accessType);
         ConfigOptionStorage.setEnum(key, defaultValue);
         this.translationKey = "option" + modId + "." + key;
         this.enumClass = defaultValue.getDeclaringClass();
