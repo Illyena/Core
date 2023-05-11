@@ -9,14 +9,12 @@ import illyena.gilding.compat.Mod;
 import illyena.gilding.config.option.BooleanConfigOption;
 import illyena.gilding.config.option.ConfigOption;
 import illyena.gilding.config.option.IntegerConfigOption;
-import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.command.CommandException;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.Texts;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 
 import java.util.List;
@@ -26,7 +24,7 @@ import static illyena.gilding.GildingInit.SUPER_MOD_NAME;
 
 public class ConfigCommand {
     public static void registerConfigCommand() {
-        CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> register(dispatcher));
+        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> register(dispatcher));
     }
 
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
@@ -67,7 +65,7 @@ public class ConfigCommand {
     static int executeQuerySetting(ServerCommandSource source, String modId, ConfigOption<?> option) {
         if (Mod.getFromId(modId) != null) {
             if (Mod.getFromId(modId).isLoaded()) {
-                source.sendFeedback(new LiteralText(option.getKey() + ": " + option.getValueText().getString()), false);
+                source.sendFeedback(Text.literal(option.getKey() + ": " + option.getValueText().getString()), false);
                 return 1;
             } else {
                 throw new CommandException(ConfigArguments.ConfigModIdArgument.tkUnloadedMod(modId));
@@ -81,9 +79,9 @@ public class ConfigCommand {
         List<ConfigOption<?>> options = ConfigOption.getConfigs(modId);
         if (Mod.getFromId(modId) != null) {
             if (Mod.getFromId(modId).isLoaded() && !options.isEmpty()) {
-                source.sendFeedback(new TranslatableText("argument." + SUPER_MOD_ID + ".settings", modId), false);
+                source.sendFeedback(Text.translatable("argument." + SUPER_MOD_ID + ".settings", modId), false);
                 for (ConfigOption<?> config : options) {
-                    source.sendFeedback(new LiteralText(config.getKey() + ": " + config.getValueText().getString()), false);
+                    source.sendFeedback(Text.literal(config.getKey() + ": " + config.getValueText().getString()), false);
                 }
                 return options.size();
             } else throw new CommandException(ConfigArguments.ConfigModIdArgument.tkUnloadedMod(modId));
@@ -115,11 +113,11 @@ public class ConfigCommand {
     }
 
     public static Text tkSet(String modId, String option, String value) {
-        return new TranslatableText("argument." + SUPER_MOD_ID + ".set_success", modId, option, value);
+        return Text.translatable("argument." + SUPER_MOD_ID + ".set_success", modId, option, value);
     }
 
     public static Text tkSetFailed(String modId, String option) {
-        return new TranslatableText("argument." + SUPER_MOD_NAME + ".set_failed", modId, option);
+        return Text.translatable("argument." + SUPER_MOD_NAME + ".set_failed", modId, option);
     }
 
 }

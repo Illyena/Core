@@ -8,13 +8,12 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.ScreenTexts;
 import net.minecraft.client.gui.screen.TitleScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 
@@ -33,7 +32,7 @@ public abstract class ConfigScreen extends Screen {
     protected String modId;
 
     protected ConfigScreen(String modId, Screen parent) {
-        super(new TranslatableText("menu." + modId + ".title"));
+        super(Text.translatable("menu." + modId + ".title"));
         this.isMinecraft = (double)(new Random()).nextFloat() < 1.0E-4;
         this.parent = parent;
         this.modId = modId;
@@ -69,10 +68,10 @@ public abstract class ConfigScreen extends Screen {
         assert this.client != null;
         if (this.client.world != null) {
             this.addDrawableChild(new ButtonWidget(this.width / 2 + 2, l + 72 +12, 98, 20,
-                    new TranslatableText("menu.returnToGame"), button -> this.close()));
+                    Text.translatable("menu.returnToGame"), button -> this.close()));
         } else {
             this.addDrawableChild(new ButtonWidget(this.width / 2 + 2, l + 72 + 12, 98, 20,
-                    new TranslatableText("gui.toTitle"), (button) -> this.client.setScreen(new TitleScreen())));
+                    Text.translatable("gui.toTitle"), (button) -> this.client.setScreen(new TitleScreen())));
         }
     }
 
@@ -100,7 +99,7 @@ public abstract class ConfigScreen extends Screen {
 
     protected ClickableWidget createDeadButton(ConfigOption<?> config, int x, int y, int width) {
         ButtonWidget.TooltipSupplier tooltips = new ButtonWidget.TooltipSupplier() {
-            private static final Text NO_SERVER_TEXT = new TranslatableText("menu." + SUPER_MOD_ID + ".no_server.tooltip");
+            private static final Text NO_SERVER_TEXT = Text.translatable("menu." + SUPER_MOD_ID + ".no_server.tooltip");
             @Override
             public void onTooltip(ButtonWidget button, MatrixStack matrices, int mouseX, int mouseY) {
                 if (button.active) {

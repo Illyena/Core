@@ -6,7 +6,7 @@ import illyena.gilding.config.command.ConfigCommand;
 import illyena.gilding.config.network.ConfigNetworking;
 import illyena.gilding.core.config.GildingConfigOptions;
 import net.fabricmc.api.ModInitializer;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -29,7 +29,7 @@ public class GildingInit implements ModInitializer {
 
     }
 
-    public static TranslatableText translationKeyOf(String type, String key) {
-        return new TranslatableText(type + "." + SUPER_MOD_ID + "." + key);
+    public static Text translationKeyOf(String type, String key) {
+        return Text.translatable(type + "." + SUPER_MOD_ID + "." + key);
     }
 }

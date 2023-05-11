@@ -2,19 +2,14 @@ package illyena.gilding.config.option;
 
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import illyena.gilding.config.gui.widget.ConfigSliderWidget;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.ScreenTexts;
 import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.client.gui.widget.DoubleOptionSliderWidget;
-import net.minecraft.client.option.DoubleOption;
-import net.minecraft.client.option.Option;
+import net.minecraft.screen.ScreenTexts;
 import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 
 import java.util.List;
 
@@ -25,15 +20,16 @@ public class IntegerConfigOption extends ConfigOption<Integer> {
     protected final int maxValue;
     protected List<OrderedText> tooltip;
 
-    public IntegerConfigOption(String modId, String key, int defaultValue, int min, int max, List<OrderedText> tooltip) {
-        this(modId, key, defaultValue, min, max);
+    public IntegerConfigOption(String modId, String key, int defaultValue, int min, int max, AccessType accessType, List<OrderedText> tooltip) {
+        this(modId, key, defaultValue, min, max, accessType);
         this.tooltip = tooltip;
     }
 
-    public IntegerConfigOption(String modId, String key, int defaultValue, int min, int max) {
+    public IntegerConfigOption(String modId, String key, int defaultValue, int min, int max, AccessType accessType) {
         super(modId, key);
         ConfigOptionStorage.setInteger(key, defaultValue);
         this.type = Type.INT;
+        this.accessType = accessType;
         this.translationKey = "option." + modId + "." + key;
         this.defaultValue = defaultValue;
         this.minValue = min;
@@ -87,30 +83,21 @@ public class IntegerConfigOption extends ConfigOption<Integer> {
     public int getMaxValue() { return maxValue; }
 
     public Text getValueText() {
-        return new LiteralText(String.valueOf(ConfigOptionStorage.getInteger(key)));
+        return Text.literal(String.valueOf(ConfigOptionStorage.getInteger(key)));
     }
 
     public Text getButtonText() {
-        return ScreenTexts.composeGenericOptionText(new TranslatableText(translationKey), getValueText());
+        return ScreenTexts.composeGenericOptionText(Text.translatable(translationKey), getValueText());
     }
 
     @Environment(EnvType.CLIENT)
     public ClickableWidget createButton(int x, int y, int width) {
-        return new DoubleOptionSliderWidget(MinecraftClient.getInstance().options, x, y, width, 20, (DoubleOption) this.asOption(), this.tooltip);
-    }
-
-    @Environment(EnvType.CLIENT)
-    @Override
-    public Option asOption() {
-         return new DoubleOption(translationKey, minValue, maxValue, 1.0f,
-                 (gameOptions) -> (double) ConfigOptionStorage.getInteger(key),
-                 (gameOptions, value) -> ConfigOptionStorage.setInteger(key, value.intValue()),
-                 ((gameOptions, option) -> getButtonText()));
+        return new ConfigSliderWidget(this, x, y, width, 20, this.tooltip);
     }
 
     @Override
     public void setFromArgument(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-        setValue(context.getSource(), context.getArgument("value", Integer.class));
+        setValue(context.getSource(), context.getArgument("value", int.class));
     }
 
 }

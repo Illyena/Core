@@ -9,13 +9,13 @@ import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import illyena.gilding.compat.Mod;
 import illyena.gilding.config.option.ConfigOption;
+import illyena.gilding.mixin.command.ArgumentTypesAccessor;
 import net.minecraft.command.CommandSource;
-import net.minecraft.command.argument.ArgumentTypes;
 import net.minecraft.command.argument.serialize.ConstantArgumentSerializer;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,8 +25,8 @@ import static illyena.gilding.GildingInit.SUPER_MOD_ID;
 
 public class ConfigArguments {
     public static void registerArgumentTypes() {
-        ArgumentTypes.register("modid", ConfigModIdArgument.class, new ConstantArgumentSerializer<>(ConfigModIdArgument::configModId));
-        ArgumentTypes.register("option", ConfigOptionsArgument.class, new ConstantArgumentSerializer<>(ConfigOptionsArgument::configOptions));
+        ArgumentTypesAccessor.callRegister(Registry.COMMAND_ARGUMENT_TYPE,"modid", ConfigModIdArgument.class, ConstantArgumentSerializer.of(ConfigModIdArgument::configModId));
+        ArgumentTypesAccessor.callRegister(Registry.COMMAND_ARGUMENT_TYPE, "option", ConfigOptionsArgument.class, ConstantArgumentSerializer.of(ConfigOptionsArgument::configOptions));
     }
 
     public static class ConfigModIdArgument implements ArgumentType<String> {
@@ -55,18 +55,18 @@ public class ConfigArguments {
         }
 
         public static Text tkIncompatibleMod(String modId) {
-            return new TranslatableText("argument." + SUPER_MOD_ID + ".incompatible_mod", modId);
+            return Text.translatable("argument." + SUPER_MOD_ID + ".incompatible_mod", modId);
         }
 
         public static Text tkUnloadedMod(String modId) {
-            return new TranslatableText("argument." + SUPER_MOD_ID + ".unloaded", modId);
+            return Text.translatable("argument." + SUPER_MOD_ID + ".unloaded", modId);
         }
 
     }
 
     public static class ConfigOptionsArgument implements ArgumentType<ConfigOption<?>> {
         public static final String NAME = "settings";
-        DynamicCommandExceptionType NO_SUCH_OPTION = new DynamicCommandExceptionType(string1 -> new TranslatableText("argument." + SUPER_MOD_ID + ".not_option", string1));
+        DynamicCommandExceptionType NO_SUCH_OPTION = new DynamicCommandExceptionType(string1 -> Text.translatable("argument." + SUPER_MOD_ID + ".not_option", string1));
 
         private ConfigOptionsArgument() {
         }
@@ -110,7 +110,7 @@ public class ConfigArguments {
         }
 
         public static Text tkNotOption(String modId, String option) {
-            return new TranslatableText("argument." + SUPER_MOD_ID + ".not_option", option, modId);
+            return Text.translatable("argument." + SUPER_MOD_ID + ".not_option", option, modId);
         }
     }
 

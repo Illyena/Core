@@ -9,13 +9,12 @@ import net.minecraft.client.gui.CubeMapRenderer;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.RotatingCubeMapRenderer;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.ScreenTexts;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 
@@ -34,7 +33,7 @@ public class GildingMenuScreen extends Screen {
     private final Screen parent;
 
     public GildingMenuScreen(Screen parent) {
-        super(new TranslatableText("menu." + SUPER_MOD_ID + ".title"));
+        super(Text.translatable("menu." + SUPER_MOD_ID + ".title"));
         this.backgroundRenderer = new RotatingCubeMapRenderer(PANORAMA_CUBE_MAP);
         this.isMinceraft = (double)(new Random()).nextFloat() < 1.0E-4;
         this.parent = parent;
@@ -44,7 +43,7 @@ public class GildingMenuScreen extends Screen {
         int l = this.height / 4 + 48;
 
         this.addDrawableChild(new ButtonWidget( this.width / 2 - 100, this.height / 6 , 200, 20,
-                new TranslatableText("menu." + SUPER_MOD_ID + "." + SUPER_MOD_ID + "_config.button"),
+                Text.translatable("menu." + SUPER_MOD_ID + "." + SUPER_MOD_ID + "_config.button"),
                 button -> this.client.setScreen(new GildingConfigMenu(this))));
 
         this.initMultiWidgets();
@@ -53,7 +52,7 @@ public class GildingMenuScreen extends Screen {
                 ScreenTexts.BACK, (button) -> this.client.setScreen(this.parent)));
 
         this.addDrawableChild(new ButtonWidget(this.width / 2 + 2, l + 72 + 12, 98, 20,
-                new TranslatableText("menu." + SUPER_MOD_ID + ".modmenu.button"), (button) -> this.client.setScreen(new ModsScreen(this.parent))));
+                Text.translatable("menu." + SUPER_MOD_ID + ".modmenu.button"), (button) -> this.client.setScreen(new ModsScreen(this.parent))));
     }
 
     private void initMultiWidgets() {
@@ -69,9 +68,9 @@ public class GildingMenuScreen extends Screen {
     }
 
     private ButtonWidget createButton(Mod mod, int x, int y, int width, int height ) {
-        Text text = new TranslatableText("menu." + SUPER_MOD_ID + "." + mod.getModId() + "_config.button");
+        Text text = Text.translatable("menu." + SUPER_MOD_ID + "." + mod.getModId() + "_config.button");
         ButtonWidget.TooltipSupplier tooltipSupplier = new ButtonWidget.TooltipSupplier() {
-            private static final Text MOD_INACTIVE_TEXT = new TranslatableText("menu." + SUPER_MOD_ID + ".inactive_mod.tooltip");
+            private static final Text MOD_INACTIVE_TEXT = Text.translatable("menu." + SUPER_MOD_ID + ".inactive_mod.tooltip");
             @Override
             public void onTooltip(ButtonWidget button, MatrixStack matrices, int mouseX, int mouseY) {
                 if (button.active) {

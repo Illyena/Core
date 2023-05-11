@@ -11,9 +11,9 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.TranslatableTextContent;
 import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,7 +29,7 @@ public class GildingMenuButton extends ButtonWidget {
     public static final ItemStack ICON = Blocks.GILDED_BLACKSTONE.asItem().getDefaultStack();
     
     public GildingMenuButton(int x, int y, @Nullable TooltipSupplier tooltip) {
-        super(x, y, 20, 20, LiteralText.EMPTY, GildingMenuButton::click, tooltip);
+        super(x, y, 20, 20, Text.empty(), GildingMenuButton::click, tooltip);
     }
     
     @Override
@@ -99,14 +99,14 @@ public class GildingMenuButton extends ButtonWidget {
                 ((ScreenAccessor) gui).getChildren().stream()
                         .filter(w -> w instanceof ClickableWidget)
                         .map(w -> (ClickableWidget) w)
-                        .filter(w -> w.getMessage() instanceof TranslatableText t && target.equals(t.getKey()))
+                        .filter(w -> w.getMessage() instanceof MutableText t && t.getContent() instanceof TranslatableTextContent content && target.equals(content.getKey()))
                         .findFirst()
                         .ifPresent(w -> {
 
                             TooltipSupplier tooltipSupplier = new TooltipSupplier() {
 
 
-                                private final Text GILDING_MENU_BUTTON_TEXT = new TranslatableText("menu." + SUPER_MOD_ID + ".button").formatted(Formatting.ITALIC);
+                                private final Text GILDING_MENU_BUTTON_TEXT = Text.translatable("menu." + SUPER_MOD_ID + ".button").formatted(Formatting.ITALIC);
                                 @Override
                                 public void onTooltip(ButtonWidget button, MatrixStack matrices, int mouseX, int mouseY) {
                                     if (button.active) {

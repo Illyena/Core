@@ -30,6 +30,7 @@ public class GildingConfigMenu extends ConfigScreen {
     }
 
     protected void init() {
+        this.initSync();
         assert this.client != null;
         int l = this.height / 4 + 48;
 

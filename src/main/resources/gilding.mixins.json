@@ -4,6 +4,7 @@
   "package": "illyena.gilding.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "command.ArgumentTypesAccessor"
   ],
   "client": [
     "client.gui.screen.ScreenAccessor"

@@ -7,18 +7,19 @@
   "menu.gilding.gilded_config.button": "Gilded Mod",
   "menu.gilding.icing_config.button": "Icing Mod",
   "menu.gilding.no_server.tooltip": "This options is not available while not connected to a game.",
-  "option.gilding.mmConfigButtonOffsetX": "Main Menu Button offset",
-  "option.gilding.mmConfigButtonRow": "Main Menu Button Row",
-  "option.gilding.inGameMenuConfigButtonOffsetX": "Game Menu Button offset",
-  "option.gilding.inGameMenuConfigButtonRow": "Game Menu Button Row",
+  "option.gilding.mm_config_button_offset": "Main Menu Button offset",
+  "option.gilding.mm_config_button_row": "Main Menu Button Row",
+  "option.gilding.gm_config_button_offset": "Game Menu Button offset",
+  "option.gilding.gm_config_button_row": "Game Menu Button Row",
   "argument.gilding.unloaded": "%s mod is not currently installed",
   "argument.gilding.incompatible_mod": "%s mod is not currently compatible",
-  "argument.gilding.not_option": "%s option is not available in the specified od",
+  "argument.gilding.not_option": "%s option is not available in the specified mod",
   "argument.gilding.settings": "%s settings",
   "argument.gilding.set_success": "%s's %s set to %s",
 
   "menu.gilding.modmenu.button": "Mod Menu",
   "modmenu.nameTranslation.gilding": "Gilding",
-  "modmenu.descriptionTranslation.gilding": "The core mod that all Gilding based mods are structured around.",
-  "modmenu.summaryTranslation.gilding": " s"
+  "modmenu.descriptionTranslation.gilding": "The core library that all Gilding based mods are structured around.",
+  "modmenu.summaryTranslation.gilding": "Library for all Gilding mods"
+
 }
