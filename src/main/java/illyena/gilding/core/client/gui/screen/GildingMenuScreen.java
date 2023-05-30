@@ -117,7 +117,7 @@ public class GildingMenuScreen extends Screen {
                 });
             }
             drawTexture(matrices, j + 88, 67, 0.0F, 0.0F, 98, 14, 128, 16);
-            String string = SUPER_MOD_NAME + " Mod v: " + VERSION;
+            String string = SUPER_MOD_NAME + " Mod : " + VERSION;
             drawStringWithShadow(matrices, this.textRenderer, string, 2, this.height - 10, 16777215 | l);
 
             for (Element element : this.children()) {

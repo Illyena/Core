@@ -60,6 +60,8 @@ public abstract class ConfigOption<T> {
 
     public AccessType getAccessType() { return this.accessType; }
 
+    public abstract T getDefaultValue();
+
     public abstract void setValue(T value);
 
     public abstract void setFromArgument(CommandContext<ServerCommandSource> context) throws CommandSyntaxException;
@@ -123,7 +125,7 @@ public abstract class ConfigOption<T> {
     }
 
     public enum AccessType {
-        SEVER,
+        SERVER,
         CLIENT,
         BOTH,
         WORLD_GEN;

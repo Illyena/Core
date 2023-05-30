@@ -4,9 +4,15 @@
   "package": "illyena.gilding.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "command.ArgumentTypesAccessor"
+    "block.FlowableFluidAccessor",
+    "block.FlowableFluidMixin",
+    "command.ArgumentTypesAccessor",
+    "worldgen.SimpleStructurePieceAccessor"
   ],
   "client": [
+    "client.KeyboardMixin",
+    "client.gui.screen.CreateWorldScreenAccessor",
+    "client.gui.screen.MoreOptionsDialogMixin",
     "client.gui.screen.ScreenAccessor"
   ],
   "injectors": {

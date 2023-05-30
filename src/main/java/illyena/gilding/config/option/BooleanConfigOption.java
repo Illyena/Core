@@ -59,7 +59,7 @@ public class BooleanConfigOption extends ConfigOption<Boolean> {
 
     public Boolean getValue() { return ConfigOptionStorage.getBoolean(key); }
 
-    public boolean getDefaultValue() { return defaultValue; }
+    public Boolean getDefaultValue() { return defaultValue; }
 
     public Text getValueText() {
         return Text.translatable(String.valueOf(ConfigOptionStorage.getBoolean(key)));
