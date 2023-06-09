@@ -23,7 +23,7 @@ public interface IThrowable {
 
     public default void onThrow(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
 
-        if (user instanceof PlayerEntity playerEntity) {
+        if (user instanceof PlayerEntity playerEntity && canThrow(stack, world, user, remainingUseTicks)) {
             int i = stack.getItem().getMaxUseTime(stack) - remainingUseTicks;
             if (!((double)getPullProgress(i) < 0.1)) {
                 int j = EnchantmentHelper.getRiptide(stack);
@@ -98,8 +98,8 @@ public interface IThrowable {
         }
     }
 
-    public default int getEnchantability() {
-       return 1;
-    }
+    public abstract boolean canThrow(ItemStack stack, World world, LivingEntity user, int remainingTicks);
+
+    public default int getEnchantability() { return 1; }
 
 }

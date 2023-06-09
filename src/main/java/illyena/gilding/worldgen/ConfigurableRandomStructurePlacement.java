@@ -30,22 +30,6 @@ public class ConfigurableRandomStructurePlacement extends RandomSpreadStructureP
                     Vec3i.createOffsetCodec(16).fieldOf("locate_offset").forGetter(placement -> ((ConfigurableRandomStructurePlacement)placement).locateOffset))
             .apply(instance, ConfigurableRandomStructurePlacement::new)).flatXmap(placement -> ((ConfigurableRandomStructurePlacement)placement).validate((ConfigurableRandomStructurePlacement) placement), DataResult::success).codec();
 
-
-
-/*
-    public static final Codec<ConfigurableRandomStructurePlacement> CODEC = RecordCodecBuilder.create(instance -> {
-        return  instance.group(
-                        ConfigOption.CONFIG.getCodec().fieldOf("spacing_config").forGetter(ConfigurableRandomStructurePlacement::getSpacingConfig),
-                        ConfigOption.CONFIG.getCodec().fieldOf("separation_config").forGetter(ConfigurableRandomStructurePlacement::getSeparationConfig),
-                        SpreadType.CODEC.optionalFieldOf("spreadType", SpreadType.LINEAR).forGetter(ConfigurableRandomStructurePlacement::spreadType),
-                        Codecs.NONNEGATIVE_INT.fieldOf("salt").forGetter(ConfigurableRandomStructurePlacement::salt),
-                        Vec3i.createOffsetCodec(16).fieldOf("locate_offset").forGetter(ConfigurableRandomStructurePlacement::locateOffset))
-                .apply(instance, ConfigurableRandomStructurePlacement::new);
-    });
-*/
-
-
-
     public ConfigurableRandomStructurePlacement(ConfigOption<Integer> spacing, ConfigOption<Integer> separation, SpreadType  spreadType, int salt, Vec3i offset) {
         super(spacing.getValue(), separation.getValue(), spreadType, salt);
         this.spacingConfig = (IntegerConfigOption) spacing;
