@@ -1,7 +1,7 @@
 package illyena.gilding.core.event;
 
+import illyena.gilding.config.gui.widget.ModdedWorldGenButton;
 import illyena.gilding.core.client.gui.widget.GildingMenuButton;
-import illyena.gilding.core.client.gui.widget.ModdedWorldGenButton;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.event.Event;
 import net.minecraft.util.Identifier;

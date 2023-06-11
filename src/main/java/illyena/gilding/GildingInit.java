@@ -7,7 +7,7 @@ import illyena.gilding.config.network.ConfigNetworking;
 import illyena.gilding.core.config.GildingConfigOptions;
 import illyena.gilding.core.networking.GildingPackets;
 import illyena.gilding.core.particle.GildingParticles;
-import illyena.gilding.worldgen.ModdedWordGen;
+import illyena.gilding.worldgen.ModdedWorldGen;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.minecraft.item.Item;
@@ -38,7 +38,7 @@ public class GildingInit implements ModInitializer {
         GildingParticles.callGildingParticles();
 
         GildingPackets.registerC2SPackets();
-        ModdedWordGen.registerWorldGen();
+        ModdedWorldGen.registerWorldGen();
 
 
     }

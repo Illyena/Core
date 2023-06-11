@@ -1,39 +1,39 @@
 package illyena.gilding.config.option;
 
-
 import com.google.common.collect.ImmutableList;
 import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import illyena.gilding.config.command.ConfigArguments;
+import illyena.gilding.config.command.ConfigCommand;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.screen.ScreenTexts;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.CyclingButtonWidget;
-import net.minecraft.client.option.CyclingOption;
-import net.minecraft.client.option.Option;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 
 import java.util.List;
-import java.util.Locale;
 
 public class EnumConfigOption<E extends Enum<E>> extends ConfigOption<Enum<E>> {
     private final String translationKey;
     private final Class<E> enumClass;
-    private final Enum<E> defaultValue;
+    private final E defaultValue;
     private List<OrderedText> tooltips = ImmutableList.of();
 
-    public EnumConfigOption(String modId, String key, Enum<E> defaultValue, AccessType accessType, List<OrderedText> tooltips) {
+    public EnumConfigOption(String modId, String key, E defaultValue, AccessType accessType, List<OrderedText> tooltips) {
         this(modId, key, defaultValue, accessType);
         this.tooltips = tooltips;
     }
 
-    public EnumConfigOption(String modId, String key, Enum<E> defaultValue, AccessType accessType) {
+    public EnumConfigOption(String modId, String key, E defaultValue, AccessType accessType) {
         super(modId, key, accessType);
         ConfigOptionStorage.setEnum(key, defaultValue);
-        this.translationKey = "option" + modId + "." + key;
+        this.type = Type.ENUM;
+        this.translationKey = "option." + modId + "." + key;
         this.enumClass = defaultValue.getDeclaringClass();
         this.defaultValue = defaultValue;
     }
@@ -43,12 +43,12 @@ public class EnumConfigOption<E extends Enum<E>> extends ConfigOption<Enum<E>> {
         this.markDirty();
     }
 
-    public <T extends Enum<T>> void setValue(PacketByteBuf ignored,T value) {
+    public <T extends Enum<T>> void setValue(PacketByteBuf ignored, T value) {
         ConfigOptionStorage.setEnum(key, value);
         this.markDirty();
     }
 
-    public void setValue(ServerCommandSource source, Enum<E> value) {
+    public void setValue(ServerCommandSource source, Enum<E> value) throws CommandSyntaxException {
         this.setValue(value);
         this.sync(source);
     }
@@ -57,42 +57,49 @@ public class EnumConfigOption<E extends Enum<E>> extends ConfigOption<Enum<E>> {
 
     public void cycleValue(int amount) { ConfigOptionStorage.cycleEnum(key, enumClass, amount); }
 
-    public Enum<E> getValue() { return ConfigOptionStorage.getEnum(key, enumClass); }
+    public E getValue() { return ConfigOptionStorage.getEnum(key, enumClass); }
 
     public Class<E> getEnumClass() { return this.enumClass; }
 
     public Enum<E> getDefaultValue() { return defaultValue; }
 
     @Override
-    public Text getValueText() {
-        return new TranslatableText(this.translationKey + "." + this.getValue().name().toLowerCase(Locale.ROOT));
-    }
+    public Text getValueText() { return this.getValueText(this.getValue()); }
 
-    private static <E extends Enum<E>> Text getValueText(EnumConfigOption<E> option, Enum<E> value) {
-        return new TranslatableText(option.translationKey + "." + value.name().toLowerCase(Locale.ROOT));
-    }
+    private Text getValueText(E value) { return new LiteralText(value.name()); }
 
-    public Text getButtonText() {
-        return ScreenTexts.composeGenericOptionText(new TranslatableText(translationKey), getValueText(this, getValue()));
-    }
+    public Text getButtonText() { return new TranslatableText(translationKey); }
 
     @Environment(EnvType.CLIENT)
     public ClickableWidget createButton(int x, int y, int width) {
-        CyclingButtonWidget.TooltipFactory<Enum<E>> factory = value -> tooltips;
-        return (new CyclingButtonWidget.Builder<Enum<E>>(value -> getValueText(this, value)).values(enumClass.getEnumConstants())
-                .tooltip(factory).initially(this.getValue())
-                .build(x, y, width, 20, new TranslatableText(this.translationKey), ((button, value) -> ConfigOptionStorage.setEnum(this.getKey(), value))));
-    }
-
-    @Environment(EnvType.CLIENT)
-    @Override
-    public Option asOption() {
-        return CyclingOption.create(translationKey, enumClass.getEnumConstants(), value -> getValueText(this, value), ignored -> ConfigOptionStorage.getEnum(key, enumClass), (ignored, option, value) -> ConfigOptionStorage.setEnum(key, value));
+        return CyclingButtonWidget.builder(o -> this.getValueText()).values(this.enumClass.getEnumConstants()).tooltip(factory -> tooltips).initially(this.getValue())
+                .build(x, y, width, 20, new TranslatableText(translationKey), ((button, value) -> {
+                    this.cycleValue();
+                    button.setValue(this.getValue());
+                }));
     }
 
     @Override
-    public void setFromArgument(CommandContext<ServerCommandSource> context) {
-        setValue(context.getSource(), context.getArgument("value", enumClass));
+    public void setFromArgument(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+        try {
+            setValue(context.getSource(), context.getArgument("value", Enum.class));
+            context.getSource().sendFeedback(ConfigCommand.tkSet(context.getArgument(ConfigArguments.ConfigModIdArgument.NAME, String.class), this.getKey(), this.getValue().name()), true);
+        } catch (IllegalArgumentException | CommandSyntaxException tryAgain) {
+            try {
+                setValue(context.getSource(), this.getValueFromString(context.getArgument("value", String.class)));
+                context.getSource().sendFeedback(ConfigCommand.tkSet(context.getArgument(ConfigArguments.ConfigModIdArgument.NAME, String.class), this.getKey(), this.getValue().name()), true);
+
+            } catch (IllegalArgumentException | CommandSyntaxException e) {
+                context.getSource().sendError(Text.of(e.getMessage()));
+            }
+        }
     }
 
+    private E getValueFromString(String string) {
+        E _enum = null;
+        for (E e : this.enumClass.getEnumConstants()) {
+            if (e.name().equals(string.toUpperCase())) { _enum = e; }
+        }
+        return _enum;
+    }
 }

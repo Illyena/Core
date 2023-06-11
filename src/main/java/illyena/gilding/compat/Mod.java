@@ -41,7 +41,6 @@ public class Mod {
         if (this.isSubGroupParent && getModsWithSubGroups(this.getModId()).isEmpty()) {
             return false;
         } else return FabricLoader.getInstance().isModLoaded(this.modId);
-
     }
 
     public Mod getParentMod() { return this.parent; }

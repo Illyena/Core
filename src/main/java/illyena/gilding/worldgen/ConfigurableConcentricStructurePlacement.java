@@ -2,7 +2,6 @@ package illyena.gilding.worldgen;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-
 import illyena.gilding.config.option.ConfigOption;
 import illyena.gilding.config.option.IntegerConfigOption;
 import net.minecraft.util.math.ChunkPos;
@@ -12,7 +11,7 @@ import net.minecraft.world.gen.chunk.placement.StructurePlacementType;
 
 import java.util.List;
 
-import static illyena.gilding.worldgen.ModdedWordGen.CONFIGURABLE_CONCENTRIC_RINGS;
+import static illyena.gilding.worldgen.ModdedWorldGen.CONFIGURABLE_CONCENTRIC_RINGS;
 
 public class ConfigurableConcentricStructurePlacement extends ConcentricRingsStructurePlacement {
     int distance;
@@ -33,9 +32,9 @@ public class ConfigurableConcentricStructurePlacement extends ConcentricRingsStr
     }
 
     @Override
-    public boolean isStartChunk(ChunkGenerator chunkGenerator, long l, int i, int j) {
+    public boolean isStartChunk(ChunkGenerator chunkGenerator, long seed, int chunkX, int chunkZ) {
         List<ChunkPos> list = chunkGenerator.getConcentricRingsStartChunks(this);
-        return list != null && list.contains(new ChunkPos(i, j));
+        return list != null && list.contains(new ChunkPos(chunkX, chunkZ));
     }
 
     @Override
