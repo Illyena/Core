@@ -65,7 +65,7 @@ public class ConfigCommand {
     static int executeQuerySetting(ServerCommandSource source, String modId, ConfigOption<?> option) {
         if (Mod.getFromId(modId) != null) {
             if (Mod.getFromId(modId).isLoaded()) {
-                source.sendFeedback(Text.literal(option.getKey() + ": " + option.getValueText().getString()), false);
+                source.sendFeedback(() -> Text.literal(option.getKey() + ": " + option.getValueText().getString()), false);
                 return 1;
             } else {
                 throw new CommandException(ConfigArguments.ConfigModIdArgument.tkUnloadedMod(modId));
@@ -79,9 +79,9 @@ public class ConfigCommand {
         List<ConfigOption<?>> options = ConfigOption.getConfigs(modId);
         if (Mod.getFromId(modId) != null) {
             if (Mod.getFromId(modId).isLoaded() && !options.isEmpty()) {
-                source.sendFeedback(Text.translatable("argument." + SUPER_MOD_ID + ".settings", modId), false);
+                source.sendFeedback(() -> Text.translatable("argument." + SUPER_MOD_ID + ".settings", modId), false);
                 for (ConfigOption<?> config : options) {
-                    source.sendFeedback(Text.literal(config.getKey() + ": " + config.getValueText().getString()), false);
+                    source.sendFeedback(() -> Text.literal(config.getKey() + ": " + config.getValueText().getString()), false);
                 }
                 return options.size();
             } else throw new CommandException(ConfigArguments.ConfigModIdArgument.tkUnloadedMod(modId));
@@ -96,7 +96,7 @@ public class ConfigCommand {
         try {
             int i = new StringReader(value).readInt();
             ((IntegerConfigOption) option).setValue(context.getSource(), i);
-            context.getSource().sendFeedback(tkSet(context.getArgument(ConfigArguments.ConfigModIdArgument.NAME, String.class), option.getKey(), value), true);
+            context.getSource().sendFeedback(() -> tkSet(context.getArgument(ConfigArguments.ConfigModIdArgument.NAME, String.class), option.getKey(), value), true);
         } catch (CommandSyntaxException e) {
             context.getSource().sendError(Texts.toText(e.getRawMessage()));
         }
@@ -106,7 +106,7 @@ public class ConfigCommand {
         try {
             boolean bool = new StringReader(value).readBoolean();
             ((BooleanConfigOption) option).setValue(context.getSource(), bool);
-            context.getSource().sendFeedback(tkSet(context.getArgument(ConfigArguments.ConfigModIdArgument.NAME, String.class), option.getKey(), value), true);
+            context.getSource().sendFeedback(() -> tkSet(context.getArgument(ConfigArguments.ConfigModIdArgument.NAME, String.class), option.getKey(), value), true);
         } catch (CommandSyntaxException e) {
             context.getSource().sendError(Texts.toText(e.getRawMessage()));
         }

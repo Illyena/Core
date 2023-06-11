@@ -5,6 +5,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import illyena.gilding.config.gui.widget.ConfigSliderWidget;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.server.command.ServerCommandSource;
@@ -18,23 +19,22 @@ public class IntegerConfigOption extends ConfigOption<Integer> {
     protected final int defaultValue;
     protected final int minValue;
     protected final int maxValue;
-    protected List<OrderedText> tooltip;
+    protected Text tooltip;
 
-    public IntegerConfigOption(String modId, String key, int defaultValue, int min, int max, AccessType accessType, List<OrderedText> tooltip) {
+    public IntegerConfigOption(String modId, String key, int defaultValue, int min, int max, AccessType accessType, Text tooltip) {
         this(modId, key, defaultValue, min, max, accessType);
         this.tooltip = tooltip;
     }
 
     public IntegerConfigOption(String modId, String key, int defaultValue, int min, int max, AccessType accessType) {
-        super(modId, key);
+        super(modId, key, accessType);
         ConfigOptionStorage.setInteger(key, defaultValue);
         this.type = Type.INT;
-        this.accessType = accessType;
         this.translationKey = "option." + modId + "." + key;
         this.defaultValue = defaultValue;
         this.minValue = min;
         this.maxValue = max;
-        this.tooltip = List.of();
+        this.tooltip = Text.empty();
     }
 
     public void setValue(Integer value) {
@@ -76,23 +76,19 @@ public class IntegerConfigOption extends ConfigOption<Integer> {
 
     public Integer getValue() { return ConfigOptionStorage.getInteger(key); }
 
-    public int getDefaultValue() { return defaultValue; }
+    public Integer getDefaultValue() { return defaultValue; }
 
     public int getMinValue() { return minValue; }
 
     public int getMaxValue() { return maxValue; }
 
-    public Text getValueText() {
-        return Text.literal(String.valueOf(ConfigOptionStorage.getInteger(key)));
-    }
+    public Text getValueText() { return Text.literal(String.valueOf(ConfigOptionStorage.getInteger(key))); }
 
-    public Text getButtonText() {
-        return ScreenTexts.composeGenericOptionText(Text.translatable(translationKey), getValueText());
-    }
+    public Text getButtonText() { return ScreenTexts.composeGenericOptionText(Text.translatable(translationKey), getValueText()); }
 
     @Environment(EnvType.CLIENT)
     public ClickableWidget createButton(int x, int y, int width) {
-        return new ConfigSliderWidget(this, x, y, width, 20, this.tooltip);
+        return new ConfigSliderWidget(this, x, y, width, 20, Tooltip.of(this.tooltip));
     }
 
     @Override

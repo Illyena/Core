@@ -11,20 +11,19 @@ import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.registry.Registry;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.SimpleRegistry;
 
 import java.util.*;
 
 import static illyena.gilding.GildingInit.SUPER_MOD_ID;
 
 public abstract class ConfigOption<T> {
-    public static final SimpleRegistry<ConfigOption> CONFIG = FabricRegistryBuilder.createSimple(ConfigOption.class, new Identifier(SUPER_MOD_ID, "config"))
+    public static final Registry<ConfigOption> CONFIG = FabricRegistryBuilder.createSimple(ConfigOption.class, new Identifier(SUPER_MOD_ID, "config"))
             .attribute(RegistryAttribute.SYNCED).attribute(RegistryAttribute.PERSISTED).buildAndRegister();
     private boolean dirty;
     protected Type type;
@@ -33,10 +32,11 @@ public abstract class ConfigOption<T> {
     protected final String modId;
     protected final Identifier id;
 
-    public ConfigOption(String modId, String key) {
+    public ConfigOption(String modId, String key, AccessType accessType) {
         this.key = key;
         this.modId = modId;
         this.id = new Identifier(modId, key.toLowerCase());
+        this.accessType = accessType;
         Registry.register(CONFIG, id, this);
     }
 
@@ -59,6 +59,8 @@ public abstract class ConfigOption<T> {
     public Type getType() { return this.type; }
 
     public AccessType getAccessType() { return this.accessType; }
+
+    public abstract T getDefaultValue();
 
     public abstract void setValue(T value);
 
@@ -123,7 +125,7 @@ public abstract class ConfigOption<T> {
     }
 
     public enum AccessType {
-        SEVER,
+        SERVER,
         CLIENT,
         BOTH,
         WORLD_GEN;

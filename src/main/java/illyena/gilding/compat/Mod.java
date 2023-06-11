@@ -8,9 +8,8 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.SharedConstants;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.SimpleRegistry;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.InvocationTargetException;
@@ -20,7 +19,7 @@ import java.util.function.Supplier;
 import static illyena.gilding.GildingInit.SUPER_MOD_ID;
 
 public class Mod {
-    public static final SimpleRegistry<Mod> MODS = FabricRegistryBuilder.createSimple(Mod.class, new Identifier(SUPER_MOD_ID, "mods")).attribute(RegistryAttribute.SYNCED).attribute(RegistryAttribute.PERSISTED).buildAndRegister();
+    public static final Registry<Mod> MODS = FabricRegistryBuilder.createSimple(Mod.class, new Identifier(SUPER_MOD_ID, "mods")).attribute(RegistryAttribute.SYNCED).attribute(RegistryAttribute.PERSISTED).buildAndRegister();
     private final String modId;
     private final Mod parent;
     private final boolean isSubGroupParent;
@@ -187,7 +186,7 @@ public class Mod {
      * @return String of combined gameVersion and modVersion.
      */
     public static String getVersion(String modId) {
-        return SharedConstants.getGameVersion().getName() + ":" + getModContainer(modId).getMetadata().getVersion();
+        return SharedConstants.getGameVersion().getName() + " v:" + getModContainer(modId).getMetadata().getVersion();
     }
 
 
@@ -224,7 +223,7 @@ public class Mod {
     @Environment(EnvType.CLIENT)
     public static class ModScreens {
         public static Map<String, Class<? extends Screen>> map = new HashMap<>();
-        private static final SimpleRegistry<Screen> SCREENS = FabricRegistryBuilder.createSimple(Screen.class, new Identifier(SUPER_MOD_ID, "screens")).buildAndRegister();
+        private static final Registry<Screen> SCREENS = FabricRegistryBuilder.createSimple(Screen.class, new Identifier(SUPER_MOD_ID, "screens")).buildAndRegister();
 
         /**
          * Registers a new instance of a Mod's config Screen in the SCREENS registry

@@ -12,10 +12,10 @@ import illyena.gilding.config.option.ConfigOption;
 import illyena.gilding.mixin.command.ArgumentTypesAccessor;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.argument.serialize.ConstantArgumentSerializer;
+import net.minecraft.registry.Registries;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,8 +25,8 @@ import static illyena.gilding.GildingInit.SUPER_MOD_ID;
 
 public class ConfigArguments {
     public static void registerArgumentTypes() {
-        ArgumentTypesAccessor.callRegister(Registry.COMMAND_ARGUMENT_TYPE,"modid", ConfigModIdArgument.class, ConstantArgumentSerializer.of(ConfigModIdArgument::configModId));
-        ArgumentTypesAccessor.callRegister(Registry.COMMAND_ARGUMENT_TYPE, "option", ConfigOptionsArgument.class, ConstantArgumentSerializer.of(ConfigOptionsArgument::configOptions));
+        ArgumentTypesAccessor.callRegister(Registries.COMMAND_ARGUMENT_TYPE, "modid", ConfigModIdArgument.class, ConstantArgumentSerializer.of(ConfigModIdArgument::configModId));
+        ArgumentTypesAccessor.callRegister(Registries.COMMAND_ARGUMENT_TYPE, "option", ConfigOptionsArgument.class, ConstantArgumentSerializer.of(ConfigOptionsArgument::configOptions));
     }
 
     public static class ConfigModIdArgument implements ArgumentType<String> {

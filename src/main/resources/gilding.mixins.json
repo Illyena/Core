@@ -4,9 +4,19 @@
   "package": "illyena.gilding.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "command.ArgumentTypesAccessor"
+    "block.FlowableFluidAccessor",
+    "block.FlowableFluidMixin",
+    "command.ArgumentTypesAccessor",
+    "enchantment.LoyaltyEnchantmentMixin",
+    "enchantment.PowerEnchantmentMixin",
+    "enchantment.PunchEnchantmentMixin",
+    "entity.PersistentProjectileEntityAccessor",
+    "entity.PlayerEntityMixin",
+    "worldgen.SimpleStructurePieceAccessor"
   ],
   "client": [
+    "client.KeyboardMixin",
+    "client.gui.screen.MoreTabMixin",
     "client.gui.screen.ScreenAccessor"
   ],
   "injectors": {

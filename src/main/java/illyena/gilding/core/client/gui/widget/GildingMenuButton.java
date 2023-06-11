@@ -1,25 +1,28 @@
 package illyena.gilding.core.client.gui.widget;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import illyena.gilding.core.client.gui.screen.GildingMenuScreen;
 import illyena.gilding.mixin.client.gui.screen.ScreenAccessor;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.GameMenuScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.TitleScreen;
+import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableTextContent;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static illyena.gilding.GildingInit.SUPER_MOD_ID;
@@ -27,16 +30,25 @@ import static illyena.gilding.core.config.GildingConfigOptions.*;
 
 public class GildingMenuButton extends ButtonWidget {
     public static final ItemStack ICON = Blocks.GILDED_BLACKSTONE.asItem().getDefaultStack();
-    
-    public GildingMenuButton(int x, int y, @Nullable TooltipSupplier tooltip) {
-        super(x, y, 20, 20, Text.empty(), GildingMenuButton::click, tooltip);
+
+    public GildingMenuButton(int x, int y, @Nullable Text tooltip) {
+        super(x, y, 20, 20, Text.empty(), GildingMenuButton::click, Supplier::get);
+        this.setTooltip(Tooltip.of(tooltip));
     }
-    
+
     @Override
-    public void renderBackground(MatrixStack matrices, MinecraftClient client, int mouseX, int mouseY) {
-        MinecraftClient.getInstance().getItemRenderer().renderGuiItemIcon(ICON, x + 2, y +2);
+    public void renderButton(DrawContext context, int mouseX, int mouseY, float delta) {
+        MinecraftClient minecraftClient = MinecraftClient.getInstance();
+        context.setShaderColor(1.0F, 1.0F, 1.0F, this.alpha);
+        RenderSystem.enableBlend();
+        RenderSystem.enableDepthTest();
+        context.drawNineSlicedTexture(WIDGETS_TEXTURE, this.getX(), this.getY(), this.getWidth(), this.getHeight(), 20, 4, 200, 20, 0, this.getTextureY());
+        context.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        context.drawItem(ICON, this.getX() + 2 , this.getY() + 2);
+        int i = this.active ? 16777215 : 10526880;
+        this.drawMessage(context, minecraftClient.textRenderer, i | MathHelper.ceil(this.alpha * 255.0F) << 24);
     }
-    
+
     public static void click(ButtonWidget button) {
         MinecraftClient.getInstance().send(() ->
                 MinecraftClient.getInstance().setScreen(new GildingMenuScreen(MinecraftClient.getInstance().currentScreen)));
@@ -102,23 +114,8 @@ public class GildingMenuButton extends ButtonWidget {
                         .filter(w -> w.getMessage() instanceof MutableText t && t.getContent() instanceof TranslatableTextContent content && target.equals(content.getKey()))
                         .findFirst()
                         .ifPresent(w -> {
-
-                            TooltipSupplier tooltipSupplier = new TooltipSupplier() {
-
-
-                                private final Text GILDING_MENU_BUTTON_TEXT = Text.translatable("menu." + SUPER_MOD_ID + ".button").formatted(Formatting.ITALIC);
-                                @Override
-                                public void onTooltip(ButtonWidget button, MatrixStack matrices, int mouseX, int mouseY) {
-                                    if (button.active) {
-                                        client.currentScreen.renderTooltip(matrices, this.GILDING_MENU_BUTTON_TEXT, mouseX, mouseY);
-                                    }
-                                }
-                                public void supply(Consumer<Text> consumer) { consumer.accept(this.GILDING_MENU_BUTTON_TEXT);}
-                            };
-
-                            gui.addDrawableChild(
-                                    new GildingMenuButton(w.x + offsetX_ + (onLeft ? -20 : w.getWidth()), w.y, tooltipSupplier)
-                            );
+                            Text GILDING_MENU_BUTTON_TEXT = Text.translatable("menu." + SUPER_MOD_ID + ".button").formatted(Formatting.ITALIC);
+                            gui.addDrawableChild(new GildingMenuButton(w.getX() + offsetX_ + (onLeft ? -20 : w.getWidth()), w.getY(), GILDING_MENU_BUTTON_TEXT));
                         });
             }
 

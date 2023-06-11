@@ -4,11 +4,11 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.brigadier.context.CommandContext;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.CyclingButtonWidget;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 
 import java.util.List;
@@ -19,26 +19,25 @@ public class BooleanConfigOption extends ConfigOption<Boolean> {
     private final boolean defaultValue;
     private final Text enabledText;
     private final Text disabledText;
-    private List<OrderedText> tooltips = List.of();
+    private Text tooltip;
 
-    public BooleanConfigOption(String modId, String key, boolean defaultValue, String enabledKey, String disabledKey, AccessType accessType, List<OrderedText> tooltips) {
+    public BooleanConfigOption(String modId, String key, boolean defaultValue, String enabledKey, String disabledKey, AccessType accessType, Text tooltip) {
         this(modId, key, defaultValue, enabledKey, disabledKey, accessType);
-        this.tooltips = tooltips;
+        this.tooltip = tooltip;
     }
     public BooleanConfigOption(String modId, String key, boolean defaultValue, String enabledKey, String disabledKey, AccessType accessType) {
-        super(modId, key);
+        super(modId, key, accessType);
         ConfigOptionStorage.setBoolean(key, defaultValue);
         this.type = Type.BOOL;
-        this.accessType = accessType;
         this.translationKey = "option." + modId + "." + key;
         this.defaultValue = defaultValue;
         this.enabledText = Text.translatable(translationKey + "." + enabledKey);
         this.disabledText = Text.translatable(translationKey + "." + disabledKey);
     }
 
-    public BooleanConfigOption(String modId, String key, boolean defaultValue, AccessType accessType, List<OrderedText> tooltips) {
+    public BooleanConfigOption(String modId, String key, boolean defaultValue, AccessType accessType, Text tooltip) {
         this(modId, key, defaultValue, accessType);
-        this.tooltips = tooltips;
+        this.tooltip = tooltip;
     }
 
     public BooleanConfigOption(String modId, String key, boolean defaultValue, AccessType accessType) {
@@ -59,19 +58,15 @@ public class BooleanConfigOption extends ConfigOption<Boolean> {
 
     public Boolean getValue() { return ConfigOptionStorage.getBoolean(key); }
 
-    public boolean getDefaultValue() { return defaultValue; }
+    public Boolean getDefaultValue() { return defaultValue; }
 
-    public Text getValueText() {
-        return Text.translatable(String.valueOf(ConfigOptionStorage.getBoolean(key)));
-    }
+    public Text getValueText() { return Text.translatable(String.valueOf(ConfigOptionStorage.getBoolean(key))); }
 
-    public Text getButtonText() {
-        return ScreenTexts.composeGenericOptionText(Text.translatable(translationKey), getValue() ? enabledText : disabledText);
-    }
+    public Text getButtonText() { return ScreenTexts.composeGenericOptionText(Text.translatable(translationKey), getValue() ? enabledText : disabledText); }
 
     @Environment(EnvType.CLIENT)
     public ClickableWidget createButton(int x, int y, int width) {
-        return CyclingButtonWidget.builder(o -> this.getValueText()).values(BOOLEAN_VALUES).tooltip(factory -> tooltips).initially(this.getValue())
+        return CyclingButtonWidget.builder(o -> this.getValueText()).values(BOOLEAN_VALUES).tooltip(tt -> Tooltip.of(this.tooltip)).initially(this.getValue())
                 .build(x, y, width, 20, Text.translatable(translationKey), ((button, value) -> {
                     this.toggleValue();
                     button.setValue(this.getValue());
