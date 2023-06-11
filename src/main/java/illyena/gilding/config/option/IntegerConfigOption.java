@@ -25,10 +25,9 @@ public class IntegerConfigOption extends ConfigOption<Integer> {
     }
 
     public IntegerConfigOption(String modId, String key, int defaultValue, int min, int max, AccessType accessType, List<OrderedText> tooltip) {
-        super(modId, key);
+        super(modId, key, accessType);
         ConfigOptionStorage.setInteger(key, defaultValue);
         this.type = Type.INT;
-        this.accessType = accessType;
         this.translationKey = "option." + modId + "." + key;
         this.defaultValue = defaultValue;
         this.minValue = min;
@@ -81,13 +80,9 @@ public class IntegerConfigOption extends ConfigOption<Integer> {
 
     public int getMaxValue() { return maxValue; }
 
-    public Text getValueText() {
-        return Text.literal(String.valueOf(ConfigOptionStorage.getInteger(key)));
-    }
+    public Text getValueText() { return Text.literal(String.valueOf(ConfigOptionStorage.getInteger(key))); }
 
-    public Text getButtonText() {
-        return ScreenTexts.composeGenericOptionText(Text.translatable(translationKey), getValueText());
-    }
+    public Text getButtonText() { return ScreenTexts.composeGenericOptionText(Text.translatable(translationKey), getValueText()); }
 
     @Environment(EnvType.CLIENT)
     public ClickableWidget createButton(int x, int y, int width) {
@@ -96,7 +91,7 @@ public class IntegerConfigOption extends ConfigOption<Integer> {
 
     @Override
     public void setFromArgument(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-        setValue(context.getSource(), context.getArgument("value", int.class));
+        setValue(context.getSource(), context.getArgument("value", Integer.class));
     }
 
 }

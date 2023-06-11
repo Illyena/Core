@@ -1,7 +1,6 @@
 package illyena.gilding.config.gui.widget;
 
 import illyena.gilding.config.gui.ModdedWorldGenScreen;
-import illyena.gilding.core.client.gui.widget.GildingMenuButton;
 import illyena.gilding.mixin.client.gui.screen.CreateWorldScreenAccessor;
 import illyena.gilding.mixin.client.gui.screen.ScreenAccessor;
 import net.minecraft.client.MinecraftClient;
@@ -10,44 +9,39 @@ import net.minecraft.client.gui.screen.world.CreateWorldScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.MutableText;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableTextContent;
+import net.minecraft.util.Pair;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 import static illyena.gilding.GildingInit.translationKeyOf;
 import static illyena.gilding.core.config.GildingConfigOptions.*;
 
 public class ModdedWorldGenButton extends ButtonWidget {
+    private boolean small;
+    public static final ItemStack ICON = Items.FILLED_MAP.getDefaultStack();
+
     public ModdedWorldGenButton(int x, int y, @Nullable TooltipSupplier tooltip, boolean small) {
         super(x, y, small ? 20 : 150, 20, small ? Text.empty() : translationKeyOf("menu", "modded_world_gen.button"), ModdedWorldGenButton::click, tooltip);
+        this.small = small;
+    }
+
+    @Override
+    public void renderBackground(MatrixStack matrices, MinecraftClient client, int mouseX, int mouseY) {
+        if (this.small) {
+            MinecraftClient.getInstance().getItemRenderer().renderGuiItemIcon(ICON, x + 2, y +2);
+        }
     }
 
     public static void click(ButtonWidget button) {
         MinecraftClient.getInstance().send(() ->
                 MinecraftClient.getInstance().setScreen(new ModdedWorldGenScreen(MinecraftClient.getInstance().currentScreen)));
-    }
-
-    public static class MenuRows {
-        public static final MenuRows MORE_OPTIONS = new MenuRows(Arrays.asList(
-
-                new GildingMenuButton.SingleMenuRow("selectWorld.mapFeatures", "selectWorld.mapType"),
-                new GildingMenuButton.SingleMenuRow("selectWorld.bonusItems", null),
-                new GildingMenuButton.SingleMenuRow("selectWorld.import_world_gen_settings", "gui.done"),
-                new GildingMenuButton.SingleMenuRow("selectWorld.create", "gui.cancel")
-        ));
-
-        protected final List<String> leftButtons, rightButtons;
-
-        public MenuRows(List<GildingMenuButton.SingleMenuRow> variants) {
-            leftButtons = variants.stream().map(r -> r.left).collect(Collectors.toList());
-            rightButtons = variants.stream().map(r -> r.right).collect(Collectors.toList());
-        }
     }
 
     public static class ModdedWorldGenButtonHandler {
@@ -70,24 +64,54 @@ public class ModdedWorldGenButton extends ButtonWidget {
                     }
                 };
 
-                if (MODDED_WORLD_GEN_BUTTON_SIZE.getValue()) {
-                    MenuRows menu = MenuRows.MORE_OPTIONS;
-                    int rowIdx = MODDED_WORLD_GEN_BUTTON_ROW.getValue();
-                    int offsetX = MODDED_WORLD_GEN_BUTTON_OFFSET.getValue();
-                    boolean left = offsetX < 0;
-                    String target = (left ? menu.leftButtons : menu.rightButtons).get(rowIdx - 1);
-                    ((ScreenAccessor) screen).getChildren().stream()
-                            .filter(w -> w instanceof ClickableWidget)
-                            .map(w -> (ClickableWidget) w)
-                            .filter(w -> w.getMessage() instanceof MutableText t && t.getContent() instanceof TranslatableTextContent content && target.equals(content.getKey()))
-                            .findFirst()
-                            .ifPresent(w ->
-                                    MODDED_WORLD_GEN_BUTTON = new ModdedWorldGenButton(w.x = offsetX + (left ? -20 : w.getWidth()), w.y, tooltipSupplier, true));
-                } else {
-                    MODDED_WORLD_GEN_BUTTON = new ModdedWorldGenButton(screen.width / 2 + 5, 151, tooltipSupplier, false);
+                int rowIdx = MODDED_WORLD_GEN_BUTTON_ROW.getValue();
+                int offsetX = MODDED_WORLD_GEN_BUTTON_OFFSET.getValue();
+                boolean left = offsetX < 0;
+
+                boolean moreOptions = ((CreateWorldScreenAccessor) screen).isMoreOptionsOpen();
+                ((CreateWorldScreenAccessor) screen).callSetMoreOptionsOpen(true);
+                List<Map.Entry<Integer, Pair<ClickableWidget, ClickableWidget>>> widgets = ((ScreenAccessor) screen).getChildren().stream()
+                        .filter(w -> w instanceof ClickableWidget)
+                        .map(w -> (ClickableWidget) w)
+                        .filter(w -> w.visible)
+                        .collect(HashMap<Integer, Pair<ClickableWidget, ClickableWidget>>::new, (map, w) -> {
+                            ClickableWidget hidden = new ButtonWidget(screen.width / 2 - 155, 122, 150, 0, Text.empty(), button -> {});
+                            if (!map.containsKey(hidden.y)) {
+                                map.put(hidden.y, new Pair<>(hidden, null));
+                            }
+                            boolean right = w.x >= screen.width / 2;
+                            if (!map.containsKey(w.y)) {
+                                Pair<ClickableWidget, ClickableWidget> pair = right ? new Pair<>(null, w) : new Pair<>(w, null);
+                                map.put(w.y, pair);
+                            } else {
+                                Pair<ClickableWidget, ClickableWidget> pair2 = map.get(w.y);
+                                if (right ? pair2.getRight() == null || pair2.getRight().x < w.x : pair2.getLeft() == null || pair2.getLeft().x > w.x) {
+                                    if (right) {
+                                        pair2.setRight(w);
+                                    } else {
+                                        pair2.setLeft(w);
+                                    }
+                                    map.put(w.y, pair2);
+                                }
+                            }
+                        }, HashMap::putAll)
+                        .entrySet().stream().sorted(Map.Entry.comparingByKey()).toList();
+                ((CreateWorldScreenAccessor) screen).callSetMoreOptionsOpen(moreOptions);
+                Pair<ClickableWidget, ClickableWidget> pair = widgets.get(Math.min(rowIdx, widgets.size())).getValue();
+
+                ClickableWidget reference = left ? pair.getLeft() : pair.getRight();
+                boolean bl = reference == null;
+                if (bl) {
+                    reference = left ? pair.getRight() : pair.getLeft();
                 }
+
+                int x = screen.width / 2 + (left ? -1 : 1) * (bl ? 0 : reference.getWidth()) + offsetX;
+                x = x + (left ? MODDED_WORLD_GEN_BUTTON_SIZE.getValue() ? -20 : -150 : 0);
+
+                MODDED_WORLD_GEN_BUTTON = new ModdedWorldGenButton(x, reference.y, tooltipSupplier, MODDED_WORLD_GEN_BUTTON_SIZE.getValue());
+
                 screen.addDrawableChild(MODDED_WORLD_GEN_BUTTON);
-                MODDED_WORLD_GEN_BUTTON.visible = ((CreateWorldScreenAccessor)screen).isMoreOptionsOpen();
+                MODDED_WORLD_GEN_BUTTON.visible = ((CreateWorldScreenAccessor) screen).isMoreOptionsOpen();
             }
         }
 

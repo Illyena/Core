@@ -12,6 +12,4 @@ public interface ArgumentTypesAccessor {
     static ArgumentSerializer<?, ?> callRegister(Registry<ArgumentSerializer<?, ?>> registry, String id, Class<?> clazz, ArgumentSerializer<?, ?> serializer) {
         throw new UnsupportedOperationException();
     }
-
-
 }

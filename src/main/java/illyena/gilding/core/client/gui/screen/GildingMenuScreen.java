@@ -28,7 +28,7 @@ public class GildingMenuScreen extends Screen {
     public static final CubeMapRenderer PANORAMA_CUBE_MAP = new CubeMapRenderer(new Identifier("textures/gui/title/background/panorama"));
     private static final Identifier PANORAMA_OVERLAY = new Identifier("textures/gui/title/background/panorama_overlay.png");
     private final boolean isMinceraft;
-    private final RotatingCubeMapRenderer backgroundRenderer;
+    final RotatingCubeMapRenderer backgroundRenderer;
 
     private final Screen parent;
 

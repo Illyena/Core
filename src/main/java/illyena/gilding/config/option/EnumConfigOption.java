@@ -28,10 +28,9 @@ public class EnumConfigOption<E extends Enum<E>> extends ConfigOption<Enum<E>> {
     }
 
     public EnumConfigOption(String modId, String key, E defaultValue, AccessType accessType) {
-        super(modId, key);
+        super(modId, key, accessType);
         ConfigOptionStorage.setEnum(key, defaultValue);
         this.type = Type.ENUM;
-        this.accessType = accessType;
         this.translationKey = "option." + modId + "." + key;
         this.enumClass = defaultValue.getDeclaringClass();
         this.defaultValue = defaultValue;
@@ -42,7 +41,7 @@ public class EnumConfigOption<E extends Enum<E>> extends ConfigOption<Enum<E>> {
         this.markDirty();
     }
 
-    public <T extends Enum<T>> void setValue(PacketByteBuf ignored,T value) {
+    public <T extends Enum<T>> void setValue(PacketByteBuf ignored, T value) {
         ConfigOptionStorage.setEnum(key, value);
         this.markDirty();
     }
@@ -75,7 +74,7 @@ public class EnumConfigOption<E extends Enum<E>> extends ConfigOption<Enum<E>> {
                 .build(x, y, width, 20, Text.translatable(translationKey), ((button, value) -> {
                     this.cycleValue();
                     button.setValue(this.getValue());
-                }) );
+                }));
     }
 
     @Override

@@ -26,10 +26,9 @@ public class BooleanConfigOption extends ConfigOption<Boolean> {
         this.tooltips = tooltips;
     }
     public BooleanConfigOption(String modId, String key, boolean defaultValue, String enabledKey, String disabledKey, AccessType accessType) {
-        super(modId, key);
+        super(modId, key, accessType);
         ConfigOptionStorage.setBoolean(key, defaultValue);
         this.type = Type.BOOL;
-        this.accessType = accessType;
         this.translationKey = "option." + modId + "." + key;
         this.defaultValue = defaultValue;
         this.enabledText = Text.translatable(translationKey + "." + enabledKey);
@@ -61,9 +60,7 @@ public class BooleanConfigOption extends ConfigOption<Boolean> {
 
     public Boolean getDefaultValue() { return defaultValue; }
 
-    public Text getValueText() {
-        return Text.translatable(String.valueOf(ConfigOptionStorage.getBoolean(key)));
-    }
+    public Text getValueText() { return Text.translatable(String.valueOf(ConfigOptionStorage.getBoolean(key))); }
 
     public Text getButtonText() {
         return ScreenTexts.composeGenericOptionText(Text.translatable(translationKey), getValue() ? enabledText : disabledText);
