@@ -25,20 +25,19 @@ public class IntegerConfigOption extends ConfigOption<Integer> {
     protected final int maxValue;
     protected List<OrderedText> tooltip;
 
-    public IntegerConfigOption(String modId, String key, int defaultValue, int min, int max, List<OrderedText> tooltip) {
-        this(modId, key, defaultValue, min, max);
-        this.tooltip = tooltip;
+    public IntegerConfigOption(String modId, String key, int defaultValue, int min, int max, AccessType accessType) {
+        this(modId, key, defaultValue, min, max, accessType, List.of());
     }
 
-    public IntegerConfigOption(String modId, String key, int defaultValue, int min, int max) {
-        super(modId, key);
+    public IntegerConfigOption(String modId, String key, int defaultValue, int min, int max, AccessType accessType, List<OrderedText> tooltip) {
+        super(modId, key, accessType);
         ConfigOptionStorage.setInteger(key, defaultValue);
         this.type = Type.INT;
         this.translationKey = "option." + modId + "." + key;
         this.defaultValue = defaultValue;
         this.minValue = min;
         this.maxValue = max;
-        this.tooltip = List.of();
+        this.tooltip = tooltip;
     }
 
     public void setValue(Integer value) {
@@ -80,19 +79,15 @@ public class IntegerConfigOption extends ConfigOption<Integer> {
 
     public Integer getValue() { return ConfigOptionStorage.getInteger(key); }
 
-    public int getDefaultValue() { return defaultValue; }
+    public Integer getDefaultValue() { return defaultValue; }
 
     public int getMinValue() { return minValue; }
 
     public int getMaxValue() { return maxValue; }
 
-    public Text getValueText() {
-        return new LiteralText(String.valueOf(ConfigOptionStorage.getInteger(key)));
-    }
+    public Text getValueText() { return new LiteralText(String.valueOf(ConfigOptionStorage.getInteger(key))); }
 
-    public Text getButtonText() {
-        return ScreenTexts.composeGenericOptionText(new TranslatableText(translationKey), getValueText());
-    }
+    public Text getButtonText() { return ScreenTexts.composeGenericOptionText(new TranslatableText(translationKey), getValueText()); }
 
     @Environment(EnvType.CLIENT)
     public ClickableWidget createButton(int x, int y, int width) {
@@ -100,7 +95,6 @@ public class IntegerConfigOption extends ConfigOption<Integer> {
     }
 
     @Environment(EnvType.CLIENT)
-    @Override
     public Option asOption() {
          return new DoubleOption(translationKey, minValue, maxValue, 1.0f,
                  (gameOptions) -> (double) ConfigOptionStorage.getInteger(key),

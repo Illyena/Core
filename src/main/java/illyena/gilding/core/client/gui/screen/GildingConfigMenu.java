@@ -26,14 +26,16 @@ public class GildingConfigMenu extends ConfigScreen {
 
     public GildingConfigMenu(Screen parent) {
         super(SUPER_MOD_ID, parent);
-        this.backgroundRenderer = new RotatingCubeMapRenderer(PANORAMA_CUBE_MAP);
+//        this.backgroundRenderer = new RotatingCubeMapRenderer(PANORAMA_CUBE_MAP);
+        this.backgroundRenderer = parent instanceof GildingMenuScreen previous ? previous.backgroundRenderer : new RotatingCubeMapRenderer(PANORAMA_CUBE_MAP);
     }
 
     protected void init() {
+        this.initSync();
         assert this.client != null;
         int l = this.height / 4 + 48;
 
-        this.initMultiWidgets(this.modId, true);
+        this.initMultiWidgets(this.modId);
         this.initBackWidget(l);
         this.initReturnWidget(l);
     }

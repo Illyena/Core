@@ -187,7 +187,7 @@ public class Mod {
      * @return String of combined gameVersion and modVersion.
      */
     public static String getVersion(String modId) {
-        return SharedConstants.getGameVersion().getName() + ":" + getModContainer(modId).getMetadata().getVersion();
+        return SharedConstants.getGameVersion().getName() + " v:" + getModContainer(modId).getMetadata().getVersion();
     }
 
 
@@ -253,6 +253,5 @@ public class Mod {
         }
 
     }
-
 
 } //todo protect from NullPointerException

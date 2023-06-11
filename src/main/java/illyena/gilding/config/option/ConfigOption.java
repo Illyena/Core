@@ -3,8 +3,6 @@ package illyena.gilding.config.option;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import illyena.gilding.config.network.ConfigNetworking;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.fabricmc.fabric.api.event.registry.RegistryAttribute;
@@ -12,7 +10,6 @@ import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.client.option.Option;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
@@ -31,14 +28,16 @@ public abstract class ConfigOption<T> {
             .attribute(RegistryAttribute.SYNCED).attribute(RegistryAttribute.PERSISTED).buildAndRegister();
     private boolean dirty;
     protected Type type;
+    protected AccessType accessType;
     protected final String key;
     protected final String modId;
     protected final Identifier id;
 
-    public ConfigOption(String modId, String key) {
+    public ConfigOption(String modId, String key, AccessType accessType) {
         this.key = key;
         this.modId = modId;
         this.id = new Identifier(modId, key.toLowerCase());
+        this.accessType = accessType;
         Registry.register(CONFIG, id, this);
     }
 
@@ -60,9 +59,9 @@ public abstract class ConfigOption<T> {
 
     public Type getType() { return this.type; }
 
-    @Environment(EnvType.CLIENT)
-    @Deprecated
-    public abstract Option asOption();
+    public AccessType getAccessType() { return this.accessType; }
+
+    public abstract T getDefaultValue();
 
     public abstract void setValue(T value);
 
@@ -90,10 +89,7 @@ public abstract class ConfigOption<T> {
             switch (this.type) {
                 case INT -> data.writeInt((Integer) this.getValue());
                 case BOOL -> data.writeBoolean((Boolean) this.getValue());
-                case ENUM -> {
-                    data.writeString(((Enum<?>) this.getValue()).getDeclaringClass().toString());
-                    data.writeEnumConstant(Enum.valueOf(((Enum<?>) this.getValue()).getDeclaringClass(), ((Enum<?>) this.getValue()).name()));
-                }
+                case ENUM -> data.writeEnumConstant((Enum<?>) this.getValue());
             }
             ClientPlayNetworking.send(ConfigNetworking.CONFIG_SYNC_C2S, data);
             this.setDirty(false);
@@ -109,10 +105,7 @@ public abstract class ConfigOption<T> {
             switch (this.type) {
                 case INT -> data.writeInt((Integer) this.getValue());
                 case BOOL -> data.writeBoolean((Boolean) this.getValue());
-                case ENUM -> {
-                    data.writeString(((Enum<?>) this.getValue()).getDeclaringClass().toString());
-                    data.writeEnumConstant(Enum.valueOf(((Enum<?>) this.getValue()).getDeclaringClass(), ((Enum<?>) this.getValue()).name()));
-                }
+                case ENUM -> data.writeEnumConstant((Enum<?>) this.getValue());
             }
 
             for (ServerPlayerEntity player : PlayerLookup.all(server)) {
@@ -130,6 +123,15 @@ public abstract class ConfigOption<T> {
 
         Type() { }
 
+    }
+
+    public enum AccessType {
+        SERVER,
+        CLIENT,
+        BOTH,
+        WORLD_GEN;
+
+        AccessType() { }
     }
 
     public static class ConfigOptionStorage {

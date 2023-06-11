@@ -29,7 +29,7 @@ public class GildingMenuScreen extends Screen {
     public static final CubeMapRenderer PANORAMA_CUBE_MAP = new CubeMapRenderer(new Identifier("textures/gui/title/background/panorama"));
     private static final Identifier PANORAMA_OVERLAY = new Identifier("textures/gui/title/background/panorama_overlay.png");
     private final boolean isMinceraft;
-    private final RotatingCubeMapRenderer backgroundRenderer;
+    final RotatingCubeMapRenderer backgroundRenderer;
 
     private final Screen parent;
 
@@ -118,7 +118,7 @@ public class GildingMenuScreen extends Screen {
                 });
             }
             drawTexture(matrices, j + 88, 67, 0.0F, 0.0F, 98, 14, 128, 16);
-            String string = SUPER_MOD_NAME + " Mod v: " + VERSION;
+            String string = SUPER_MOD_NAME + " Mod : " + VERSION;
             drawStringWithShadow(matrices, this.textRenderer, string, 2, this.height - 10, 16777215 | l);
 
             for (Element element : this.children()) {
