@@ -29,9 +29,7 @@ public interface IThrowable {
                 int j = EnchantmentHelper.getRiptide(stack);
                 if (j <= 0 || playerEntity.isTouchingWaterOrRain()) {
                     if (!world.isClient) {
-                        stack.damage(1, playerEntity, (p) -> {
-                            p.sendToolBreakStatus(user.getActiveHand());
-                        });
+                        stack.damage(1, playerEntity, (p) -> p.sendToolBreakStatus(user.getActiveHand()));
                         if (j == 0) {
                             PersistentProjectileEntity projectile = getProjectileEntity(world, (PlayerEntity) user, stack);
                             projectile.setVelocity(playerEntity, playerEntity.getPitch(), playerEntity.getYaw(), 0.0F, 2.5F + (float) j * 0.5F, 0.0f); //1.0F);
@@ -75,7 +73,7 @@ public interface IThrowable {
                         h *= n / m;
                         k *= n / m;
                         l *= n / m;
-                        playerEntity.addVelocity((double) h, (double) k, (double) l);
+                        playerEntity.addVelocity(h, k, l);
                         playerEntity.useRiptide(20);
                         if (playerEntity.isOnGround()) {
                             float o = 1.1999999F;
@@ -91,7 +89,7 @@ public interface IThrowable {
                             soundEvent = SoundEvents.ITEM_TRIDENT_RIPTIDE_1;
                         }
 
-                        world.playSoundFromEntity((PlayerEntity) null, playerEntity, soundEvent, SoundCategory.PLAYERS, 1.0F, 1.0F);
+                        world.playSoundFromEntity(null, playerEntity, soundEvent, SoundCategory.PLAYERS, 1.0F, 1.0F);
                     }
                 }
             }

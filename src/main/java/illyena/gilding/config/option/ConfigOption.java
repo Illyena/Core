@@ -33,10 +33,11 @@ public abstract class ConfigOption<T> {
     protected final String modId;
     protected final Identifier id;
 
-    public ConfigOption(String modId, String key) {
+    public ConfigOption(String modId, String key, AccessType accessType) {
         this.key = key;
         this.modId = modId;
         this.id = new Identifier(modId, key.toLowerCase());
+        this.accessType = accessType;
         Registry.register(CONFIG, id, this);
     }
 
