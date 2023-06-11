@@ -85,13 +85,9 @@ public class IntegerConfigOption extends ConfigOption<Integer> {
 
     public int getMaxValue() { return maxValue; }
 
-    public Text getValueText() {
-        return new LiteralText(String.valueOf(ConfigOptionStorage.getInteger(key)));
-    }
+    public Text getValueText() { return new LiteralText(String.valueOf(ConfigOptionStorage.getInteger(key))); }
 
-    public Text getButtonText() {
-        return ScreenTexts.composeGenericOptionText(new TranslatableText(translationKey), getValueText());
-    }
+    public Text getButtonText() { return ScreenTexts.composeGenericOptionText(new TranslatableText(translationKey), getValueText()); }
 
     @Environment(EnvType.CLIENT)
     public ClickableWidget createButton(int x, int y, int width) {
@@ -99,7 +95,6 @@ public class IntegerConfigOption extends ConfigOption<Integer> {
     }
 
     @Environment(EnvType.CLIENT)
-    @Override
     public Option asOption() {
          return new DoubleOption(translationKey, minValue, maxValue, 1.0f,
                  (gameOptions) -> (double) ConfigOptionStorage.getInteger(key),

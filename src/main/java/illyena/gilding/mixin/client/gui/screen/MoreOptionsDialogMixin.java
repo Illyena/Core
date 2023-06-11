@@ -1,6 +1,6 @@
 package illyena.gilding.mixin.client.gui.screen;
 
-import illyena.gilding.core.client.gui.widget.ModdedWorldGenButton;
+import illyena.gilding.config.gui.widget.ModdedWorldGenButton;
 import net.minecraft.client.gui.screen.world.MoreOptionsDialog;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
