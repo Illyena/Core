@@ -22,8 +22,7 @@ import java.awt.*;
 import java.util.List;
 import java.util.*;
 
-import static illyena.gilding.GildingInit.SUPER_MOD_ID;
-import static illyena.gilding.GildingInit.translationKeyOf;
+import static illyena.gilding.GildingInit.*;
 
 @Environment(EnvType.CLIENT)
 public abstract class ConfigScreen extends Screen {

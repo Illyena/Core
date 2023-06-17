@@ -15,6 +15,4 @@ public class LoyaltyEnchantmentMixin {
         return GildingEnchantmentTarget.THROWABLE_TARGET;
     }
 
-
-
 }

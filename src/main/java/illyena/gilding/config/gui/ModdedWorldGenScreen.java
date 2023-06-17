@@ -17,6 +17,7 @@ import net.minecraft.util.math.MathHelper;
 import java.awt.*;
 
 import static illyena.gilding.GildingInit.SUPER_MOD_ID;
+import static illyena.gilding.GildingInit.translationKeyOf;
 
 public class ModdedWorldGenScreen extends ConfigScreen{
     public static final CubeMapRenderer PANORAMA_CUBE_MAP = new CubeMapRenderer(new Identifier("textures/gui/title/background/panorama"));
@@ -64,7 +65,7 @@ public class ModdedWorldGenScreen extends ConfigScreen{
         context.drawTexture(PANORAMA_OVERLAY, 0, 0, this.width, this.height, 0.0F, 0.0F, 16, 128, 16, 128);
         int l = MathHelper.ceil(255.0F) << 24;
 
-        context.drawCenteredTextWithShadow(this.textRenderer, Text.literal("Modded World Options"), this.width / 2, this.height / 8, Color.CYAN.getRGB());
+        context.drawCenteredTextWithShadow(this.textRenderer, translationKeyOf("menu", "modded_world_gen_options.title"), this.width / 2, this.height / 8, Color.CYAN.getRGB());
         int m = this.textRenderer.getWidth(GildingCalendar.getDateLong()) / 2;
         context.drawTextWithShadow(this.textRenderer, GildingCalendar.getDateLong(), this.width / 2 - m, this.height - 10, 16777215 | l);
 

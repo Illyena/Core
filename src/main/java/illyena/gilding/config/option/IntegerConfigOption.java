@@ -9,10 +9,7 @@ import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
-
-import java.util.List;
 
 public class IntegerConfigOption extends ConfigOption<Integer> {
     protected final String translationKey;
