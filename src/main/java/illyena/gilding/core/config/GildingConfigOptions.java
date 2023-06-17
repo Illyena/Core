@@ -1,8 +1,8 @@
 package illyena.gilding.core.config;
 
 import illyena.gilding.config.option.BooleanConfigOption;
-import illyena.gilding.config.option.IntegerConfigOption;
 import illyena.gilding.config.option.ConfigOption;
+import illyena.gilding.config.option.IntegerConfigOption;
 
 import java.util.List;
 

@@ -111,7 +111,7 @@ public class ModdedWorldGenButton extends ButtonWidget {
                 MODDED_WORLD_GEN_BUTTON = new ModdedWorldGenButton(x, reference.y, tooltipSupplier, MODDED_WORLD_GEN_BUTTON_SIZE.getValue());
 
                 screen.addDrawableChild(MODDED_WORLD_GEN_BUTTON);
-                MODDED_WORLD_GEN_BUTTON.visible = ((CreateWorldScreenAccessor)screen).isMoreOptionsOpen();
+                MODDED_WORLD_GEN_BUTTON.visible = ((CreateWorldScreenAccessor) screen).isMoreOptionsOpen();
             }
         }
 

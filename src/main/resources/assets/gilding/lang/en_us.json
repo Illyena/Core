@@ -9,6 +9,7 @@
   "menu.gilding.gilded_config.button": "Gilded Mod",
   "menu.gilding.icing_config.button": "Icing Mod",
   "menu.gilding.no_server.tooltip": "This options is not available while not connected to a game.",
+  "menu.gilding.modded_world_gen_options.title": "Modded World Gen Options",
   "option.gilding.mm_config_button_offset": "Main Menu Button offset",
   "option.gilding.mm_config_button_row": "Main Menu Button Row",
   "option.gilding.gm_config_button_offset": "Game Menu Button offset",

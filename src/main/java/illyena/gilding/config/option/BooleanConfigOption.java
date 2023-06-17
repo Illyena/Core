@@ -62,7 +62,9 @@ public class BooleanConfigOption extends ConfigOption<Boolean> {
 
     public Text getValueText() { return Text.translatable(String.valueOf(ConfigOptionStorage.getBoolean(key))); }
 
-    public Text getButtonText() { return ScreenTexts.composeGenericOptionText(Text.translatable(translationKey), getValue() ? enabledText : disabledText); }
+    public Text getButtonText() {
+        return ScreenTexts.composeGenericOptionText(Text.translatable(translationKey), getValue() ? enabledText : disabledText);
+    }
 
     @Environment(EnvType.CLIENT)
     public ClickableWidget createButton(int x, int y, int width) {

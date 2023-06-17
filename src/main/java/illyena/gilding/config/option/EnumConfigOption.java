@@ -41,7 +41,7 @@ public class EnumConfigOption<E extends Enum<E>> extends ConfigOption<Enum<E>> {
         this.markDirty();
     }
 
-    public <T extends Enum<T>> void setValue(PacketByteBuf ignored,T value) {
+    public <T extends Enum<T>> void setValue(PacketByteBuf ignored, T value) {
         ConfigOptionStorage.setEnum(key, value);
         this.markDirty();
     }

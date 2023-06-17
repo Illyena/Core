@@ -85,11 +85,13 @@ public class IntegerConfigOption extends ConfigOption<Integer> {
     public Text getButtonText() { return ScreenTexts.composeGenericOptionText(Text.translatable(translationKey), getValueText()); }
 
     @Environment(EnvType.CLIENT)
-    public ClickableWidget createButton(int x, int y, int width) { return new ConfigSliderWidget(this, x, y, width, 20, this.tooltip); }
+    public ClickableWidget createButton(int x, int y, int width) {
+        return new ConfigSliderWidget(this, x, y, width, 20, this.tooltip);
+    }
 
     @Override
     public void setFromArgument(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-        setValue(context.getSource(), context.getArgument("value", int.class));
+        setValue(context.getSource(), context.getArgument("value", Integer.class));
     }
 
 }
