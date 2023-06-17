@@ -33,6 +33,7 @@
 
   "key.category.gilding.gilding": "Gilding KeyBindings",
   "key.gilding.throw": "Throw",
+  "tooltip.gilding.throwable": "Use THROW key (default R) while using to Release.",
 
   "enchantment.gilding.ricochet": "Ricochet"
 
