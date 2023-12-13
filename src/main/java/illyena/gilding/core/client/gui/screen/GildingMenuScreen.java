@@ -18,14 +18,11 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 
 import java.util.List;
-import java.util.Random;
 
 import static illyena.gilding.GildingInit.*;
 
 public class GildingMenuScreen extends Screen {
     public static final CubeMapRenderer PANORAMA_CUBE_MAP = new CubeMapRenderer(new Identifier("textures/gui/title/background/panorama"));
-    private static final Identifier PANORAMA_OVERLAY = new Identifier("textures/gui/title/background/panorama_overlay.png");
-    private final boolean isMinceraft;
     final RotatingCubeMapRenderer backgroundRenderer;
 
     private final Screen parent;
@@ -33,7 +30,6 @@ public class GildingMenuScreen extends Screen {
     public GildingMenuScreen(Screen parent) {
         super(Text.translatable("menu." + SUPER_MOD_ID + ".title"));
         this.backgroundRenderer = new RotatingCubeMapRenderer(PANORAMA_CUBE_MAP);
-        this.isMinceraft = (double)(new Random()).nextFloat() < 1.0E-4;
         this.parent = parent;
     }
 
@@ -68,8 +64,7 @@ public class GildingMenuScreen extends Screen {
     private ButtonWidget createButton(Mod mod, int x, int y, int width, int height ) {
         Text text = Text.translatable("menu." + SUPER_MOD_ID + "." + mod.getModId() + "_config.button");
         Text MOD_INACTIVE_TEXT = Text.translatable("menu." + SUPER_MOD_ID + ".inactive_mod.tooltip");
-
-        return ModButtonWidget.builder(mod, text, button -> {
+        return ModButtonWidget.builder(text, button -> {
             if (mod.isLoaded()) {
                 this.client.setScreen(Mod.ModScreens.getScreen(mod.getModId(), this));
             }
@@ -80,8 +75,6 @@ public class GildingMenuScreen extends Screen {
         float f = 1.0F;
         this.backgroundRenderer.render(delta, MathHelper.clamp(f, 0.0F, 1.0F));
         RenderSystem.enableBlend();
-        context.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        context.drawTexture(PANORAMA_OVERLAY, 0, 0, this.width, this.height, 0.0f, 0.0f, 16, 128, 16, 128);
         context.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         float g = 1.0F;
         int i = MathHelper.ceil(g * 255.0F) << 24;

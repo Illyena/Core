@@ -19,12 +19,13 @@ public class BooleanConfigOption extends ConfigOption<Boolean> {
     private final boolean defaultValue;
     private final Text enabledText;
     private final Text disabledText;
-    private Text tooltip;
+    private Text tooltip = Text.empty();
 
     public BooleanConfigOption(String modId, String key, boolean defaultValue, String enabledKey, String disabledKey, AccessType accessType, Text tooltip) {
         this(modId, key, defaultValue, enabledKey, disabledKey, accessType);
         this.tooltip = tooltip;
     }
+
     public BooleanConfigOption(String modId, String key, boolean defaultValue, String enabledKey, String disabledKey, AccessType accessType) {
         super(modId, key, accessType);
         ConfigOptionStorage.setBoolean(key, defaultValue);
@@ -49,7 +50,7 @@ public class BooleanConfigOption extends ConfigOption<Boolean> {
         this.markDirty();
     }
 
-    public void setValue(ServerCommandSource source, Boolean value){
+    public void setValue(ServerCommandSource source, Boolean value) {
         this.setValue(value);
         this.sync(source);
     }
@@ -76,9 +77,8 @@ public class BooleanConfigOption extends ConfigOption<Boolean> {
     }
 
     @Override
-    public void setFromArgument(CommandContext<ServerCommandSource> context){
-        this.setValue(context.getSource(), context.getArgument("value",  Boolean.class));
+    public void setFromArgument(CommandContext<ServerCommandSource> context) {
+        this.setValue(context.getSource(), context.getArgument("value", Boolean.class));
     }
 
 }
-

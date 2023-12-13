@@ -23,9 +23,7 @@ public class RicochetEnchantment extends Enchantment {
     public int getMaxPower(int level) { return this.getMinPower(level) + 50; }
 
     @Override
-    public boolean canAccept(Enchantment other) {
-        return super.canAccept(other) && other != Enchantments.PUNCH;
-    }
+    public boolean canAccept(Enchantment other) { return super.canAccept(other) && other != Enchantments.PUNCH; }
 
     @Override
     public boolean isTreasure() { return true; }
@@ -35,4 +33,5 @@ public class RicochetEnchantment extends Enchantment {
 
     @Override
     public boolean isAvailableForRandomSelection() { return true; }
+
 }

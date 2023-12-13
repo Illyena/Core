@@ -10,13 +10,11 @@ import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 public class ThrowC2SPacket {
+
     public static void receive(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler,
                                PacketByteBuf buf, PacketSender responseSender) {
-
         if (player.getMainHandStack().getItem() instanceof IThrowable) {
-
             throwItem(player);
-
         }
     }
 

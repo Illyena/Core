@@ -6,19 +6,20 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.SliderWidget;
+import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
 
 @Environment(EnvType.CLIENT)
 public class ConfigSliderWidget extends SliderWidget {
     protected final IntegerConfigOption config;
-    private final Tooltip tooltip;
 
-    public ConfigSliderWidget(ConfigOption<Integer> config, int x, int y, int width, int height, Tooltip tooltip) {
-        super(x, y, width, height, Text.literal("TEST"), MathHelper.map((float)config.getValue(), (float)((IntegerConfigOption)config).getMinValue(), (float)((IntegerConfigOption)config).getMaxValue(), 0.0F, 1.0F));
+    public ConfigSliderWidget(ConfigOption<Integer> config, int x, int y, int width, int height, Text tooltip) {
+        super(x, y, width, height, ScreenTexts.EMPTY, MathHelper.map((float)config.getValue(),
+                (float)((IntegerConfigOption)config).getMinValue(), (float)((IntegerConfigOption)config).getMaxValue(),
+                0.0F, 1.0F));
         this.config = (IntegerConfigOption) config;
-        this.tooltip = tooltip;
-
+        this.setTooltip(Tooltip.of(tooltip));
         this.updateMessage();
     }
 

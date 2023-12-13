@@ -12,6 +12,7 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -23,7 +24,8 @@ import java.util.*;
 import static illyena.gilding.GildingInit.SUPER_MOD_ID;
 
 public abstract class ConfigOption<T> {
-    public static final Registry<ConfigOption> CONFIG = FabricRegistryBuilder.createSimple(ConfigOption.class, new Identifier(SUPER_MOD_ID, "config"))
+    public static final RegistryKey<Registry<ConfigOption>> CONFIG_KEY = RegistryKey.ofRegistry(new Identifier(SUPER_MOD_ID, "config"));
+    public static final Registry<ConfigOption> CONFIG = FabricRegistryBuilder.createSimple(CONFIG_KEY)
             .attribute(RegistryAttribute.SYNCED).attribute(RegistryAttribute.PERSISTED).buildAndRegister();
     private boolean dirty;
     protected Type type;
@@ -173,7 +175,6 @@ public abstract class ConfigOption<T> {
         public static <E extends Enum<E>> E cycleEnum(String key, Class<E> typeClass) {
             return cycleEnum(key, typeClass, 1);
         }
-
 
         public static <E extends Enum<E>> E cycleEnum(String key, Class<E> typeClass, int amount) {
             E[] values = typeClass.getEnumConstants();

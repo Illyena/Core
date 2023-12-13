@@ -10,7 +10,6 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.RotatingCubeMapRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.render.GameRenderer;
-import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 
@@ -21,12 +20,9 @@ import static illyena.gilding.GildingInit.translationKeyOf;
 
 public class ModdedWorldGenScreen extends ConfigScreen{
     public static final CubeMapRenderer PANORAMA_CUBE_MAP = new CubeMapRenderer(new Identifier("textures/gui/title/background/panorama"));
-    private static final Identifier PANORAMA_OVERLAY = new Identifier("textures/gui/title/background/panorama_overlay.png");
     private final RotatingCubeMapRenderer backgroundRenderer;
 
-    public ModdedWorldGenScreen() {
-        this(MinecraftClient.getInstance().currentScreen);
-    }
+    public ModdedWorldGenScreen() { this(MinecraftClient.getInstance().currentScreen); }
 
     public ModdedWorldGenScreen(Screen parent) {
         super(SUPER_MOD_ID, parent);
@@ -62,7 +58,6 @@ public class ModdedWorldGenScreen extends ConfigScreen{
         RenderSystem.enableBlend();
         RenderSystem.blendFunc(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA);
         context.setShaderColor(1.0F, 1.0F, 1.0F, 1.0f);
-        context.drawTexture(PANORAMA_OVERLAY, 0, 0, this.width, this.height, 0.0F, 0.0F, 16, 128, 16, 128);
         int l = MathHelper.ceil(255.0F) << 24;
 
         context.drawCenteredTextWithShadow(this.textRenderer, translationKeyOf("menu", "modded_world_gen_options.title"), this.width / 2, this.height / 8, Color.CYAN.getRGB());

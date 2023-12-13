@@ -20,7 +20,6 @@ import net.minecraft.util.Identifier;
 import java.util.List;
 
 import static illyena.gilding.GildingInit.SUPER_MOD_ID;
-import static illyena.gilding.GildingInit.SUPER_MOD_NAME;
 
 public class ConfigCommand {
     public static void registerConfigCommand() {
@@ -114,10 +113,6 @@ public class ConfigCommand {
 
     public static Text tkSet(String modId, String option, String value) {
         return Text.translatable("argument." + SUPER_MOD_ID + ".set_success", modId, option, value);
-    }
-
-    public static Text tkSetFailed(String modId, String option) {
-        return Text.translatable("argument." + SUPER_MOD_NAME + ".set_failed", modId, option);
     }
 
 }

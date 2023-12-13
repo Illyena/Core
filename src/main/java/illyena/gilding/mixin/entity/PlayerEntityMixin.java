@@ -30,9 +30,7 @@ public class PlayerEntityMixin {
                 Hand hand = player.getActiveHand();
 
                 activeItem.damage(i, (LivingEntity) player, ((playerEntity) -> player.sendToolBreakStatus(hand)));
-
             }
-
         }
     }
 }

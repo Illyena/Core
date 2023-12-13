@@ -3,7 +3,7 @@
   "id": "gilding",
   "version": "${version}",
 
-  "name": "Gilding Api",
+  "name": "Gilding API",
   "description": "The core mod that all Gilding based mods are structured around.",
   "authors": [
     "Illyena"
@@ -31,6 +31,9 @@
     ],
     "modmenu": [
       "illyena.gilding.compat.ModMenuCompat"
+    ],
+    "config" : [
+      "illyena.gilding.core.config.GildingConfigOptions"
     ]
   },
   "mixins": [
@@ -41,7 +44,7 @@
   "depends": {
     "fabricloader": ">=0.14.19",
     "fabric": "*",
-    "minecraft": "1.20",
+    "minecraft": "~1.20",
     "java": ">=17"
   },
   "suggests": {

@@ -1,5 +1,8 @@
 package illyena.gilding;
 
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import illyena.gilding.compat.Mod;
 import illyena.gilding.config.network.ConfigNetworking;
 import illyena.gilding.core.client.gui.screen.GildingConfigMenu;
@@ -17,6 +20,7 @@ import static illyena.gilding.GildingInit.SUPER_MOD_ID;
 @Environment(EnvType.CLIENT)
 public class GildingClientInit implements ClientModInitializer {
     public static final Screen GILDING_CONFIG_SCREEN = Mod.ModScreens.registerConfigScreen(SUPER_MOD_ID, new GildingConfigMenu());
+    public static final Gson GSON = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).setPrettyPrinting().create();
 
     @Override
     public void onInitializeClient() {

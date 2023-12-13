@@ -5,7 +5,7 @@ accessWidener v1 named
 # Mixin can't handle an invoker here thanks to weird generics, so we need this AW'd
 accessible method net/minecraft/client/gui/screen/Screen addDrawableChild (Lnet/minecraft/client/gui/Element;)Lnet/minecraft/client/gui/Element;
 
-# throwable enchantment target
+# new enchantment targets
 extendable class net/minecraft/enchantment/EnchantmentTarget
 
 # structure additions from structurized-reborn
@@ -16,8 +16,9 @@ mutable field net/minecraft/structure/pool/StructurePool elementCounts Ljava/uti
 extendable class net/minecraft/world/gen/chunk/placement/RandomSpreadStructurePlacement
 extendable class net/minecraft/world/gen/chunk/placement/ConcentricRingsStructurePlacement
 
-## test modbuttonwidget
+#ModButtonWidget
 extendable method net/minecraft/client/gui/widget/PressableWidget getTextureY ()I
-accessible method net/minecraft/client/gui/widget/IconButtonWidget <init> (Lnet/minecraft/text/Text;IIIIIIIIILnet/minecraft/util/Identifier;Lnet/minecraft/client/gui/widget/ButtonWidget$PressAction;)V
+
+#MoreTabMixin
 accessible class net/minecraft/client/gui/screen/world/CreateWorldScreen$MoreTab
 

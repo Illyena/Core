@@ -9,6 +9,7 @@ import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.SharedConstants;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
@@ -19,7 +20,8 @@ import java.util.function.Supplier;
 import static illyena.gilding.GildingInit.SUPER_MOD_ID;
 
 public class Mod {
-    public static final Registry<Mod> MODS = FabricRegistryBuilder.createSimple(Mod.class, new Identifier(SUPER_MOD_ID, "mods")).attribute(RegistryAttribute.SYNCED).attribute(RegistryAttribute.PERSISTED).buildAndRegister();
+    public static final RegistryKey<Registry<Mod>> MODS_KEY = RegistryKey.ofRegistry(new Identifier(SUPER_MOD_ID, "mods"));
+    public static final Registry<Mod> MODS = FabricRegistryBuilder.createSimple(MODS_KEY).attribute(RegistryAttribute.SYNCED).attribute(RegistryAttribute.PERSISTED).buildAndRegister();
     private final String modId;
     private final Mod parent;
     private final boolean isSubGroupParent;
@@ -47,10 +49,9 @@ public class Mod {
     public Class<?> getConfigClass() { return this.configClass; }
 
     @Environment(EnvType.CLIENT)
-    private Screen getScreen(Screen parent) {
+    private Screen getScreen() {
         return ModScreens.SCREENS.get(new Identifier(SUPER_MOD_ID, this.modId));
-    } //todo implement parent
-
+    }
 
 
     //BY MOD_ID
@@ -63,7 +64,7 @@ public class Mod {
 
     /**
      * @param modId identifies Mod
-     * @return a boolean of whether the mod is loaded or not.
+     * @return boolean of whether the mod is loaded or not.
      */
     public static boolean isLoaded(String modId) { return getFromId(modId).isLoaded(); }
 
@@ -71,7 +72,7 @@ public class Mod {
      * @param modId identifies Mod
      * @return the registered parent Mod of the register mod with modId @param modId
      */
-    public static Mod getPartentMod(String modId) { return getFromId(modId).getParentMod();}
+    public static Mod getParentMod(String modId) { return getFromId(modId).getParentMod();}
 
 
     /**
@@ -223,7 +224,8 @@ public class Mod {
     @Environment(EnvType.CLIENT)
     public static class ModScreens {
         public static Map<String, Class<? extends Screen>> map = new HashMap<>();
-        private static final Registry<Screen> SCREENS = FabricRegistryBuilder.createSimple(Screen.class, new Identifier(SUPER_MOD_ID, "screens")).buildAndRegister();
+        private static final RegistryKey<Registry<Screen>> SCREENS_KEY = RegistryKey.ofRegistry(new Identifier(SUPER_MOD_ID, "screens"));
+        private static final Registry<Screen> SCREENS = FabricRegistryBuilder.createSimple(SCREENS_KEY).buildAndRegister();
 
         /**
          * Registers a new instance of a Mod's config Screen in the SCREENS registry
@@ -247,10 +249,13 @@ public class Mod {
             try {
                 return map.get(modId).getConstructor(Screen.class).newInstance(parent);
             } catch (InvocationTargetException | InstantiationException | IllegalAccessException | NoSuchMethodException e) {
-                return getFromId(modId).getScreen(parent);
+                return getFromId(modId).getScreen();
             }
         }
 
     }
 
+    public interface Configs {
+
+    }
 } //todo protect from NullPointerException

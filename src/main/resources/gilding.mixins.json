@@ -10,14 +10,17 @@
     "enchantment.LoyaltyEnchantmentMixin",
     "enchantment.PowerEnchantmentMixin",
     "enchantment.PunchEnchantmentMixin",
-    "entity.PersistentProjectileEntityAccessor",
+    "entity.FallingBlockEntityMixin",
+    "entity.ItemEntityMixin",
     "entity.PlayerEntityMixin",
-    "worldgen.SimpleStructurePieceAccessor"
+    "item.BlockItemAccessor"
   ],
   "client": [
     "client.KeyboardMixin",
+    "client.gui.screen.CreateWorldScreenMixin",
     "client.gui.screen.MoreTabMixin",
-    "client.gui.screen.ScreenAccessor"
+    "client.gui.screen.ScreenAccessor",
+    "client.gui.screen.TabNavigationWidgetMixin"
   ],
   "injectors": {
     "defaultRequire": 1

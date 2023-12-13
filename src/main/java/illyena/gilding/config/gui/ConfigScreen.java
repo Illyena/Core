@@ -1,5 +1,6 @@
 package illyena.gilding.config.gui;
 
+import illyena.gilding.config.ConfigManager;
 import illyena.gilding.config.network.ConfigNetworking;
 import illyena.gilding.config.option.ConfigOption;
 import net.fabricmc.api.EnvType;
@@ -22,11 +23,11 @@ import java.awt.*;
 import java.util.List;
 import java.util.*;
 
-import static illyena.gilding.GildingInit.*;
+import static illyena.gilding.GildingInit.SUPER_MOD_ID;
+import static illyena.gilding.GildingInit.translationKeyOf;
 
 @Environment(EnvType.CLIENT)
 public abstract class ConfigScreen extends Screen {
-    protected final boolean isMinecraft;
     protected Screen parent;
     protected String modId;
 
@@ -35,7 +36,6 @@ public abstract class ConfigScreen extends Screen {
 
     protected ConfigScreen(String modId, Screen parent) {
         super(Text.translatable("menu." + modId + ".title"));
-        this.isMinecraft = (double)(new Random()).nextFloat() < 1.0E-4;
         this.parent = parent;
         this.modId = modId;
     }
@@ -110,27 +110,13 @@ public abstract class ConfigScreen extends Screen {
 
     protected ClickableWidget createDeadButton(ConfigOption<?> config, int x, int y, int width) {
         Text NO_SERVER_TEXT = Text.translatable("menu." + SUPER_MOD_ID + ".no_server.tooltip");
-/*
-        ButtonWidget.TooltipSupplier tooltips = new ButtonWidget.TooltipSupplier() {
-            @Override
-            public void onTooltip(ButtonWidget button, MatrixStack matrices, int mouseX, int mouseY) {
-                if (button.active) {
-                    ConfigScreen.this.renderTooltip(matrices, NO_SERVER_TEXT, mouseX, mouseY);
-                }
-            }
-            public void supply(Consumer<Text> consumer) { consumer.accept(this.NO_SERVER_TEXT); }
-        };
-
- */
-
         return ButtonWidget.builder(config.getButtonText(), button -> { })
                 .dimensions(x, y, width, 20).tooltip(Tooltip.of(NO_SERVER_TEXT)).build();
-//        return new ButtonWidget( x, y, width, 20, config.getButtonText(), button -> {}, tooltips) {
-  //          @Override
-  //          protected int getYImage(boolean hovered) { return 0; }
+    }
 
- //       };
-
+    @Override
+    public void removed() {
+        ConfigManager.save();
     }
 
     public void close() {
@@ -150,38 +136,14 @@ public abstract class ConfigScreen extends Screen {
             }
             super.render(context, mouseX, mouseY, delta);
         }
- /*       List<OrderedText> list = getHoveredButtonTooltip(mouseX, mouseY);
-        if (list != null) {
-            this.renderTOrderedTooltip(matrices, list, mouseX, mouseY);
-        }
-
-  */
     }
 
     private void drawInfo(ClickableWidget widget, DrawContext context) {
         if (this.map.get(widget) != null) {
-            switch (this.map.get(widget).getAccessType()) {
-                case WORLD_GEN -> context.drawTextWithShadow(this.textRenderer, WORLD_GEN_INFO, widget.getX() + 4, widget.getY() + 22, Color.GRAY.getRGB());
-                default -> { }
+            if (this.map.get(widget).getAccessType() == ConfigOption.AccessType.WORLD_GEN) {
+                context.drawTextWithShadow(this.textRenderer, WORLD_GEN_INFO, widget.getX() + 4, widget.getY() + 22, Color.GRAY.getRGB());
             }
         }
     }
-    /*
-    public List<OrderedText> getHoveredButtonTooltip(int mouseX, int mouseY) {
-        Optional<ClickableWidget> optional = this.getHoveredButton(mouseX, mouseY);
-        return optional.isPresent() && optional.get() instanceof OrderableTooltip ? ((OrderableTooltip)optional.get()).getOrderedTooltip() : ImmutableList.of();
-    }
 
-
-
-    public Optional<ClickableWidget> getHoveredButton(double mouseX, double mouseY) {
-        for (Element element : this.children()) {
-            if (element instanceof ClickableWidget widget) {
-                if (widget.isMouseOver(mouseX, mouseY));
-                return Optional.of(widget);
-            }
-        }
-        return Optional.empty();
-    }*/
 }
-

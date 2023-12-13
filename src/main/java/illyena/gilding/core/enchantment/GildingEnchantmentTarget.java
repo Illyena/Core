@@ -7,4 +7,6 @@ public class GildingEnchantmentTarget {
 
     public static final EnchantmentTarget THROWABLE_TARGET = ClassTinkerers.getEnum(EnchantmentTarget.class, "THROWABLE");
     public static final EnchantmentTarget PROJECTILE_TARGET = ClassTinkerers.getEnum(EnchantmentTarget.class, "PROJECTILE");
+    public static final EnchantmentTarget THUNDEROUS_TARGET = ClassTinkerers.getEnum(EnchantmentTarget.class, "THUNDEROUS");
+
 }

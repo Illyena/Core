@@ -1,7 +1,6 @@
 package illyena.gilding.core.entity.projectile;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.item.ItemStack;
@@ -28,14 +27,13 @@ import net.minecraft.util.math.Vec3d;
  * this.dataTracker.startTracking(ENCHANTED, false);}
  *</pre>
  */
+
 public interface ILoyalty {
     public abstract int getInGroundTime();
 
     public abstract void setInGroundTime(int value);
 
     public abstract ItemStack asItemStack();
-
-    public abstract DataTracker getDataTracker();
 
     public abstract TrackedData<Integer> getLoyalty();
 
@@ -58,7 +56,7 @@ public interface ILoyalty {
 
     public static void tick(PersistentProjectileEntity projectile) {
         Entity entity = projectile.getOwner();
-        int i = ((ILoyalty)getProjectile(projectile)).getDataTracker().get((((ILoyalty) getProjectile(projectile)).getLoyalty()));
+        int i = getProjectile(projectile).getDataTracker().get(((ILoyalty)getProjectile(projectile)).getLoyalty());
         if (i > 0 && (((ILoyalty)getProjectile(projectile)).getDealtDamage() || projectile.isNoClip()) && entity != null) {
             if (((IRicochet)getProjectile(projectile)).getBlockHit()) {
                 ((ILoyalty) getProjectile(projectile)).setInGroundTime((((ILoyalty) getProjectile(projectile)).getInGroundTime() + 1));
@@ -101,17 +99,15 @@ public interface ILoyalty {
     }
 
     public static boolean shouldReturn(PersistentProjectileEntity projectile) {
-        int i = ((ILoyalty) getProjectile(projectile)).getDataTracker().get((((ILoyalty) getProjectile(projectile)).getLoyalty()));
+        int i = getProjectile(projectile).getDataTracker().get(((ILoyalty)getProjectile(projectile)).getLoyalty());
         if (i > 0) {
             ((ILoyalty) getProjectile(projectile)).setWait(((ILoyalty) getProjectile(projectile)).getWait() + 1);
-            int delay = 90 / ((ILoyalty) getProjectile(projectile)).getDataTracker().get((((ILoyalty) getProjectile(projectile)).getLoyalty()));
+            int delay = 90 / i;
             if (projectile instanceof IRicochet && ((IRicochet) projectile).getRemainingBounces() == 0) return true;
             else if (projectile instanceof IRicochet && !((IRicochet) projectile).getBlockHit()) {
-                return ((ILoyalty) getProjectile(projectile)).getWait() > delay + 30 * ((ILoyalty) getProjectile(projectile)).getDataTracker().get(((ILoyalty) getProjectile(projectile)).getLoyalty());
-
+                return ((ILoyalty)getProjectile(projectile)).getWait() > delay + 30 * i;
             } else return ((ILoyalty) getProjectile(projectile)).getWait() > delay;
         } else return false;
     }
-
 
 }

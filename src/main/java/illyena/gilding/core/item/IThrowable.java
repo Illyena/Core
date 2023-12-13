@@ -22,13 +22,11 @@ public interface IThrowable {
     public abstract float getPullProgress(int useTicks);
 
     public default void onThrow(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
-
         if (user instanceof PlayerEntity playerEntity && canThrow(stack, world, user, remainingUseTicks)) {
             int i = stack.getItem().getMaxUseTime(stack) - remainingUseTicks;
             if (!((double)getPullProgress(i) < 0.1)) {
-                int j = EnchantmentHelper.getRiptide(stack);
-                if (j <= 0 || playerEntity.isTouchingWaterOrRain()) {
-                    if (!world.isClient) {
+                int j = getRiptide(stack, world, user, remainingUseTicks);
+                    if (!world.isClient  && j <= 0) {
                         stack.damage(1, playerEntity, (p) -> p.sendToolBreakStatus(user.getActiveHand()));
                         if (j == 0) {
                             PersistentProjectileEntity projectile = getProjectileEntity(world, (PlayerEntity) user, stack);
@@ -63,41 +61,47 @@ public interface IThrowable {
 
                     playerEntity.incrementStat(Stats.USED.getOrCreateStat(stack.getItem()));
                     if (j > 0) {
-                        float f = playerEntity.getYaw();
-                        float g = playerEntity.getPitch();
-                        float h = -MathHelper.sin(f * 0.017453292F) * MathHelper.cos(g * 0.017453292F);
-                        float k = -MathHelper.sin(g * 0.017453292F);
-                        float l = MathHelper.cos(f * 0.017453292F) * MathHelper.cos(g * 0.017453292F);
-                        float m = MathHelper.sqrt(h * h + k * k + l * l);
-                        float n = 3.0F * ((1.0F + (float) j) / 4.0F);
-                        h *= n / m;
-                        k *= n / m;
-                        l *= n / m;
-                        playerEntity.addVelocity(h, k, l);
-                        playerEntity.useRiptide(20);
-                        if (playerEntity.isOnGround()) {
-                            float o = 1.1999999F;
-                            playerEntity.move(MovementType.SELF, new Vec3d(0.0, 1.1999999284744263, 0.0));
-                        }
-
-                        SoundEvent soundEvent;
-                        if (j >= 3) {
-                            soundEvent = SoundEvents.ITEM_TRIDENT_RIPTIDE_3;
-                        } else if (j == 2) {
-                            soundEvent = SoundEvents.ITEM_TRIDENT_RIPTIDE_2;
-                        } else {
-                            soundEvent = SoundEvents.ITEM_TRIDENT_RIPTIDE_1;
-                        }
-
-                        world.playSoundFromEntity(null, playerEntity, soundEvent, SoundCategory.PLAYERS, 1.0F, 1.0F);
+                        this.riptide(stack, world, playerEntity, remainingUseTicks);
                     }
-                }
             }
         }
     }
 
+    public default void riptide(ItemStack stack, World world, PlayerEntity playerEntity, int remainingUseTicks) {
+        int riptide = this.getRiptide(stack, world, playerEntity, remainingUseTicks);
+        float f = playerEntity.getYaw();
+        float g = playerEntity.getPitch();
+        float h = -MathHelper.sin(f * 0.017453292F) * MathHelper.cos(g * 0.017453292F);
+        float k = -MathHelper.sin(g * 0.017453292F);
+        float l = MathHelper.cos(f * 0.017453292F) * MathHelper.cos(g * 0.017453292F);
+        float m = MathHelper.sqrt(h * h + k * k + l * l);
+        float n = 3.0F * ((1.0F + (float) riptide) / 4.0F);
+        h *= n / m;
+        k *= n / m;
+        l *= n / m;
+        playerEntity.addVelocity(h, k, l);
+        playerEntity.useRiptide(20);
+        if (playerEntity.isOnGround()) {
+            float o = 1.1999999F;
+            playerEntity.move(MovementType.SELF, new Vec3d(0.0, 1.1999999284744263, 0.0));
+        }
+
+        SoundEvent soundEvent;
+        if (riptide >= 3) {
+            soundEvent = SoundEvents.ITEM_TRIDENT_RIPTIDE_3;
+        } else if (riptide == 2) {
+            soundEvent = SoundEvents.ITEM_TRIDENT_RIPTIDE_2;
+        } else {
+            soundEvent = SoundEvents.ITEM_TRIDENT_RIPTIDE_1;
+        }
+
+        world.playSoundFromEntity(null, playerEntity, soundEvent, SoundCategory.PLAYERS, 1.0F, 1.0F);
+    }
+
     public abstract boolean canThrow(ItemStack stack, World world, LivingEntity user, int remainingTicks);
 
-    public default int getEnchantability() { return 1; }
+    public default int getRiptide(ItemStack stack, World world, LivingEntity user, int remainingTicks) {
+        return user.isTouchingWaterOrRain() ? EnchantmentHelper.getRiptide(stack) : 0;
+    }
 
 }

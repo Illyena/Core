@@ -5,7 +5,6 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import illyena.gilding.config.gui.widget.ConfigSliderWidget;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.server.command.ServerCommandSource;
@@ -15,8 +14,8 @@ public class IntegerConfigOption extends ConfigOption<Integer> {
     protected final String translationKey;
     protected final int defaultValue;
     protected final int minValue;
-    protected final int maxValue;
-    protected Text tooltip;
+    protected int maxValue;
+    protected Text tooltip = Text.empty();
 
     public IntegerConfigOption(String modId, String key, int defaultValue, int min, int max, AccessType accessType, Text tooltip) {
         this(modId, key, defaultValue, min, max, accessType);
@@ -31,8 +30,9 @@ public class IntegerConfigOption extends ConfigOption<Integer> {
         this.defaultValue = defaultValue;
         this.minValue = min;
         this.maxValue = max;
-        this.tooltip = Text.empty();
     }
+
+    public void setMutableMax(int value) { this.maxValue = Math.max(this.defaultValue, value); }
 
     public void setValue(Integer value) {
         ConfigOptionStorage.setInteger(key, value);
@@ -85,7 +85,7 @@ public class IntegerConfigOption extends ConfigOption<Integer> {
 
     @Environment(EnvType.CLIENT)
     public ClickableWidget createButton(int x, int y, int width) {
-        return new ConfigSliderWidget(this, x, y, width, 20, Tooltip.of(this.tooltip));
+        return new ConfigSliderWidget(this, x, y, width, 20, this.tooltip);
     }
 
     @Override
