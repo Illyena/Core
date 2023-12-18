@@ -1,7 +1,7 @@
 package illyena.gilding.config.option.util;
 
-import net.minecraft.client.gui.tooltip.Tooltip;
+import net.minecraft.text.Text;
 
 public interface HasTooltip {
-    Tooltip getTooltip();
+    Text getTooltipText();
 }

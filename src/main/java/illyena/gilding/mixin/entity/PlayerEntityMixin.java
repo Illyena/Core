@@ -1,6 +1,6 @@
 package illyena.gilding.mixin.entity;
 
-import illyena.gilding.core.item.IUnbreakable;
+import illyena.gilding.core.item.IUndestroyable;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -23,7 +23,7 @@ public class PlayerEntityMixin {
         PlayerEntity player = (PlayerEntity) (Object) this;
         ItemStack activeItem = player.getActiveItem();
 
-        if (activeItem.getItem() instanceof IUnbreakable) {
+        if (activeItem.getItem() instanceof IUndestroyable) {
             if (amount >= 3.0F) {
                 int i = 1 + MathHelper.floor(amount);
                 i = MathHelper.clamp(i, 0, activeItem.getMaxDamage() - activeItem.getDamage() -1 );

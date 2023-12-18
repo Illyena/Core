@@ -58,7 +58,7 @@ public interface ILoyalty {
         Entity entity = projectile.getOwner();
         int i = getProjectile(projectile).getDataTracker().get(((ILoyalty)getProjectile(projectile)).getLoyalty());
         if (i > 0 && (((ILoyalty)getProjectile(projectile)).getDealtDamage() || projectile.isNoClip()) && entity != null) {
-            if (((IRicochet)getProjectile(projectile)).getBlockHit()) {
+            if (projectile instanceof IRicochet &&  ((IRicochet)getProjectile(projectile)).getBlockHit()) {
                 ((ILoyalty) getProjectile(projectile)).setInGroundTime((((ILoyalty) getProjectile(projectile)).getInGroundTime() + 1));
             }
 

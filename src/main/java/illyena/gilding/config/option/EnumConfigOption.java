@@ -69,7 +69,7 @@ public class EnumConfigOption<E extends Enum<E>> extends ConfigOption<Enum<E>> {
     @Environment(EnvType.CLIENT)
     public ClickableWidget createButton(int x, int y, int width) {
         return CyclingButtonWidget.builder(o -> this.getValueText()).values(this.enumClass.getEnumConstants())
-                .tooltip(tt -> this.getValue() instanceof HasTooltip value? value.getTooltip() : Tooltip.of(tooltip))
+                .tooltip(tt -> this.getValue() instanceof HasTooltip value? Tooltip.of(value.getTooltipText()) : Tooltip.of(tooltip))
                 .initially(this.getValue())
                 .build(x, y, width, 20, Text.translatable(translationKey), ((button, value) -> {
                     this.cycleValue();

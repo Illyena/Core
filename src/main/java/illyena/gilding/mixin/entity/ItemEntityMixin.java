@@ -1,6 +1,6 @@
 package illyena.gilding.mixin.entity;
 
-import illyena.gilding.core.item.IUnbreakable;
+import illyena.gilding.core.item.IUndestroyable;
 import illyena.gilding.core.item.util.BlockEntityItem;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.damage.DamageSource;
@@ -26,7 +26,7 @@ public abstract class ItemEntityMixin {
     private void onTick(CallbackInfo ci) {
         Item item = this.itemEntity.getStack().getItem();
         boolean bl = this.itemEntity.getY() <= this.itemEntity.getWorld().getBottomY();
-        if (!this.itemEntity.getWorld().isClient() && item instanceof IUnbreakable) {
+        if (!this.itemEntity.getWorld().isClient() && item instanceof IUndestroyable) {
             if (item instanceof BlockEntityItem blockEntityItem) {
                 if ((this.itemAge >= 250 && this.itemAge < 5999) || bl) {
                     BlockPos blockPos = new BlockPos(this.itemEntity.getBlockPos().getX(), this.itemEntity.getWorld().getBottomY() + 1, this.itemEntity.getBlockPos().getZ());
@@ -53,7 +53,7 @@ public abstract class ItemEntityMixin {
     @Inject(method = "damage", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/ItemEntity;getStack()Lnet/minecraft/item/ItemStack;", ordinal = 3), locals = LocalCapture.CAPTURE_FAILEXCEPTION, cancellable = true)
     private void onDamage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
         Item item = this.getStack().getItem();
-        if (item instanceof IUnbreakable) {
+        if (item instanceof IUndestroyable) {
             this.health = Math.max(1, this.health - 1);
             if (item instanceof BlockEntityItem blockEntityItem) {
                 if (blockEntityItem.toBlock(this.itemEntity.getStack(), this.itemEntity.getWorld(), this.itemEntity, this.itemEntity.getBlockPos(), 0)) {
