@@ -31,9 +31,7 @@ public class StarParticle extends SpriteBillboardParticle {
         this.maxAge = (int)(Math.random() * 10.0) + 40;
     }
 
-    public ParticleTextureSheet getType() {
-        return ParticleTextureSheet.PARTICLE_SHEET_OPAQUE;
-    }
+    public ParticleTextureSheet getType() { return ParticleTextureSheet.PARTICLE_SHEET_OPAQUE; }
 
     public void move(double dx, double dy, double dz) {
         this.setBoundingBox(this.getBoundingBox().offset(dx, dy, dz));
@@ -94,4 +92,5 @@ public class StarParticle extends SpriteBillboardParticle {
             return starParticle;
         }
     }
+
 }

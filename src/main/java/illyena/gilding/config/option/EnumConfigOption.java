@@ -20,11 +20,11 @@ public class EnumConfigOption<E extends Enum<E>> extends ConfigOption<Enum<E>> {
     private final String translationKey;
     private final Class<E> enumClass;
     private final E defaultValue;
-    private List<OrderedText> tooltips = ImmutableList.of();
+    private List<OrderedText> tooltip = ImmutableList.of();
 
-    public EnumConfigOption(String modId, String key, E defaultValue, AccessType accessType, List<OrderedText> tooltips) {
+    public EnumConfigOption(String modId, String key, E defaultValue, AccessType accessType, List<OrderedText> tooltip) {
         this(modId, key, defaultValue, accessType);
-        this.tooltips = tooltips;
+        this.tooltip = tooltip;
     }
 
     public EnumConfigOption(String modId, String key, E defaultValue, AccessType accessType) {
@@ -70,7 +70,7 @@ public class EnumConfigOption<E extends Enum<E>> extends ConfigOption<Enum<E>> {
 
     @Environment(EnvType.CLIENT)
     public ClickableWidget createButton(int x, int y, int width) {
-        return CyclingButtonWidget.builder(o -> this.getValueText()).values(this.enumClass.getEnumConstants()).tooltip(factory -> tooltips).initially(this.getValue())
+        return CyclingButtonWidget.builder(o -> this.getValueText()).values(this.enumClass.getEnumConstants()).tooltip(factory -> tooltip).initially(this.getValue())
                 .build(x, y, width, 20, Text.translatable(translationKey), ((button, value) -> {
                     this.cycleValue();
                     button.setValue(this.getValue());
@@ -93,7 +93,7 @@ public class EnumConfigOption<E extends Enum<E>> extends ConfigOption<Enum<E>> {
         }
     }
 
-    private E getValueFromString(String string) {
+    public E getValueFromString(String string) {
         E _enum = null;
         for (E e : this.enumClass.getEnumConstants()) {
             if (e.name().equals(string.toUpperCase())) { _enum = e; }

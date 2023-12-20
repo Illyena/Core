@@ -1,6 +1,7 @@
 package illyena.gilding.config.gui;
 
 import com.google.common.collect.ImmutableList;
+import illyena.gilding.config.ConfigManager;
 import illyena.gilding.config.network.ConfigNetworking;
 import illyena.gilding.config.option.ConfigOption;
 import net.fabricmc.api.EnvType;
@@ -130,6 +131,9 @@ public abstract class ConfigScreen extends Screen {
 
     }
 
+    @Override
+    public void removed() { ConfigManager.save(); }
+
     public void close() {
         ConfigOption.getConfigs(this.modId).forEach(ConfigOption::sync);
         super.close();
@@ -176,4 +180,3 @@ public abstract class ConfigScreen extends Screen {
         return Optional.empty();
     }
 }
-

@@ -10,8 +10,11 @@
     "enchantment.LoyaltyEnchantmentMixin",
     "enchantment.PowerEnchantmentMixin",
     "enchantment.PunchEnchantmentMixin",
+    "entity.FallingBlockEntityMixin",
+    "entity.ItemEntityMixin",
     "entity.PersistentProjectileEntityAccessor",
     "entity.PlayerEntityMixin",
+    "item.BlockItemAccessor",
     "worldgen.SimpleStructurePieceAccessor"
   ],
   "client": [
