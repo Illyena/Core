@@ -12,9 +12,8 @@ import net.minecraft.util.registry.Registry;
 import static illyena.gilding.GildingInit.*;
 
 public class GildingParticles {
-    public static void callGildingParticles() {
-        LOGGER.info("Registering Blocks for " + SUPER_MOD_NAME + " Mod.");
-    }
+
+    public static void callGildingParticles() { LOGGER.info("Registering particles for {} mod.", SUPER_MOD_NAME); }
 
     private static DefaultParticleType registerParticle(String name, DefaultParticleType particle) {
         return Registry.register(Registry.PARTICLE_TYPE, new Identifier(SUPER_MOD_ID, name), particle);
@@ -26,4 +25,5 @@ public class GildingParticles {
     public static void registerParticles() {
         ParticleFactoryRegistry.getInstance().register(GildingParticles.STAR_PARTICLE, StarParticle.Factory::new);
     }
+
 }

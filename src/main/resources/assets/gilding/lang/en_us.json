@@ -4,7 +4,7 @@
   "menu.gilding.gilding_config.button": "Gilding Configuration",
   "menu.gilding.gilding_config.title": "Gilding Configuration",
   "menu.gilding.inactive_mod.tooltip": "This mod is not installed.",
-  "menu.gilding.modded_world_gen.button": "Modded Options",
+  "menu.gilding.modded_world_gen.button": "Modded World Gen Options",
   "menu.gilding.world_gen_config.info": "Applies only to new worlds.",
   "menu.gilding.gilded_config.button": "Gilded Mod",
   "menu.gilding.icing_config.button": "Icing Mod",
@@ -36,6 +36,7 @@
   "key.gilding.throw": "Throw",
   "tooltip.gilding.throwable": "Use THROW key (default R) while using to Release.",
 
-  "enchantment.gilding.ricochet": "Ricochet"
+  "enchantment.gilding.ricochet": "Ricochet",
+  "enchantment.gilding.thunderous": "Thunderous"
 
 }

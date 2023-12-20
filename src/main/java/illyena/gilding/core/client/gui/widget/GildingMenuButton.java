@@ -31,12 +31,12 @@ public class GildingMenuButton extends ButtonWidget {
     public GildingMenuButton(int x, int y, @Nullable TooltipSupplier tooltip) {
         super(x, y, 20, 20, Text.empty(), GildingMenuButton::click, tooltip);
     }
-    
+
     @Override
     public void renderBackground(MatrixStack matrices, MinecraftClient client, int mouseX, int mouseY) {
         MinecraftClient.getInstance().getItemRenderer().renderGuiItemIcon(ICON, x + 2, y +2);
     }
-    
+
     public static void click(ButtonWidget button) {
         MinecraftClient.getInstance().send(() ->
                 MinecraftClient.getInstance().setScreen(new GildingMenuScreen(MinecraftClient.getInstance().currentScreen)));

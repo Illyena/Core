@@ -28,6 +28,7 @@ import net.minecraft.util.math.Vec3d;
  * this.dataTracker.startTracking(ENCHANTED, false);}
  *</pre>
  */
+
 public interface ILoyalty {
     public abstract int getInGroundTime();
 
@@ -60,7 +61,7 @@ public interface ILoyalty {
         Entity entity = projectile.getOwner();
         int i = ((ILoyalty)getProjectile(projectile)).getDataTracker().get((((ILoyalty) getProjectile(projectile)).getLoyalty()));
         if (i > 0 && (((ILoyalty)getProjectile(projectile)).getDealtDamage() || projectile.isNoClip()) && entity != null) {
-            if (((IRicochet)getProjectile(projectile)).getBlockHit()) {
+            if (projectile instanceof IRicochet && ((IRicochet)getProjectile(projectile)).getBlockHit()) {
                 ((ILoyalty) getProjectile(projectile)).setInGroundTime((((ILoyalty) getProjectile(projectile)).getInGroundTime() + 1));
             }
 
@@ -104,14 +105,12 @@ public interface ILoyalty {
         int i = ((ILoyalty) getProjectile(projectile)).getDataTracker().get((((ILoyalty) getProjectile(projectile)).getLoyalty()));
         if (i > 0) {
             ((ILoyalty) getProjectile(projectile)).setWait(((ILoyalty) getProjectile(projectile)).getWait() + 1);
-            int delay = 90 / ((ILoyalty) getProjectile(projectile)).getDataTracker().get((((ILoyalty) getProjectile(projectile)).getLoyalty()));
+            int delay = 90 / i;
             if (projectile instanceof IRicochet && ((IRicochet) projectile).getRemainingBounces() == 0) return true;
             else if (projectile instanceof IRicochet && !((IRicochet) projectile).getBlockHit()) {
-                return ((ILoyalty) getProjectile(projectile)).getWait() > delay + 30 * ((ILoyalty) getProjectile(projectile)).getDataTracker().get(((ILoyalty) getProjectile(projectile)).getLoyalty());
-
+                return ((ILoyalty) getProjectile(projectile)).getWait() > delay + 30 * i;
             } else return ((ILoyalty) getProjectile(projectile)).getWait() > delay;
         } else return false;
     }
-
 
 }
