@@ -96,7 +96,6 @@ public interface FluidFlowsThrough extends Waterloggable {
             return true;
 
         } else return false;
-
     }
 
     public default ItemStack tryDrainFluid(WorldAccess world, BlockPos pos, BlockState state) {
@@ -107,8 +106,6 @@ public interface FluidFlowsThrough extends Waterloggable {
         } else {
             return ItemStack.EMPTY;
         }
-
     }
-
 
 }

@@ -121,6 +121,7 @@ public class ModdedWorldGenButton extends ButtonWidget {
                 MODDED_WORLD_GEN_BUTTON.visible = moreOptionsOpen;
             }
         }
+
     }
 
 }

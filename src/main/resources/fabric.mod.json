@@ -3,7 +3,7 @@
   "id": "gilding",
   "version": "${version}",
 
-  "name": "Gilding Api",
+  "name": "Gilding API",
   "description": "The core mod that all Gilding based mods are structured around.",
   "authors": [
     "Illyena"
@@ -27,10 +27,13 @@
       "illyena.gilding.GildingDataGeneration"
     ],
     "mm:early_risers": [
-
+      "illyena.gilding.GildingEarlyRiser"
     ],
     "modmenu": [
       "illyena.gilding.compat.ModMenuCompat"
+    ],
+    "config" : [
+      "illyena.gilding.core.config.GildingConfigOptions"
     ]
   },
   "mixins": [

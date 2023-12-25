@@ -47,7 +47,6 @@ public class ConfigArguments {
                     return string;
                 } else throw new DynamicCommandExceptionType(string1 -> tkUnloadedMod((String) string1)).create(string);
             } else throw new DynamicCommandExceptionType(string2 -> tkIncompatibleMod((String) string2)).create(string);
-
         }
 
         public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
@@ -112,6 +111,7 @@ public class ConfigArguments {
         public static Text tkNotOption(String modId, String option) {
             return new TranslatableText("argument." + SUPER_MOD_ID + ".not_option", option, modId);
         }
+
     }
 
 }

@@ -1,6 +1,7 @@
 package illyena.gilding.config.gui;
 
 import com.google.common.collect.ImmutableList;
+import illyena.gilding.config.ConfigManager;
 import illyena.gilding.config.network.ConfigNetworking;
 import illyena.gilding.config.option.ConfigOption;
 import net.fabricmc.api.EnvType;
@@ -26,7 +27,8 @@ import java.util.List;
 import java.util.*;
 import java.util.function.Consumer;
 
-import static illyena.gilding.GildingInit.*;
+import static illyena.gilding.GildingInit.SUPER_MOD_ID;
+import static illyena.gilding.GildingInit.translationKeyOf;
 
 @Environment(EnvType.CLIENT)
 public abstract class ConfigScreen extends Screen {
@@ -76,7 +78,7 @@ public abstract class ConfigScreen extends Screen {
                     new TranslatableText("menu.returnToGame"), button -> this.close()));
         } else {
             this.addDrawableChild(new ButtonWidget(this.width / 2 + 2, l + 72 + 12, 98, 20,
-                    new TranslatableText("gui.toTitle"), (button) -> this.client.setScreen(new TitleScreen())));
+                    new TranslatableText("gui.toTitle"), button -> this.client.setScreen(new TitleScreen())));
         }
     }
 
@@ -128,8 +130,10 @@ public abstract class ConfigScreen extends Screen {
             protected int getYImage(boolean hovered) { return 0; }
 
         };
-
     }
+
+    @Override
+    public void removed() { ConfigManager.save(); }
 
     public void close() {
         ConfigOption.getConfigs(this.modId).forEach(ConfigOption::sync);
@@ -162,6 +166,7 @@ public abstract class ConfigScreen extends Screen {
             }
         }
     }
+
     public List<OrderedText> getHoveredButtonTooltip(int mouseX, int mouseY) {
         Optional<ClickableWidget> optional = this.getHoveredButton(mouseX, mouseY);
         return optional.isPresent() && optional.get() instanceof OrderableTooltip ? ((OrderableTooltip)optional.get()).getOrderedTooltip() : ImmutableList.of();
@@ -176,5 +181,5 @@ public abstract class ConfigScreen extends Screen {
         }
         return Optional.empty();
     }
-}
 
+}

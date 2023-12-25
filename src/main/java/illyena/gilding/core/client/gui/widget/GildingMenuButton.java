@@ -75,9 +75,11 @@ public class GildingMenuButton extends ButtonWidget {
             leftButtons = variants.stream().map(r -> r.left).collect(Collectors.toList());
             rightButtons = variants.stream().map(r -> r.right).collect(Collectors.toList());
         }
+
     }
     
     public static class GildingMenuButtonHandler {
+
         public static void onGuiInit(MinecraftClient client, Screen gui, int scaledWidth, int scaledHeight) {
             MenuRows menu = null;
             int rowIdx = 0, offsetX = 0;
@@ -123,6 +125,7 @@ public class GildingMenuButton extends ButtonWidget {
             }
 
         }
+
     }
 
 }

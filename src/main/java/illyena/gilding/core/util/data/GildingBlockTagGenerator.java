@@ -182,4 +182,5 @@ public class GildingBlockTagGenerator extends FabricTagProvider<Block> {
 //        getOrCreateTagBuilder(BlockTags.SNOW_LAYER_CANNOT_SURVIVE_ON);
 //        getOrCreateTagBuilder(BlockTags.SNOW_LAYER_CAN_SURVIVE_ON);
     }
+
 }

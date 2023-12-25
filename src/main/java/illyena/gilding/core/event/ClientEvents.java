@@ -16,4 +16,5 @@ public class ClientEvents {
         ScreenEvents.AFTER_INIT.register(LATE_PHASE, GildingMenuButton.GildingMenuButtonHandler::onGuiInit);
         ScreenEvents.AFTER_INIT.register(LATE_PHASE, ModdedWorldGenButton.ModdedWorldGenButtonHandler::onGuiInit);
     }
+
 }

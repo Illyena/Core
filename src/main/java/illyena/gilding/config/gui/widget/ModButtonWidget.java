@@ -9,7 +9,6 @@ public class ModButtonWidget extends ButtonWidget {
 
     public ModButtonWidget(Mod mod, int x, int y, int width, int height, Text message, PressAction onPress) {
         this(mod, x, y, width, height, message, onPress, ButtonWidget.EMPTY);
-
     }
 
     public ModButtonWidget(Mod mod, int x, int y, int width, int height, Text message, PressAction onPress, TooltipSupplier tooltipSupplier) {
@@ -17,7 +16,7 @@ public class ModButtonWidget extends ButtonWidget {
         this.mod = mod;
     }
 
-    protected int getYImage(boolean hovered) {
-        return this.mod.isLoaded() ? super.getYImage(hovered) : 0;
-    }
+    @Override
+    protected int getYImage(boolean hovered) { return this.mod.isLoaded() ? super.getYImage(hovered) : 0; }
+
 }

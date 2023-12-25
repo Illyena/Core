@@ -22,14 +22,15 @@ public class IntegerConfigOption extends ConfigOption<Integer> {
     protected final String translationKey;
     protected final int defaultValue;
     protected final int minValue;
-    protected final int maxValue;
-    protected List<OrderedText> tooltip;
-
-    public IntegerConfigOption(String modId, String key, int defaultValue, int min, int max, AccessType accessType) {
-        this(modId, key, defaultValue, min, max, accessType, List.of());
-    }
+    protected int maxValue;
+    protected List<OrderedText> tooltip = List.of();
 
     public IntegerConfigOption(String modId, String key, int defaultValue, int min, int max, AccessType accessType, List<OrderedText> tooltip) {
+        this(modId, key, defaultValue, min, max, accessType);
+        this.tooltip = tooltip;
+    }
+
+    public IntegerConfigOption(String modId, String key, int defaultValue, int min, int max, AccessType accessType) {
         super(modId, key, accessType);
         ConfigOptionStorage.setInteger(key, defaultValue);
         this.type = Type.INT;
@@ -37,8 +38,9 @@ public class IntegerConfigOption extends ConfigOption<Integer> {
         this.defaultValue = defaultValue;
         this.minValue = min;
         this.maxValue = max;
-        this.tooltip = tooltip;
     }
+
+    public void setMutableMax(int value) { this.maxValue = Math.max(this.defaultValue, value); }
 
     public void setValue(Integer value) {
         ConfigOptionStorage.setInteger(key, value);
@@ -54,7 +56,6 @@ public class IntegerConfigOption extends ConfigOption<Integer> {
                     CommandSyntaxException.BUILT_IN_EXCEPTIONS.integerTooHigh().create(value, maxValue) :
                     CommandSyntaxException.BUILT_IN_EXCEPTIONS.integerTooLow().create(value, minValue);
         }
-
     }
 
     public void incrementValue() { incrementValue(1); }

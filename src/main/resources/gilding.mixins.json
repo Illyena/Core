@@ -6,7 +6,13 @@
   "mixins": [
     "block.FlowableFluidAccessor",
     "block.FlowableFluidMixin",
+    "enchantment.LoyaltyEnchantmentMixin",
+    "enchantment.PowerEnchantmentMixin",
+    "enchantment.PunchEnchantmentMixin",
+    "entity.FallingBlockEntityMixin",
+    "entity.ItemEntityMixin",
     "entity.PlayerEntityMixin",
+    "item.BlockItemAccessor",
     "worldgen.SimpleStructurePieceAccessor",
     "worldgen.StructureFeatureAccessor"
   ],

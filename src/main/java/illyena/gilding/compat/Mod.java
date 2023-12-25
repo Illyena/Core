@@ -48,10 +48,9 @@ public class Mod {
     public Class<?> getConfigClass() { return this.configClass; }
 
     @Environment(EnvType.CLIENT)
-    private Screen getScreen(Screen parent) {
+    private Screen getScreen() {
         return ModScreens.SCREENS.get(new Identifier(SUPER_MOD_ID, this.modId));
-    } //todo implement parent
-
+    }
 
 
     //BY MOD_ID
@@ -64,7 +63,7 @@ public class Mod {
 
     /**
      * @param modId identifies Mod
-     * @return a boolean of whether the mod is loaded or not.
+     * @return boolean of whether the mod is loaded or not.
      */
     public static boolean isLoaded(String modId) { return getFromId(modId).isLoaded(); }
 
@@ -72,7 +71,7 @@ public class Mod {
      * @param modId identifies Mod
      * @return the registered parent Mod of the register mod with modId @param modId
      */
-    public static Mod getPartentMod(String modId) { return getFromId(modId).getParentMod();}
+    public static Mod getParentMod(String modId) { return getFromId(modId).getParentMod();}
 
 
     /**
@@ -248,11 +247,13 @@ public class Mod {
             try {
                 return map.get(modId).getConstructor(Screen.class).newInstance(parent);
             } catch (InvocationTargetException | InstantiationException | IllegalAccessException | NoSuchMethodException e) {
-                return getFromId(modId).getScreen(parent);
+                return getFromId(modId).getScreen();
             }
         }
 
     }
 
+    public interface Configs {
 
+    }
 } //todo protect from NullPointerException

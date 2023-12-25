@@ -8,7 +8,6 @@ import net.minecraft.client.gui.screen.ScreenTexts;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.CyclingButtonWidget;
 import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -21,12 +20,13 @@ public class BooleanConfigOption extends ConfigOption<Boolean> {
     private final boolean defaultValue;
     private final Text enabledText;
     private final Text disabledText;
-    private List<OrderedText> tooltips = List.of();
+    private List<OrderedText> tooltip = List.of();
 
-    public BooleanConfigOption(String modId, String key, boolean defaultValue, String enabledKey, String disabledKey, AccessType accessType, List<OrderedText> tooltips) {
+    public BooleanConfigOption(String modId, String key, boolean defaultValue, String enabledKey, String disabledKey, AccessType accessType, List<OrderedText> tooltip) {
         this(modId, key, defaultValue, enabledKey, disabledKey, accessType);
-        this.tooltips = tooltips;
+        this.tooltip = tooltip;
     }
+
     public BooleanConfigOption(String modId, String key, boolean defaultValue, String enabledKey, String disabledKey, AccessType accessType) {
         super(modId, key, accessType);
         ConfigOptionStorage.setBoolean(key, defaultValue);
@@ -37,9 +37,9 @@ public class BooleanConfigOption extends ConfigOption<Boolean> {
         this.disabledText = new TranslatableText(translationKey + "." + disabledKey);
     }
 
-    public BooleanConfigOption(String modId, String key, boolean defaultValue, AccessType accessType, List<OrderedText> tooltips) {
+    public BooleanConfigOption(String modId, String key, boolean defaultValue, AccessType accessType, List<OrderedText> tooltip) {
         this(modId, key, defaultValue, accessType);
-        this.tooltips = tooltips;
+        this.tooltip = tooltip;
     }
 
     public BooleanConfigOption(String modId, String key, boolean defaultValue, AccessType accessType) {
@@ -51,7 +51,7 @@ public class BooleanConfigOption extends ConfigOption<Boolean> {
         this.markDirty();
     }
 
-    public void setValue(ServerCommandSource source, Boolean value){
+    public void setValue(ServerCommandSource source, Boolean value) {
         this.setValue(value);
         this.sync(source);
     }
@@ -62,7 +62,7 @@ public class BooleanConfigOption extends ConfigOption<Boolean> {
 
     public Boolean getDefaultValue() { return defaultValue; }
 
-    public Text getValueText() { return new LiteralText(String.valueOf(ConfigOptionStorage.getBoolean(key))); }
+    public Text getValueText() { return this.getValue() ? this.enabledText : this.disabledText; }
 
     public Text getButtonText() {
         return ScreenTexts.composeGenericOptionText(new TranslatableText(translationKey), getValue() ? enabledText : disabledText);
@@ -70,7 +70,7 @@ public class BooleanConfigOption extends ConfigOption<Boolean> {
 
     @Environment(EnvType.CLIENT)
     public ClickableWidget createButton(int x, int y, int width) {
-        return CyclingButtonWidget.builder(o -> this.getValueText()).values(BOOLEAN_VALUES).tooltip(factory -> tooltips).initially(this.getValue())
+        return CyclingButtonWidget.builder(o -> this.getValueText()).values(BOOLEAN_VALUES).tooltip(factory -> tooltip).initially(this.getValue())
                 .build(x, y, width, 20, new TranslatableText(translationKey), ((button, value) -> {
                     this.toggleValue();
                     button.setValue(this.getValue());
@@ -78,9 +78,8 @@ public class BooleanConfigOption extends ConfigOption<Boolean> {
     }
 
     @Override
-    public void setFromArgument(CommandContext<ServerCommandSource> context){
-        this.setValue(context.getSource(), context.getArgument("value",  Boolean.class));
+    public void setFromArgument(CommandContext<ServerCommandSource> context) {
+        this.setValue(context.getSource(), context.getArgument("value", Boolean.class));
     }
 
 }
-

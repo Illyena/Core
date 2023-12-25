@@ -39,14 +39,13 @@ public abstract class FlowableFluidMixin {
     @ModifyArg(method = "onScheduledTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;I)Z", ordinal = 0), index = 1)
     private BlockState replaceEmptyBlockState(BlockState state) {
         return isFluidFlowsThrough(world, pos) ? setFFTBlockState(world, pos, false, 0, false) : Blocks.AIR.getDefaultState();
-
     }
 
     @ModifyArg(method = "onScheduledTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;I)Z", ordinal = 1), index = 1)
     private BlockState replaceUnequalBlockState(BlockState state) {
         return isFluidFlowsThrough(world, pos) ? setFFTBlockState(world, pos, fluidState) : state;
-
     }
+
     private static boolean isFluidFlowsThrough(World world, BlockPos pos) {
         return world.getBlockState(pos).getBlock() instanceof FluidFlowsThrough;
     }

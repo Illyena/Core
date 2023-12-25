@@ -17,9 +17,7 @@ public class GildingCalendar {
                 calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.ROOT ) + " " +
                 calendar.get(Calendar.DATE) + ", " +
                 calendar.get(Calendar.YEAR);
-
-
-    } //todo change to long form
+    }
 
     public static Holidays checkHolidays() {
         if (isNewYears()) {
@@ -44,12 +42,11 @@ public class GildingCalendar {
             return Holidays.BIRTHDAY;
         }
         return Holidays.HOLIDAYS;
-
     }
 
     public static boolean isNewYears() {
         calendar.setLenient(true);
-        return calendar.get(Calendar.MONTH) == Calendar.DECEMBER && calendar.get(Calendar.DATE) >= 31 && calendar.get(Calendar.DATE) <= 32;
+        return (calendar.get(Calendar.MONTH) == Calendar.DECEMBER && calendar.get(Calendar.DATE) == 31) || (calendar.get(Calendar.MONTH) == Calendar.JANUARY && calendar.get(Calendar.DATE) == 1);
     }
 
     public static boolean isEaster() {
@@ -119,5 +116,7 @@ public class GildingCalendar {
         JOHN;
 
         Birthdays() { }
+
     }
+
 }
