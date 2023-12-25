@@ -22,5 +22,4 @@ public interface ScreenAccessor {
 
     @Accessor
     MinecraftClient getClient();
-
 }

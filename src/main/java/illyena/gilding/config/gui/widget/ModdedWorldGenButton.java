@@ -13,6 +13,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Pair;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,11 +26,14 @@ import static illyena.gilding.GildingInit.translationKeyOf;
 import static illyena.gilding.core.config.GildingConfigOptions.*;
 
 public class ModdedWorldGenButton extends ButtonWidget {
+    private static final TranslatableText MODDED_WORLD_GEN_BUTTON_TEXT = translationKeyOf("menu", "modded_world_gen.button");
+    private static final TranslatableText MODDED_WORLD_GEN_BUTTON_TOOLTIP = translationKeyOf("tooltip", "modded_world_gen.button");
+
     private boolean small;
     public static final ItemStack ICON = Items.FILLED_MAP.getDefaultStack();
 
     public ModdedWorldGenButton(int x, int y, @Nullable TooltipSupplier tooltip, boolean small) {
-        super(x, y, small ? 20 : 150, 20, small ? LiteralText.EMPTY : translationKeyOf("menu", "modded_world_gen.button"), ModdedWorldGenButton::click, tooltip);
+        super(x, y, small ? 20 : 150, 20, small ? LiteralText.EMPTY : MODDED_WORLD_GEN_BUTTON_TEXT, ModdedWorldGenButton::click, tooltip);
         this.small = small;
     }
 
@@ -51,18 +55,14 @@ public class ModdedWorldGenButton extends ButtonWidget {
         public static void onGuiInit(MinecraftClient client, Screen screen, int scaledWidth, int scaledHeight) {
             if (screen instanceof CreateWorldScreen) {
                 TooltipSupplier tooltipSupplier = new TooltipSupplier() {
-                    private final Text MODDED_WORLD_GEN_BUTTON_TEXT = translationKeyOf("tooltip", "modded_world_gen.button");
-
                     @Override
                     public void onTooltip(ButtonWidget button, MatrixStack matrices, int mouseX, int mouseY) {
                         if (button.active) {
-                            client.currentScreen.renderTooltip(matrices, this.MODDED_WORLD_GEN_BUTTON_TEXT, mouseX, mouseY);
+                            client.currentScreen.renderTooltip(matrices, MODDED_WORLD_GEN_BUTTON_TOOLTIP, mouseX, mouseY);
                         }
                     }
 
-                    public void supply(Consumer<Text> consumer) {
-                        consumer.accept(this.MODDED_WORLD_GEN_BUTTON_TEXT);
-                    }
+                    public void supply(Consumer<Text> consumer) { consumer.accept(MODDED_WORLD_GEN_BUTTON_TOOLTIP); }
                 };
 
                 int rowIdx = MODDED_WORLD_GEN_BUTTON_ROW.getValue();
@@ -76,7 +76,7 @@ public class ModdedWorldGenButton extends ButtonWidget {
                         .map(w -> (ClickableWidget) w)
                         .filter(w -> w.visible)
                         .collect(HashMap<Integer, Pair<ClickableWidget, ClickableWidget>>::new, (map, w) -> {
-                            ClickableWidget hidden = new ButtonWidget(screen.width / 2 - 155, 122, 150, 0, new LiteralText(""), button -> {});
+                            ClickableWidget hidden = new ButtonWidget(screen.width / 2 - 155, 122, 150, 0, LiteralText.EMPTY, button -> {});
                             if (!map.containsKey(hidden.y)) {
                                 map.put(hidden.y, new Pair<>(hidden, null));
                             }

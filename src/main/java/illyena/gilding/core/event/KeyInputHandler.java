@@ -9,9 +9,11 @@ import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import org.lwjgl.glfw.GLFW;
 
+import static illyena.gilding.GildingInit.SUPER_MOD_ID;
+
 public class KeyInputHandler {
-    public static final String KEY_CATEGORY_GILDING = "key.category.gilding.gilding";
-    public static final String KEY_TROW = "key.gilding.throw";
+    public static final String KEY_CATEGORY_GILDING = "key.category." + SUPER_MOD_ID;
+    public static final String KEY_TROW = "key." + SUPER_MOD_ID + ".throw";
 
     public static KeyBinding throwing;
 

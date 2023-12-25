@@ -7,6 +7,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+@SuppressWarnings({"UnnecessaryModifier", "unused"})
 public interface TeleportCallback {
     public static final Event<TeleportCallback> TELEPORT_EVENT = EventFactory.createArrayBacked(TeleportCallback.class,
             (listeners) -> (world, entity, pos) -> {

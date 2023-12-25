@@ -1,7 +1,6 @@
 package illyena.gilding.core.entity.projectile;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.item.ItemStack;
@@ -28,15 +27,13 @@ import net.minecraft.util.math.Vec3d;
  * this.dataTracker.startTracking(ENCHANTED, false);}
  *</pre>
  */
-
+@SuppressWarnings({"UnnecessaryModifier", "unused"})
 public interface ILoyalty {
     public abstract int getInGroundTime();
 
     public abstract void setInGroundTime(int value);
 
     public abstract ItemStack asItemStack();
-
-    public abstract DataTracker getDataTracker();
 
     public abstract TrackedData<Integer> getLoyalty();
 
@@ -58,35 +55,35 @@ public interface ILoyalty {
     }
 
     public static void tick(PersistentProjectileEntity projectile) {
+        ILoyalty loyaltyProjectile = (ILoyalty)getProjectile(projectile);
         Entity entity = projectile.getOwner();
-        int i = ((ILoyalty)getProjectile(projectile)).getDataTracker().get((((ILoyalty) getProjectile(projectile)).getLoyalty()));
-        if (i > 0 && (((ILoyalty)getProjectile(projectile)).getDealtDamage() || projectile.isNoClip()) && entity != null) {
+        int i = getProjectile(projectile).getDataTracker().get(loyaltyProjectile.getLoyalty());
+        if (i > 0 && (loyaltyProjectile.getDealtDamage() || projectile.isNoClip()) && entity != null) {
             if (projectile instanceof IRicochet && ((IRicochet)getProjectile(projectile)).getBlockHit()) {
-                ((ILoyalty) getProjectile(projectile)).setInGroundTime((((ILoyalty) getProjectile(projectile)).getInGroundTime() + 1));
+                loyaltyProjectile.setInGroundTime(loyaltyProjectile.getInGroundTime() + 1);
             }
 
-            if (!projectile.world.isClient() && shouldReturn(projectile)){
+            if (!projectile.getWorld().isClient() && shouldReturn(projectile)){
                 if (!isOwnerAlive(projectile)) {
-                    if (!projectile.world.isClient && projectile.pickupType == PersistentProjectileEntity.PickupPermission.ALLOWED) {
-                        projectile.dropStack(((ILoyalty) getProjectile(projectile)).asItemStack(), 0.1F);
+                    if (!projectile.getWorld().isClient && projectile.pickupType == PersistentProjectileEntity.PickupPermission.ALLOWED) {
+                        projectile.dropStack(loyaltyProjectile.asItemStack(), 0.1F);
                     }
-
                     projectile.discard();
                 } else {
                     projectile.setNoClip(true);
                     Vec3d vec3d = entity.getEyePos().subtract(projectile.getPos());
                     projectile.setPos(projectile.getX(), projectile.getY() + vec3d.y * 0.015 * (double) i, projectile.getZ());
-                    if (projectile.world.isClient) {
+                    if (projectile.getWorld().isClient) {
                         projectile.lastRenderY = projectile.getY();
                     }
 
                     double d = 0.05 * (double) i;
                     projectile.setVelocity(projectile.getVelocity().multiply(0.95).add(vec3d.normalize().multiply(d)));
-                    if (((ILoyalty) getProjectile(projectile)).getReturnTimer() == 0) {
+                    if (loyaltyProjectile.getReturnTimer() == 0) {
                         projectile.playSound(SoundEvents.ITEM_TRIDENT_RETURN, 10.0F, 1.0F);
                     }
 
-                    ((ILoyalty) getProjectile(projectile)).setReturnTimer(((ILoyalty) getProjectile(projectile)).getReturnTimer() + 1);
+                    loyaltyProjectile.setReturnTimer(loyaltyProjectile.getReturnTimer() + 1);
                 }
             }
         }
@@ -102,14 +99,15 @@ public interface ILoyalty {
     }
 
     public static boolean shouldReturn(PersistentProjectileEntity projectile) {
-        int i = ((ILoyalty) getProjectile(projectile)).getDataTracker().get((((ILoyalty) getProjectile(projectile)).getLoyalty()));
+        ILoyalty loyaltyProjectile = (ILoyalty)getProjectile(projectile);
+        int i = getProjectile(projectile).getDataTracker().get(loyaltyProjectile.getLoyalty());
         if (i > 0) {
-            ((ILoyalty) getProjectile(projectile)).setWait(((ILoyalty) getProjectile(projectile)).getWait() + 1);
+            loyaltyProjectile.setWait(loyaltyProjectile.getWait() + 1);
             int delay = 90 / i;
             if (projectile instanceof IRicochet && ((IRicochet) projectile).getRemainingBounces() == 0) return true;
             else if (projectile instanceof IRicochet && !((IRicochet) projectile).getBlockHit()) {
-                return ((ILoyalty) getProjectile(projectile)).getWait() > delay + 30 * i;
-            } else return ((ILoyalty) getProjectile(projectile)).getWait() > delay;
+                return loyaltyProjectile.getWait() > delay + 30 * i;
+            } else return loyaltyProjectile.getWait() > delay;
         } else return false;
     }
 

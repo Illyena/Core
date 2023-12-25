@@ -54,7 +54,7 @@ public class ConfigManager {
             }
             if (file.exists()) {
                 BufferedReader br = new BufferedReader(new FileReader(file));
-                JsonObject json = (new JsonParser().parse(br).getAsJsonObject());
+                JsonObject json = JsonParser.parseReader(br).getAsJsonObject();
 
                 for (ConfigOption<?> configOption : ConfigOption.CONFIG) {
                     JsonElement jsonElement = json.get(configOption.getId().getNamespace() + "." + configOption.getKey());
@@ -77,7 +77,7 @@ public class ConfigManager {
                                     Enum<?> found = enumConfig.getValueFromString(primitive.getAsString());
 
                                     if (found != null) {
-                                        ConfigOption.ConfigOptionStorage.setEnum(enumConfig.getKey(), found); //todo set Enum
+                                        ConfigOption.ConfigOptionStorage.setEnum(enumConfig.getKey(), found);
                                     }
                                 }
                             }

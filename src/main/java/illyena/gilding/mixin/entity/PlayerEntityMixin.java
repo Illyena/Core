@@ -1,6 +1,7 @@
 package illyena.gilding.mixin.entity;
 
 import illyena.gilding.core.item.IUndestroyable;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -17,6 +18,14 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
  */
 @Mixin(PlayerEntity.class)
 public class PlayerEntityMixin {
+
+    @Inject(method = "attack", at = @At("HEAD"), cancellable = true)
+    private void onAttack(Entity target, CallbackInfo ci) {
+        ItemStack stack = ((PlayerEntity)(Object)this).getMainHandStack();
+        if (stack.getItem() instanceof IUndestroyable item && !item.isUsable(stack)) {
+            ci.cancel();
+        }
+    }
 
     @Inject(at = @At(value = "HEAD"), method = "damageShield(F)V", locals = LocalCapture.CAPTURE_FAILHARD)
     private void damageShield(float amount, CallbackInfo callBackInfo) {

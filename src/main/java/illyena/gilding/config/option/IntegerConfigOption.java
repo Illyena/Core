@@ -18,6 +18,7 @@ import net.minecraft.text.TranslatableText;
 
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class IntegerConfigOption extends ConfigOption<Integer> {
     protected final String translationKey;
     protected final int defaultValue;
@@ -43,52 +44,52 @@ public class IntegerConfigOption extends ConfigOption<Integer> {
     public void setMutableMax(int value) { this.maxValue = Math.max(this.defaultValue, value); }
 
     public void setValue(Integer value) {
-        ConfigOptionStorage.setInteger(key, value);
+        ConfigOptionStorage.setInteger(this.key, value);
         this.markDirty();
     }
 
     public void setValue(ServerCommandSource source, Integer value) throws CommandSyntaxException {
-        if (value >= minValue && value <= maxValue) {
+        if (value >= this.minValue && value <= this.maxValue) {
             this.setValue(value);
             this.sync(source);
         } else {
-            throw  value > maxValue ?
-                    CommandSyntaxException.BUILT_IN_EXCEPTIONS.integerTooHigh().create(value, maxValue) :
-                    CommandSyntaxException.BUILT_IN_EXCEPTIONS.integerTooLow().create(value, minValue);
+            throw  value > this.maxValue ?
+                    CommandSyntaxException.BUILT_IN_EXCEPTIONS.integerTooHigh().create(value, this.maxValue) :
+                    CommandSyntaxException.BUILT_IN_EXCEPTIONS.integerTooLow().create(value, this.minValue);
         }
     }
 
-    public void incrementValue() { incrementValue(1); }
+    public void incrementValue() { this.incrementValue(1); }
 
     public void incrementValue(int i) {
-        if (ConfigOptionStorage.getInteger(key) == maxValue) {
-            ConfigOptionStorage.setInteger(key, minValue);
+        if (ConfigOptionStorage.getInteger(this.key) == this.maxValue) {
+            ConfigOptionStorage.setInteger(this.key, this.minValue);
         } else {
-            ConfigOptionStorage.setInteger(key, ConfigOptionStorage.getInteger(key) + i);
+            ConfigOptionStorage.setInteger(this.key, ConfigOptionStorage.getInteger(this.key) + i);
         }
     }
 
     public void decrementValue() { decrementValue(1); }
 
     public void decrementValue(int i) {
-        if (ConfigOptionStorage.getInteger(key) == minValue) {
-            ConfigOptionStorage.setInteger(key, maxValue);
+        if (ConfigOptionStorage.getInteger(this.key) == this.minValue) {
+            ConfigOptionStorage.setInteger(this.key, this.maxValue);
         } else {
-            ConfigOptionStorage.setInteger(key, ConfigOptionStorage.getInteger(key) - i);
+            ConfigOptionStorage.setInteger(this.key, ConfigOptionStorage.getInteger(this.key) - i);
         }
     }
 
-    public Integer getValue() { return ConfigOptionStorage.getInteger(key); }
+    public Integer getValue() { return ConfigOptionStorage.getInteger(this.key); }
 
-    public Integer getDefaultValue() { return defaultValue; }
+    public Integer getDefaultValue() { return this.defaultValue; }
 
-    public int getMinValue() { return minValue; }
+    public int getMinValue() { return this.minValue; }
 
-    public int getMaxValue() { return maxValue; }
+    public int getMaxValue() { return this.maxValue; }
 
-    public Text getValueText() { return new LiteralText(String.valueOf(ConfigOptionStorage.getInteger(key))); }
+    public Text getValueText() { return new LiteralText(String.valueOf(ConfigOptionStorage.getInteger(this.key))); }
 
-    public Text getButtonText() { return ScreenTexts.composeGenericOptionText(new TranslatableText(translationKey), getValueText()); }
+    public Text getButtonText() { return ScreenTexts.composeGenericOptionText(new TranslatableText(this.translationKey), getValueText()); }
 
     @Environment(EnvType.CLIENT)
     public ClickableWidget createButton(int x, int y, int width) {
@@ -97,9 +98,9 @@ public class IntegerConfigOption extends ConfigOption<Integer> {
 
     @Environment(EnvType.CLIENT)
     public Option asOption() {
-         return new DoubleOption(translationKey, minValue, maxValue, 1.0f,
-                 (gameOptions) -> (double) ConfigOptionStorage.getInteger(key),
-                 (gameOptions, value) -> ConfigOptionStorage.setInteger(key, value.intValue()),
+         return new DoubleOption(this.translationKey, this.minValue, this.maxValue, 1.0f,
+                 (gameOptions) -> (double) ConfigOptionStorage.getInteger(this.key),
+                 (gameOptions, value) -> ConfigOptionStorage.setInteger(this.key, value.intValue()),
                  ((gameOptions, option) -> getButtonText()));
     }
 

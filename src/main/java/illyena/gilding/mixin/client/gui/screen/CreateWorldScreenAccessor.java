@@ -7,11 +7,9 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(CreateWorldScreen.class)
 public interface CreateWorldScreenAccessor {
-
     @Accessor
     boolean isMoreOptionsOpen();
 
     @Invoker
     void callSetMoreOptionsOpen(boolean moreOptionsOpen);
-
 }

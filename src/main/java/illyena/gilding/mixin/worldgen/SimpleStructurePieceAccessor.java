@@ -1,21 +1,18 @@
 package illyena.gilding.mixin.worldgen;
 
 import net.minecraft.structure.SimpleStructurePiece;
-import net.minecraft.structure.Structure;
 import net.minecraft.structure.StructurePlacementData;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
+import org.spongepowered.asm.mixin.gen.Invoker;
 
+@SuppressWarnings("unused")
 @Mixin(SimpleStructurePiece.class)
 public interface SimpleStructurePieceAccessor {
-    @Accessor
-    Structure getStructure();
+    @Invoker
+    Identifier callGetId();
 
     @Accessor
     StructurePlacementData getPlacementData();
-
-    @Accessor
-    BlockPos getPos();
-
 }

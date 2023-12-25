@@ -10,6 +10,7 @@ import net.minecraft.util.registry.Registry;
 
 import static illyena.gilding.GildingInit.SUPER_MOD_ID;
 
+@SuppressWarnings("unused")
 public class GildingBlockTagGenerator extends FabricTagProvider<Block> {
     public static final TagKey<Block> MAGIC_MINEABLE        = TagKey.of(Registry.BLOCK_KEY, new Identifier(SUPER_MOD_ID, "mineable/magic"));
 

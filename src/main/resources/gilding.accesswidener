@@ -15,7 +15,3 @@ mutable field net/minecraft/structure/pool/StructurePool elementCounts Ljava/uti
 #StructurePlacement
 extendable class net/minecraft/world/gen/chunk/placement/RandomSpreadStructurePlacement
 extendable class net/minecraft/world/gen/chunk/placement/ConcentricRingsStructurePlacement
-
-
-
-

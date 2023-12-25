@@ -9,6 +9,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 
+@SuppressWarnings("unused")
 public class ThrowC2SPacket {
 
     public static void receive(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler,
@@ -23,7 +24,7 @@ public class ThrowC2SPacket {
         ItemStack stack = player.getActiveItem();
 
         if (!stack.isEmpty() && stack.getItem() instanceof IThrowable item) {
-            item.onThrow(stack, player.world, player, player.getItemUseTimeLeft());
+            item.onThrow(stack, player.getWorld(), player, player.getItemUseTimeLeft());
             player.clearActiveItem();
         }
     }

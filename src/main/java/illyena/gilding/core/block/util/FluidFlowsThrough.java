@@ -74,6 +74,7 @@ import net.minecraft.world.WorldAccess;
  *      } }
  *</pre>
  */
+@SuppressWarnings("UnnecessaryModifier")
 public interface FluidFlowsThrough extends Waterloggable {
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
     public static final IntProperty WATER_LEVEL = Properties.LEVEL_8;

@@ -24,6 +24,7 @@ import java.util.concurrent.CompletableFuture;
 import static illyena.gilding.GildingInit.SUPER_MOD_ID;
 
 public class ConfigArguments {
+
     public static void registerArgumentTypes() {
         ArgumentTypes.register("modid", ConfigModIdArgument.class, new ConstantArgumentSerializer<>(ConfigModIdArgument::configModId));
         ArgumentTypes.register("option", ConfigOptionsArgument.class, new ConstantArgumentSerializer<>(ConfigOptionsArgument::configOptions));
@@ -65,10 +66,9 @@ public class ConfigArguments {
 
     public static class ConfigOptionsArgument implements ArgumentType<ConfigOption<?>> {
         public static final String NAME = "settings";
-        DynamicCommandExceptionType NO_SUCH_OPTION = new DynamicCommandExceptionType(string1 -> new TranslatableText("argument." + SUPER_MOD_ID + ".not_option", string1));
+        private static final DynamicCommandExceptionType NO_SUCH_OPTION = new DynamicCommandExceptionType(string1 -> new TranslatableText("argument." + SUPER_MOD_ID + ".not_option", string1));
 
-        private ConfigOptionsArgument() {
-        }
+        private ConfigOptionsArgument() { }
 
         public static ConfigOptionsArgument configOptions() {
             return new ConfigOptionsArgument();

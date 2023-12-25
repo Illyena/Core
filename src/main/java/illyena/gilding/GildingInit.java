@@ -11,12 +11,7 @@ import illyena.gilding.core.networking.GildingPackets;
 import illyena.gilding.core.particle.GildingParticles;
 import illyena.gilding.worldgen.ModdedWorldGen;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
 import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -47,10 +42,6 @@ public class GildingInit implements ModInitializer {
 
     public static TranslatableText translationKeyOf(String type, String key) {
         return new TranslatableText(type + "." + SUPER_MOD_ID + "." + key);
-    }
-
-    public static ItemGroup registerItemGroup(String modId, String name, Item item) {
-        return FabricItemGroupBuilder.build(new Identifier(modId, name), () -> new ItemStack(item));
     }
 
 }

@@ -6,6 +6,7 @@ import net.minecraft.item.BowItem;
 import net.minecraft.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 
+@SuppressWarnings("unused")
 @Mixin(PowerEnchantment.class)
 public class PowerEnchantmentMixin {
 

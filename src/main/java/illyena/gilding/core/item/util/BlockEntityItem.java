@@ -7,10 +7,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 /**
- * limit to {@link BlockItem} decendents.
+ * limit to {@link BlockItem} descendants.
  */
-
-public interface BlockEntityItem  {
+@SuppressWarnings("UnnecessaryModifier")
+public interface BlockEntityItem {
 
     public abstract boolean toBlock(ItemStack stack, World world, Entity entity, BlockPos blockPos, int radius);
 
