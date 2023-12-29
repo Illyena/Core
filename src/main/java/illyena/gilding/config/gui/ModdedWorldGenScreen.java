@@ -1,8 +1,8 @@
 package illyena.gilding.config.gui;
 
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import illyena.gilding.config.option.ConfigOption;
+import illyena.gilding.core.client.gui.screen.SharedBackground;
 import illyena.gilding.core.util.time.GildingCalendar;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.CubeMapRenderer;
@@ -10,23 +10,28 @@ import net.minecraft.client.gui.RotatingCubeMapRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.MathHelper;
-
-import java.awt.*;
 
 import static illyena.gilding.GildingInit.SUPER_MOD_ID;
 import static illyena.gilding.GildingInit.translationKeyOf;
 
-public class ModdedWorldGenScreen extends ConfigScreen{
-    public static final CubeMapRenderer PANORAMA_CUBE_MAP = new CubeMapRenderer(new Identifier("textures/gui/title/background/panorama"));
-    private final RotatingCubeMapRenderer backgroundRenderer;
+public class ModdedWorldGenScreen extends ConfigScreen implements SharedBackground {
+    private static final Text TITLE = translationKeyOf("menu", "modded_world_gen.title");
+    private static final CubeMapRenderer PANORAMA_CUBE_MAP = new CubeMapRenderer(new Identifier("textures/gui/title/background/panorama"));
+    private static final Identifier TITLE_TEXTURE = new Identifier(SUPER_MOD_ID, "textures/gui/title/gilding.png");
 
     public ModdedWorldGenScreen() { this(MinecraftClient.getInstance().currentScreen); }
 
     public ModdedWorldGenScreen(Screen parent) {
-        super(SUPER_MOD_ID, parent);
-        this.backgroundRenderer = new RotatingCubeMapRenderer(PANORAMA_CUBE_MAP);
+        super(SUPER_MOD_ID, parent, TITLE);
+        if (parent instanceof SharedBackground previous) {
+            this.backgroundRenderer = previous.getBackgroundRenderer();
+            this.doBackgroundFade = false;
+        } else {
+            this.backgroundRenderer = new RotatingCubeMapRenderer(PANORAMA_CUBE_MAP);
+            this.doBackgroundFade = true;
+        }
     }
 
     protected void init() {
@@ -51,21 +56,16 @@ public class ModdedWorldGenScreen extends ConfigScreen{
         }
     }
 
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        this.backgroundRenderer.render(delta, MathHelper.clamp(1.0f, 0.0F, 1.0F));
-        int j = this.width / 2 - 137;
+    public void renderText(MatrixStack matrices, int mouseX, int mouseY, float delta, float alpha, int time) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.enableBlend();
-        RenderSystem.blendFunc(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0f);
-        drawTexture(matrices, 0, 0, this.width, this.height, 0.0F, 0.0F, 16, 128, 16, 128);
-        int l = MathHelper.ceil(255.0F) << 24;
+        RenderSystem.setShaderTexture(0, TITLE_TEXTURE);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, alpha);
+        drawTexture(matrices, this.width / 2 - 80, 10, 0.0f, 0.0f, 160, 60, 160, 60);
 
-        drawCenteredText(matrices, this.textRenderer, translationKeyOf("menu", "modded_world_gen_options.title"), this.width / 2, this.height / 8, Color.CYAN.getRGB());
-        int m = this.textRenderer.getWidth(GildingCalendar.getDateLong()) / 2;
-        drawStringWithShadow(matrices, this.textRenderer, GildingCalendar.getDateLong(), this.width / 2 - m, this.height - 10, 16777215 | l);
-
-        super.render(matrices, mouseX, mouseY, delta);
-
+        drawCenteredTextWithShadow(matrices, this.textRenderer, Text.of(GildingCalendar.getDateLong()).asOrderedText(), this.width / 2, this.height / 8 * 2, 16777215 | time);
     }
+
+    @Override
+    public RotatingCubeMapRenderer getBackgroundRenderer() { return this.backgroundRenderer; }
+
 }

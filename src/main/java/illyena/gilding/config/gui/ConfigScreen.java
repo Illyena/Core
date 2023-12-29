@@ -4,11 +4,14 @@ import com.google.common.collect.ImmutableList;
 import illyena.gilding.config.ConfigManager;
 import illyena.gilding.config.network.ConfigNetworking;
 import illyena.gilding.config.option.ConfigOption;
+import illyena.gilding.core.client.gui.screen.SharedBackground;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.minecraft.SharedConstants;
 import net.minecraft.client.gui.Element;
+import net.minecraft.client.gui.RotatingCubeMapRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.TitleScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -19,6 +22,7 @@ import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.MathHelper;
 
 import java.awt.*;
@@ -29,17 +33,20 @@ import java.util.function.Consumer;
 import static illyena.gilding.GildingInit.*;
 
 @Environment(EnvType.CLIENT)
-public abstract class ConfigScreen extends Screen {
-    protected final boolean isMinecraft;
+public abstract class ConfigScreen extends Screen implements SharedBackground {
+    private static final Text WORLD_GEN_INFO = translationKeyOf("menu", "config_menu.world_gen.info");
+    private static final Text NO_SERVER_TOOLTIP = translationKeyOf("tooltip", "config_menu.no_server");
+
+    protected RotatingCubeMapRenderer backgroundRenderer;
+    protected boolean doBackgroundFade;
+    protected long backgroundFadeStart;
     protected Screen parent;
     protected String modId;
 
-    Map< Element, ConfigOption<?>> map = new HashMap<>();
-    Text WORLD_GEN_INFO = translationKeyOf("menu", "world_gen_config.info");
+    protected Map< Element, ConfigOption<?>> map = new HashMap<>();
 
-    protected ConfigScreen(String modId, Screen parent) {
-        super(Text.translatable("menu." + modId + ".title"));
-        this.isMinecraft = (double)(new Random()).nextFloat() < 1.0E-4;
+    protected ConfigScreen(String modId, Screen parent, Text title) {
+        super(title);
         this.parent = parent;
         this.modId = modId;
     }
@@ -64,24 +71,21 @@ public abstract class ConfigScreen extends Screen {
     }
 
     protected void initBackWidget(int l) {
-        assert this.client != null;
         this.addDrawableChild(new ButtonWidget(this.width / 2 - 100, l + 72 + 12, 98, 20,
-                ScreenTexts.BACK, (button) -> this.client.setScreen(this.parent)));
+                ScreenTexts.BACK, button -> this.client.setScreen(this.parent)));
     }
 
     protected void initReturnWidget(int l) {
-        assert this.client != null;
         if (this.client.world != null) {
-            this.addDrawableChild(new ButtonWidget(this.width / 2 + 2, l + 72 +12, 98, 20,
+            this.addDrawableChild(new ButtonWidget(this.width / 2 + 2, l + 72 + 12, 98, 20,
                     Text.translatable("menu.returnToGame"), button -> this.close()));
         } else {
             this.addDrawableChild(new ButtonWidget(this.width / 2 + 2, l + 72 + 12, 98, 20,
-                    Text.translatable("gui.toTitle"), (button) -> this.client.setScreen(new TitleScreen())));
+                    Text.translatable("gui.toTitle"), button -> this.client.setScreen(new TitleScreen())));
         }
     }
 
     protected void initMultiWidgets(String modId) {
-        assert this.client != null;
         int i = 0;
         for (ConfigOption<?> config : getConfigs(modId)) {
             int j = this.width / 2 - 155 + i % 2 * 160;
@@ -98,7 +102,6 @@ public abstract class ConfigScreen extends Screen {
     }
 
     protected void initSync() {
-        assert this.client != null;
         if (this.client.world != null) {
             ClientPlayNetworking.send(ConfigNetworking.CONFIG_RETRIEVE_C2S, PacketByteBufs.create());
         }
@@ -114,21 +117,20 @@ public abstract class ConfigScreen extends Screen {
 
     protected ClickableWidget createDeadButton(ConfigOption<?> config, int x, int y, int width) {
         ButtonWidget.TooltipSupplier tooltips = new ButtonWidget.TooltipSupplier() {
-            private static final Text NO_SERVER_TEXT = Text.translatable("menu." + SUPER_MOD_ID + ".no_server.tooltip");
             @Override
             public void onTooltip(ButtonWidget button, MatrixStack matrices, int mouseX, int mouseY) {
-                if (button.active) {
-                    ConfigScreen.this.renderTooltip(matrices, NO_SERVER_TEXT, mouseX, mouseY);
+                if (button.active && config.getAccessType().equals(ConfigOption.AccessType.CLIENT)) {
+                    ConfigScreen.this.renderTooltip(matrices, NO_SERVER_TOOLTIP, mouseX, mouseY);
                 }
             }
-            public void supply(Consumer<Text> consumer) { consumer.accept(this.NO_SERVER_TEXT); }
+            public void supply(Consumer<Text> consumer) { consumer.accept(NO_SERVER_TOOLTIP); }
         };
+
         return new ButtonWidget( x, y, width, 20, config.getButtonText(), button -> {}, tooltips) {
             @Override
             protected int getYImage(boolean hovered) { return 0; }
 
         };
-
     }
 
     @Override
@@ -140,22 +142,37 @@ public abstract class ConfigScreen extends Screen {
     }
 
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        float g = 1.0f;
+        if (this.backgroundFadeStart == 0L && this.doBackgroundFade) {
+            this.backgroundFadeStart = Util.getMeasuringTimeMs();
+        }
+
+        float f = this.doBackgroundFade ? (float)(Util.getMeasuringTimeMs() - this.backgroundFadeStart) / 1000.0F : 1.0F;
+        this.getBackgroundRenderer().render(delta, MathHelper.clamp(f, 0.0F, 1.0F));
+
+        float g = this.doBackgroundFade ? MathHelper.clamp(f - 1.0F, 0.0F, 1.0F) : 1.0F;
         int l = MathHelper.ceil(g * 255.0F) << 24;
         if ((l & -67108864) != 0) {
+            this.renderText(matrices, mouseX, mouseY, delta, g, l);
+            String string = "Minecraft: " + SharedConstants.getGameVersion().getName() + ", " + SUPER_MOD_NAME + ": " + VERSION;
+            drawStringWithShadow(matrices, this.textRenderer, string, 2, this.height - 10, 16777215 | l);
+
             for (Element element : this.children()) {
                 if (element instanceof ClickableWidget clickable) {
                     clickable.setAlpha(g);
                     drawInfo(clickable, matrices);
                 }
             }
+
             super.render(matrices, mouseX, mouseY, delta);
-        }
-        List<OrderedText> list = getHoveredButtonTooltip(mouseX, mouseY);
-        if (list != null) {
-            this.renderOrderedTooltip(matrices, list, mouseX, mouseY);
+
+            List<OrderedText> list = getHoveredButtonTooltip(mouseX, mouseY);
+            if (list != null) {
+                this.renderOrderedTooltip(matrices, list, mouseX, mouseY);
+            }
         }
     }
+
+    protected abstract void renderText(MatrixStack matrices, int mouseX, int mouseY, float delta, float alpha, int time);
 
     private void drawInfo(ClickableWidget widget, MatrixStack matrices) {
         if (this.map.get(widget) != null) {
@@ -165,6 +182,7 @@ public abstract class ConfigScreen extends Screen {
             }
         }
     }
+
     public List<OrderedText> getHoveredButtonTooltip(int mouseX, int mouseY) {
         Optional<ClickableWidget> optional = this.getHoveredButton(mouseX, mouseY);
         return optional.isPresent() && optional.get() instanceof OrderableTooltip ? ((OrderableTooltip)optional.get()).getOrderedTooltip() : ImmutableList.of();
@@ -173,10 +191,14 @@ public abstract class ConfigScreen extends Screen {
     public Optional<ClickableWidget> getHoveredButton(double mouseX, double mouseY) {
         for (Element element : this.children()) {
             if (element instanceof ClickableWidget widget) {
-                if (widget.isMouseOver(mouseX, mouseY));
-                return Optional.of(widget);
+                if (widget.isMouseOver(mouseX, mouseY)) {
+                    return Optional.of(widget);
+                }
             }
         }
         return Optional.empty();
     }
+
+    public abstract RotatingCubeMapRenderer getBackgroundRenderer();
+
 }

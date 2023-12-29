@@ -11,11 +11,16 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.stat.Stats;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+import static illyena.gilding.GildingInit.translationKeyOf;
+
+@SuppressWarnings({"UnnecessaryModifier", "unused"})
 public interface IThrowable {
+    public static final Text TOOLTIP = translationKeyOf("tooltip", "item.throwable");
 
     public abstract PersistentProjectileEntity getProjectileEntity(World world, PlayerEntity playerEntity, ItemStack stack);
 
@@ -24,7 +29,7 @@ public interface IThrowable {
     public default void onThrow(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
         if (user instanceof PlayerEntity playerEntity && canThrow(stack, world, user, remainingUseTicks)) {
             int i = stack.getItem().getMaxUseTime(stack) - remainingUseTicks;
-            if (!((double) getPullProgress(i) < 0.1)) {
+            if (!((double)getPullProgress(i) < 0.1)) {
                 int j = getRiptide(stack, world, user, remainingUseTicks);
                 if (!world.isClient && j <= 0) {
                     stack.damage(1, playerEntity, (p) -> p.sendToolBreakStatus(user.getActiveHand()));
@@ -52,7 +57,7 @@ public interface IThrowable {
                             projectile.pickupType = PersistentProjectileEntity.PickupPermission.CREATIVE_ONLY;
                         }
                         world.spawnEntity(projectile);
-                        world.playSoundFromEntity((PlayerEntity) null, projectile, SoundEvents.ITEM_TRIDENT_THROW, SoundCategory.PLAYERS, 1.0F, 1.0F); //todo sound
+                        world.playSoundFromEntity((PlayerEntity) null, projectile, sounds()[0], SoundCategory.PLAYERS, 1.0F, 1.0F);
                         if (!playerEntity.getAbilities().creativeMode) {
                             playerEntity.getInventory().removeOne(stack);
                         }
@@ -88,11 +93,11 @@ public interface IThrowable {
 
         SoundEvent soundEvent;
         if (riptide >= 3) {
-            soundEvent = SoundEvents.ITEM_TRIDENT_RIPTIDE_3;
+            soundEvent = sounds()[1];
         } else if (riptide == 2) {
-            soundEvent = SoundEvents.ITEM_TRIDENT_RIPTIDE_2;
+            soundEvent = sounds()[2];
         } else {
-            soundEvent = SoundEvents.ITEM_TRIDENT_RIPTIDE_1;
+            soundEvent = sounds()[3];
         }
 
         world.playSoundFromEntity(null, playerEntity, soundEvent, SoundCategory.PLAYERS, 1.0F, 1.0F);
@@ -102,6 +107,15 @@ public interface IThrowable {
 
     public default int getRiptide(ItemStack stack, World world, LivingEntity user, int remainingTicks) {
         return user.isTouchingWaterOrRain() ? EnchantmentHelper.getRiptide(stack) : 0;
+    }
+
+    public default SoundEvent[] sounds() {
+        return new SoundEvent[]{
+                SoundEvents.ITEM_TRIDENT_THROW,
+                SoundEvents.ITEM_TRIDENT_RIPTIDE_1,
+                SoundEvents.ITEM_TRIDENT_RIPTIDE_2,
+                SoundEvents.ITEM_TRIDENT_RIPTIDE_3
+        };
     }
 
 }

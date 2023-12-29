@@ -2,21 +2,30 @@ package illyena.gilding.core.util.time;
 
 import com.ibm.icu.util.EasterHoliday;
 import com.ibm.icu.util.SimpleHoliday;
+import net.minecraft.client.MinecraftClient;
 
 import java.time.DayOfWeek;
 import java.time.temporal.TemporalAdjusters;
 import java.util.Calendar;
 import java.util.Locale;
 
+@SuppressWarnings("unused")
 public class GildingCalendar {
     static Calendar calendar = Calendar.getInstance();
     static Birthdays birthday;
 
     public static String getDateLong() {
-        return  calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.ROOT ) + ", " +
-                calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.ROOT ) + " " +
+        Locale locale = getLocale();
+        return  calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, locale) + ", " +
+                calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, locale) + " " +
                 calendar.get(Calendar.DATE) + ", " +
                 calendar.get(Calendar.YEAR);
+    }
+
+    public static Locale getLocale() {
+        String languageTag = MinecraftClient.getInstance().getLanguageManager().getLanguage().getCode();
+        languageTag = languageTag.replace("_", "-");
+        return Locale.forLanguageTag(languageTag);
     }
 
     public static Holidays checkHolidays() {
@@ -42,7 +51,6 @@ public class GildingCalendar {
             return Holidays.BIRTHDAY;
         }
         return Holidays.HOLIDAYS;
-
     }
 
     public static boolean isNewYears() {
@@ -117,5 +125,7 @@ public class GildingCalendar {
         JOHN;
 
         Birthdays() { }
+
     }
+
 }

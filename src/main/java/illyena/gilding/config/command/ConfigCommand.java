@@ -20,9 +20,9 @@ import net.minecraft.util.Identifier;
 import java.util.List;
 
 import static illyena.gilding.GildingInit.SUPER_MOD_ID;
-import static illyena.gilding.GildingInit.SUPER_MOD_NAME;
 
 public class ConfigCommand {
+
     public static void registerConfigCommand() {
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> register(dispatcher));
     }
@@ -89,7 +89,6 @@ public class ConfigCommand {
         } else {
             throw new CommandException(ConfigArguments.ConfigModIdArgument.tkIncompatibleMod(modId));
         }
-
     }
 
     private static void setInt(CommandContext<ServerCommandSource> context, ConfigOption<?> option, String value) {
@@ -114,10 +113,6 @@ public class ConfigCommand {
 
     public static Text tkSet(String modId, String option, String value) {
         return Text.translatable("argument." + SUPER_MOD_ID + ".set_success", modId, option, value);
-    }
-
-    public static Text tkSetFailed(String modId, String option) {
-        return Text.translatable("argument." + SUPER_MOD_NAME + ".set_failed", modId, option);
     }
 
 }

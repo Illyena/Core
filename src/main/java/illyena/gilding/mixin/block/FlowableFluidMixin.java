@@ -13,6 +13,7 @@ import net.minecraft.block.Block;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
@@ -23,9 +24,10 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 @Mixin(FlowableFluid.class)
 public abstract class FlowableFluidMixin {
     @Shadow @Final public static BooleanProperty FALLING;
-    private World world;
-    private BlockPos pos;
-    private FluidState fluidState;
+
+    @Unique private World world;
+    @Unique private BlockPos pos;
+    @Unique private FluidState fluidState;
 
 
     /** dummy inject to capture locals */
@@ -39,22 +41,24 @@ public abstract class FlowableFluidMixin {
     @ModifyArg(method = "onScheduledTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;I)Z", ordinal = 0), index = 1)
     private BlockState replaceEmptyBlockState(BlockState state) {
         return isFluidFlowsThrough(world, pos) ? setFFTBlockState(world, pos, false, 0, false) : Blocks.AIR.getDefaultState();
-
     }
 
     @ModifyArg(method = "onScheduledTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;I)Z", ordinal = 1), index = 1)
     private BlockState replaceUnequalBlockState(BlockState state) {
         return isFluidFlowsThrough(world, pos) ? setFFTBlockState(world, pos, fluidState) : state;
-
     }
+
+    @Unique
     private static boolean isFluidFlowsThrough(World world, BlockPos pos) {
         return world.getBlockState(pos).getBlock() instanceof FluidFlowsThrough;
     }
 
+    @Unique
     private static BlockState setFFTBlockState(World world, BlockPos pos, boolean isStill, int level, boolean falling) {
-        return world.getBlockState(pos).with(FluidFlowsThrough.WATERLOGGED, isStill).with(FluidFlowsThrough.WATER_LEVEL, level).with(FluidFlowsThrough.FLUID_FALL, false);
+        return world.getBlockState(pos).with(FluidFlowsThrough.WATERLOGGED, isStill).with(FluidFlowsThrough.WATER_LEVEL, level).with(FluidFlowsThrough.FLUID_FALL, falling);
     }
 
+    @Unique
     private static BlockState setFFTBlockState(World world, BlockPos pos, FluidState fluidState) {
         return world.getBlockState(pos).with(FluidFlowsThrough.WATERLOGGED, fluidState.isStill()).with(FluidFlowsThrough.WATER_LEVEL, fluidState.getLevel()).with(FluidFlowsThrough.FLUID_FALL, fluidState.get(FALLING));
     }

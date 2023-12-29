@@ -14,4 +14,5 @@ public class GildingEarlyRiser implements Runnable{
         ClassTinkerers.enumBuilder(enchantmentTarget).addEnumSubclass("PROJECTILE", "illyena.gilding.core.enchantment.target.ProjectileTarget").build();
         ClassTinkerers.enumBuilder(enchantmentTarget).addEnumSubclass("THUNDEROUS", "illyena.gilding.core.enchantment.target.ThunderousTarget").build();
     }
+
 }

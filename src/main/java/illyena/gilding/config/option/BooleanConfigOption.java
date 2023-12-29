@@ -13,6 +13,7 @@ import net.minecraft.text.Text;
 
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class BooleanConfigOption extends ConfigOption<Boolean> {
     private static final List<Boolean> BOOLEAN_VALUES = ImmutableList.of(Boolean.TRUE, Boolean.FALSE);
     private final String translationKey;
@@ -32,8 +33,8 @@ public class BooleanConfigOption extends ConfigOption<Boolean> {
         this.type = Type.BOOL;
         this.translationKey = "option." + modId + "." + key;
         this.defaultValue = defaultValue;
-        this.enabledText = Text.translatable(translationKey + "." + enabledKey);
-        this.disabledText = Text.translatable(translationKey + "." + disabledKey);
+        this.enabledText = Text.translatable(this.translationKey + "." + enabledKey);
+        this.disabledText = Text.translatable(this.translationKey + "." + disabledKey);
     }
 
     public BooleanConfigOption(String modId, String key, boolean defaultValue, AccessType accessType, List<OrderedText> tooltip) {
@@ -46,7 +47,7 @@ public class BooleanConfigOption extends ConfigOption<Boolean> {
     }
 
     public void setValue(Boolean value) {
-        ConfigOptionStorage.setBoolean(key, value);
+        ConfigOptionStorage.setBoolean(this.key, value);
         this.markDirty();
     }
 
@@ -55,22 +56,24 @@ public class BooleanConfigOption extends ConfigOption<Boolean> {
         this.sync(source);
     }
 
-    public void toggleValue() { ConfigOptionStorage.toggleBoolean(key); }
+    public void toggleValue() { ConfigOptionStorage.toggleBoolean(this.key); }
 
-    public Boolean getValue() { return ConfigOptionStorage.getBoolean(key); }
+    public Boolean getValue() { return ConfigOptionStorage.getBoolean(this.key); }
 
-    public Boolean getDefaultValue() { return defaultValue; }
+    public Boolean getDefaultValue() { return this.defaultValue; }
 
     public Text getValueText() { return this.getValue() ? this.enabledText : this.disabledText; }
 
     public Text getButtonText() {
-        return ScreenTexts.composeGenericOptionText(Text.translatable(translationKey), getValue() ? enabledText : disabledText);
+        return ScreenTexts.composeGenericOptionText(Text.translatable(this.translationKey), getValue() ? this.enabledText : this.disabledText);
     }
 
     @Environment(EnvType.CLIENT)
     public ClickableWidget createButton(int x, int y, int width) {
-        return CyclingButtonWidget.builder(o -> this.getValueText()).values(BOOLEAN_VALUES).tooltip(factory -> tooltip).initially(this.getValue())
-                .build(x, y, width, 20, Text.translatable(translationKey), ((button, value) -> {
+        return CyclingButtonWidget.builder(o -> this.getValueText()).values(BOOLEAN_VALUES)
+                .tooltip(factory -> this.tooltip)
+                .initially(this.getValue())
+                .build(x, y, width, 20, Text.translatable(this.translationKey), ((button, value) -> {
                     this.toggleValue();
                     button.setValue(this.getValue());
                 }));

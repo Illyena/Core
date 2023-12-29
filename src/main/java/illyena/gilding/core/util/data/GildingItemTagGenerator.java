@@ -118,4 +118,5 @@ public class GildingItemTagGenerator extends FabricTagProvider<Item> {
 //        getOrCreateTagBuilder(ItemTags.BREAKS_DECORATED_POTS);
 //        getOrCreateTagBuilder(ItemTags.VILLAGER_PLANTABLE_SEEDS);
     }
+
 }

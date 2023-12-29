@@ -19,6 +19,7 @@ import java.util.function.Supplier;
 
 import static illyena.gilding.GildingInit.SUPER_MOD_ID;
 
+@SuppressWarnings("unused")
 public class Mod {
     public static final SimpleRegistry<Mod> MODS = FabricRegistryBuilder.createSimple(Mod.class, new Identifier(SUPER_MOD_ID, "mods")).attribute(RegistryAttribute.SYNCED).attribute(RegistryAttribute.PERSISTED).buildAndRegister();
     private final String modId;
@@ -52,9 +53,7 @@ public class Mod {
         return ModScreens.SCREENS.get(new Identifier(SUPER_MOD_ID, this.modId));
     }
 
-
     //BY MOD_ID
-
     /**
      * @param modId identifies Mod
      * @return the registered Mod with modId @param modId
@@ -73,7 +72,6 @@ public class Mod {
      */
     public static Mod getParentMod(String modId) { return getFromId(modId).getParentMod();}
 
-
     /**
      * @param modId identifies Mod
      * @return the class holding this @param modId 's ConfigOptions.
@@ -89,7 +87,6 @@ public class Mod {
     }
 
     //LISTS
-
     /**
      * @return List of all register modIds
      */
@@ -128,7 +125,7 @@ public class Mod {
 
     /**
      * @param modId identifies Mod
-     * @return List of all Mods with Mod as mod.parent and its subMods;
+     * @return List of all Mods with Mod as {@link #parent} and its subMods;
      */
     public static List<Mod> getModsWithSubGroups(String modId) {
         List<Mod> mods = getModsSansSubGroups(modId);
@@ -189,10 +186,7 @@ public class Mod {
         return SharedConstants.getGameVersion().getName() + " v:" + getModContainer(modId).getMetadata().getVersion();
     }
 
-
-
     // RUN METHODS
-
     /**
      * Simple hook to run code if a mod is installed
      * @author Fabric
@@ -256,4 +250,5 @@ public class Mod {
     public interface Configs {
 
     }
+
 } //todo protect from NullPointerException

@@ -6,13 +6,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.World;
 
+@SuppressWarnings({"UnnecessaryModifier", "unused"})
 public interface IThunderous {
     public static int durationMultiplier = 10;
 
     public default void callThunder(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
         if (this.canCallThunder(stack, world, user, remainingUseTicks)) {
             if (!world.isClient) {
-                ((ServerWorld)world).setWeather(0, getDuration(stack, world, user, remainingUseTicks), true, true );
+                ((ServerWorld)world).setWeather(0, getDuration(stack, world, user, remainingUseTicks), true, true);
             }
         }
     }

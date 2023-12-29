@@ -8,8 +8,10 @@ import org.spongepowered.asm.mixin.Shadow;
 /**
  * must not be in mixins.json
  */
+@SuppressWarnings({ "UnusedMixin", "unused"})
 @Mixin(EnchantmentTarget.class)
 public abstract class EnchantmentTargetMixin {
-    @Shadow
-    public abstract boolean isAcceptableItem(Item item);
+
+    @Shadow public abstract boolean isAcceptableItem(Item item);
+
 }

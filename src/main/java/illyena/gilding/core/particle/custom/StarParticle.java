@@ -91,6 +91,7 @@ public class StarParticle extends SpriteBillboardParticle {
             starParticle.setSprite(this.spriteProvider);
             return starParticle;
         }
+
     }
 
 }

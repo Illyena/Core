@@ -12,7 +12,6 @@
     "enchantment.PunchEnchantmentMixin",
     "entity.FallingBlockEntityMixin",
     "entity.ItemEntityMixin",
-    "entity.PersistentProjectileEntityAccessor",
     "entity.PlayerEntityMixin",
     "item.BlockItemAccessor",
     "worldgen.SimpleStructurePieceAccessor"
@@ -21,7 +20,8 @@
     "client.KeyboardMixin",
     "client.gui.screen.CreateWorldScreenAccessor",
     "client.gui.screen.MoreOptionsDialogMixin",
-    "client.gui.screen.ScreenAccessor"
+    "client.gui.screen.ScreenAccessor",
+    "client.gui.screen.TitleScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1

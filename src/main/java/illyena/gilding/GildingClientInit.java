@@ -4,6 +4,7 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import illyena.gilding.compat.Mod;
+import illyena.gilding.config.ConfigManager;
 import illyena.gilding.config.network.ConfigNetworking;
 import illyena.gilding.core.client.gui.screen.GildingConfigMenu;
 import illyena.gilding.core.event.ClientEvents;
@@ -21,6 +22,7 @@ import net.minecraft.util.Identifier;
 
 import static illyena.gilding.GildingInit.SUPER_MOD_ID;
 
+@SuppressWarnings("unused")
 @Environment(EnvType.CLIENT)
 public class GildingClientInit implements ClientModInitializer {
     public static final Screen GILDING_CONFIG_SCREEN = Mod.ModScreens.registerConfigScreen(SUPER_MOD_ID, new GildingConfigMenu());
@@ -37,7 +39,7 @@ public class GildingClientInit implements ClientModInitializer {
         ClientEvents.registerClientEvents();
 
         GildingParticles.registerParticles();
-
+        ConfigManager.initializeConfig();
     }
 
 }

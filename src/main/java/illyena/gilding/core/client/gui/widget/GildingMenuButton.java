@@ -27,7 +27,8 @@ import static illyena.gilding.core.config.GildingConfigOptions.*;
 
 public class GildingMenuButton extends ButtonWidget {
     public static final ItemStack ICON = Blocks.GILDED_BLACKSTONE.asItem().getDefaultStack();
-    
+    private static final Text GILDING_MENU_BUTTON_TOOLTIP = Text.translatable("tooltip." + SUPER_MOD_ID + ".button").formatted(Formatting.ITALIC);
+
     public GildingMenuButton(int x, int y, @Nullable TooltipSupplier tooltip) {
         super(x, y, 20, 20, Text.empty(), GildingMenuButton::click, tooltip);
     }
@@ -75,9 +76,11 @@ public class GildingMenuButton extends ButtonWidget {
             leftButtons = variants.stream().map(r -> r.left).collect(Collectors.toList());
             rightButtons = variants.stream().map(r -> r.right).collect(Collectors.toList());
         }
+
     }
     
     public static class GildingMenuButtonHandler {
+
         public static void onGuiInit(MinecraftClient client, Screen gui, int scaledWidth, int scaledHeight) {
             MenuRows menu = null;
             int rowIdx = 0, offsetX = 0;
@@ -104,16 +107,13 @@ public class GildingMenuButton extends ButtonWidget {
                         .ifPresent(w -> {
 
                             TooltipSupplier tooltipSupplier = new TooltipSupplier() {
-
-
-                                private final Text GILDING_MENU_BUTTON_TEXT = Text.translatable("menu." + SUPER_MOD_ID + ".button").formatted(Formatting.ITALIC);
                                 @Override
                                 public void onTooltip(ButtonWidget button, MatrixStack matrices, int mouseX, int mouseY) {
                                     if (button.active) {
-                                        client.currentScreen.renderTooltip(matrices, this.GILDING_MENU_BUTTON_TEXT, mouseX, mouseY);
+                                        client.currentScreen.renderTooltip(matrices, GILDING_MENU_BUTTON_TOOLTIP, mouseX, mouseY);
                                     }
                                 }
-                                public void supply(Consumer<Text> consumer) { consumer.accept(this.GILDING_MENU_BUTTON_TEXT);}
+                                public void supply(Consumer<Text> consumer) { consumer.accept(GILDING_MENU_BUTTON_TOOLTIP);}
                             };
 
                             gui.addDrawableChild(
@@ -123,6 +123,7 @@ public class GildingMenuButton extends ButtonWidget {
             }
 
         }
+
     }
 
 }

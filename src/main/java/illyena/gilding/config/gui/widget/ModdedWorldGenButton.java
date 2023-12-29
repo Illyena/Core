@@ -24,11 +24,14 @@ import static illyena.gilding.GildingInit.translationKeyOf;
 import static illyena.gilding.core.config.GildingConfigOptions.*;
 
 public class ModdedWorldGenButton extends ButtonWidget {
+    private static final Text MODDED_WORLD_GEN_BUTTON_TEXT = translationKeyOf("menu", "modded_world_gen.button");
+    private static final Text MODDED_WORLD_GEN_BUTTON_TOOLTIP = translationKeyOf("tooltip", "modded_world_gen.button");
+
     private boolean small;
     public static final ItemStack ICON = Items.FILLED_MAP.getDefaultStack();
 
     public ModdedWorldGenButton(int x, int y, @Nullable TooltipSupplier tooltip, boolean small) {
-        super(x, y, small ? 20 : 150, 20, small ? Text.empty() : translationKeyOf("menu", "modded_world_gen.button"), ModdedWorldGenButton::click, tooltip);
+        super(x, y, small ? 20 : 150, 20, small ? Text.empty() : MODDED_WORLD_GEN_BUTTON_TEXT, ModdedWorldGenButton::click, tooltip);
         this.small = small;
     }
 
@@ -50,18 +53,14 @@ public class ModdedWorldGenButton extends ButtonWidget {
         public static void onGuiInit(MinecraftClient client, Screen screen, int scaledWidth, int scaledHeight) {
             if (screen instanceof CreateWorldScreen) {
                 TooltipSupplier tooltipSupplier = new TooltipSupplier() {
-                    private final Text MODDED_WORLD_GEN_BUTTON_TEXT = translationKeyOf("tooltip", "modded_world_gen.button");
-
                     @Override
                     public void onTooltip(ButtonWidget button, MatrixStack matrices, int mouseX, int mouseY) {
                         if (button.active) {
-                            client.currentScreen.renderTooltip(matrices, this.MODDED_WORLD_GEN_BUTTON_TEXT, mouseX, mouseY);
+                            client.currentScreen.renderTooltip(matrices, MODDED_WORLD_GEN_BUTTON_TOOLTIP, mouseX, mouseY);
                         }
                     }
 
-                    public void supply(Consumer<Text> consumer) {
-                        consumer.accept(this.MODDED_WORLD_GEN_BUTTON_TEXT);
-                    }
+                    public void supply(Consumer<Text> consumer) { consumer.accept(MODDED_WORLD_GEN_BUTTON_TOOLTIP); }
                 };
 
                 int rowIdx = MODDED_WORLD_GEN_BUTTON_ROW.getValue();
@@ -120,6 +119,7 @@ public class ModdedWorldGenButton extends ButtonWidget {
                 MODDED_WORLD_GEN_BUTTON.visible = moreOptionsOpen;
             }
         }
+
     }
 
 }
