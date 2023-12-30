@@ -11,11 +11,16 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.stat.Stats;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+import static illyena.gilding.GildingInit.translationKeyOf;
+
+@SuppressWarnings({"UnnecessaryModifier", "unused"})
 public interface IThrowable {
+    public static final Text TOOLTIP = translationKeyOf("tooltip", "item.throwable");
 
     public abstract PersistentProjectileEntity getProjectileEntity(World world, PlayerEntity playerEntity, ItemStack stack);
 
@@ -26,43 +31,43 @@ public interface IThrowable {
             int i = stack.getItem().getMaxUseTime(stack) - remainingUseTicks;
             if (!((double)getPullProgress(i) < 0.1)) {
                 int j = getRiptide(stack, world, user, remainingUseTicks);
-                    if (!world.isClient  && j <= 0) {
-                        stack.damage(1, playerEntity, (p) -> p.sendToolBreakStatus(user.getActiveHand()));
-                        if (j == 0) {
-                            PersistentProjectileEntity projectile = getProjectileEntity(world, (PlayerEntity) user, stack);
-                            projectile.setVelocity(playerEntity, playerEntity.getPitch(), playerEntity.getYaw(), 0.0F, 2.5F + (float) j * 0.5F, 0.0f); //1.0F);
+                if (!world.isClient && j <= 0) {
+                    stack.damage(1, playerEntity, (p) -> p.sendToolBreakStatus(user.getActiveHand()));
+                    if (j == 0) {
+                        PersistentProjectileEntity projectile = getProjectileEntity(world, (PlayerEntity) user, stack);
+                        projectile.setVelocity(playerEntity, playerEntity.getPitch(), playerEntity.getYaw(), 0.0F, 2.5F + (float) j * 0.5F, 0.0f); //1.0F);
 
-                            if (getPullProgress(i) == 1.0f) {
-                                projectile.setCritical(true);
-                            }
+                        if (getPullProgress(i) == 1.0f) {
+                            projectile.setCritical(true);
+                        }
 
-                            if (EnchantmentHelper.getLevel(Enchantments.POWER, stack) > 0) {
-                                projectile.setDamage(projectile.getDamage() + (double)EnchantmentHelper.getLevel(Enchantments.POWER, stack) * 0.5 +0.5);
-                            }
+                        if (EnchantmentHelper.getLevel(Enchantments.POWER, stack) > 0) {
+                            projectile.setDamage(projectile.getDamage() + (double) EnchantmentHelper.getLevel(Enchantments.POWER, stack) * 0.5 + 0.5);
+                        }
 
-                            if (EnchantmentHelper.getLevel(Enchantments.PUNCH, stack) > 0) {
-                                projectile.setPunch(EnchantmentHelper.getLevel(Enchantments.PUNCH, stack));
-                            }
+                        if (EnchantmentHelper.getLevel(Enchantments.PUNCH, stack) > 0) {
+                            projectile.setPunch(EnchantmentHelper.getLevel(Enchantments.PUNCH, stack));
+                        }
 
-                            if (EnchantmentHelper.getLevel(Enchantments.FLAME, stack) > 0) {
-                                projectile.setOnFireFor(100);
-                            }
+                        if (EnchantmentHelper.getLevel(Enchantments.FLAME, stack) > 0) {
+                            projectile.setOnFireFor(100);
+                        }
 
-                            if (playerEntity.getAbilities().creativeMode) {
-                                projectile.pickupType = PersistentProjectileEntity.PickupPermission.CREATIVE_ONLY;
-                            }
-                            world.spawnEntity(projectile);
-                            world.playSoundFromEntity((PlayerEntity) null, projectile, SoundEvents.ITEM_TRIDENT_THROW, SoundCategory.PLAYERS, 1.0F, 1.0F); //todo sound
-                            if (!playerEntity.getAbilities().creativeMode) {
-                                playerEntity.getInventory().removeOne(stack);
-                            }
+                        if (playerEntity.getAbilities().creativeMode) {
+                            projectile.pickupType = PersistentProjectileEntity.PickupPermission.CREATIVE_ONLY;
+                        }
+                        world.spawnEntity(projectile);
+                        world.playSoundFromEntity((PlayerEntity) null, projectile, sounds()[0], SoundCategory.PLAYERS, 1.0F, 1.0F);
+                        if (!playerEntity.getAbilities().creativeMode) {
+                            playerEntity.getInventory().removeOne(stack);
                         }
                     }
+                }
 
-                    playerEntity.incrementStat(Stats.USED.getOrCreateStat(stack.getItem()));
-                    if (j > 0) {
-                        this.riptide(stack, world, playerEntity, remainingUseTicks);
-                    }
+                playerEntity.incrementStat(Stats.USED.getOrCreateStat(stack.getItem()));
+                if (j > 0) {
+                    this.riptide(stack, world, playerEntity, remainingUseTicks);
+                }
             }
         }
     }
@@ -88,11 +93,11 @@ public interface IThrowable {
 
         SoundEvent soundEvent;
         if (riptide >= 3) {
-            soundEvent = SoundEvents.ITEM_TRIDENT_RIPTIDE_3;
+            soundEvent = sounds()[1];
         } else if (riptide == 2) {
-            soundEvent = SoundEvents.ITEM_TRIDENT_RIPTIDE_2;
+            soundEvent = sounds()[2];
         } else {
-            soundEvent = SoundEvents.ITEM_TRIDENT_RIPTIDE_1;
+            soundEvent = sounds()[3];
         }
 
         world.playSoundFromEntity(null, playerEntity, soundEvent, SoundCategory.PLAYERS, 1.0F, 1.0F);
@@ -102,6 +107,15 @@ public interface IThrowable {
 
     public default int getRiptide(ItemStack stack, World world, LivingEntity user, int remainingTicks) {
         return user.isTouchingWaterOrRain() ? EnchantmentHelper.getRiptide(stack) : 0;
+    }
+
+    public default SoundEvent[] sounds() {
+        return new SoundEvent[]{
+                SoundEvents.ITEM_TRIDENT_THROW,
+                SoundEvents.ITEM_TRIDENT_RIPTIDE_1,
+                SoundEvents.ITEM_TRIDENT_RIPTIDE_2,
+                SoundEvents.ITEM_TRIDENT_RIPTIDE_3
+        };
     }
 
 }

@@ -7,13 +7,9 @@ import illyena.gilding.config.option.IntegerConfigOption;
 import net.minecraft.registry.RegistryCodecs;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntryList;
-import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.chunk.placement.ConcentricRingsStructurePlacement;
-import net.minecraft.world.gen.chunk.placement.StructurePlacementCalculator;
 import net.minecraft.world.gen.chunk.placement.StructurePlacementType;
-
-import java.util.List;
 
 import static illyena.gilding.worldgen.ModdedWorldGen.CONFIGURABLE_CONCENTRIC_RINGS;
 
@@ -32,12 +28,6 @@ public class ConfigurableConcentricStructurePlacement extends ConcentricRingsStr
         super(distance, spread.getValue(), count.getValue(), preferredBiomes);
         this.spreadConfig = (IntegerConfigOption)spread;
         this.countConfig = (IntegerConfigOption)count;
-    }
-
-    @Override
-    protected boolean isStartChunk(StructurePlacementCalculator calculator, int chunkX, int chunkZ) {
-        List<ChunkPos> list = calculator.getPlacementPositions(this);
-        return list != null && list.contains(new ChunkPos(chunkX, chunkZ));
     }
 
     @Override

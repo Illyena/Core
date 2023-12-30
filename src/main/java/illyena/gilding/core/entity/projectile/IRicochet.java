@@ -5,6 +5,9 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.TargetPredicate;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -45,7 +48,7 @@ import java.util.function.Predicate;
  *         }}
  * </pre>
  */
-
+@SuppressWarnings({"UnnecessaryModifier", "unused"})
 public interface IRicochet {
 
     public abstract double getRicochetRange();
@@ -65,8 +68,8 @@ public interface IRicochet {
     public abstract int getHangTime();
 
     public abstract void setHangTime(int value);
-
-
+    
+    public abstract ItemStack asItemStack();
 
     public static PersistentProjectileEntity getProjectile (PersistentProjectileEntity projectile) {
         if (projectile instanceof IRicochet) {
@@ -76,21 +79,21 @@ public interface IRicochet {
     }
 
     public static void tick(PersistentProjectileEntity projectile) {
-        int i = getProjectile(projectile).getDataTracker().get(((IRicochet)getProjectile(projectile)).getRicochet());
-        if (i > 0 && ((IRicochet)getProjectile(projectile)).getRicochetHitEntities().size() > 0 && !projectile.isOnGround()) {
-            ((IRicochet)getProjectile(projectile)).setHangTime(((IRicochet)getProjectile(projectile)).getHangTime() + 1);
-            if (((IRicochet)getProjectile(projectile)).getHangTime() > 90) {
+        IRicochet ricochetProjectile = (IRicochet)getProjectile(projectile);
+        int i = projectile.getDataTracker().get(ricochetProjectile.getRicochet());
+        if (i > 0 && ricochetProjectile.getRicochetHitEntities().size() > 0 && !projectile.isOnGround()) {
+            ricochetProjectile.setHangTime(ricochetProjectile.getHangTime() + 1);
+            if (ricochetProjectile.getHangTime() > 90) {
                 projectile.setNoClip(false);
                 projectile.setNoGravity(false);
                 boolean bl = MathHelper.sign(projectile.getVelocity().getY()) == -1;
                 projectile.setVelocity(projectile.getVelocity().multiply(-0.01, bl ? 1 : -1.0, -0.01));
             }
-
         }
     }
 
     public static void ricochet(PersistentProjectileEntity projectile, LivingEntity entity) {
-        float k = 0.1f; //1.0f; todo velocity multiplier
+        float k = 0.1f; //velocity multiplier
         LivingEntity nextTarget = nextRicochetTarget(projectile, entity);
         Vec3d nextTargetPos = nextTarget.getPos();
         Vec3d vec3d = new Vec3d(nextTargetPos.x - projectile.getPos().x, nextTargetPos.y - projectile.getPos().y, nextTargetPos.z - projectile.getPos().z);
@@ -105,9 +108,11 @@ public interface IRicochet {
     }
 
     public static void onEntityHit (PersistentProjectileEntity projectile, Entity entity) {
-        ((IRicochet)getProjectile(projectile)).getRicochetHitEntities().add(entity);
-        ((IRicochet)getProjectile(projectile)).setRemainingBounces(((IRicochet)getProjectile(projectile)).getBounces() - ((IRicochet)getProjectile(projectile)).getRicochetHitEntities().size());
-        if (IRicochet.nextRicochetTarget(projectile, (LivingEntity) entity) != null && ((IRicochet)getProjectile(projectile)).getRemainingBounces() > 0) {
+        IRicochet ricochetProjectile = (IRicochet)getProjectile(projectile);
+        ricochetProjectile.handleStackDamage(projectile);
+        ricochetProjectile.getRicochetHitEntities().add(entity);
+        ricochetProjectile.setRemainingBounces(ricochetProjectile.getBounces() - ricochetProjectile.getRicochetHitEntities().size());
+        if (IRicochet.nextRicochetTarget(projectile, (LivingEntity) entity) != null && ricochetProjectile.getRemainingBounces() > 0) {
             IRicochet.ricochet(projectile, (LivingEntity) entity);
         } else {
             projectile.setNoGravity(false);
@@ -117,6 +122,12 @@ public interface IRicochet {
 
     public static void onBlockHit(PersistentProjectileEntity projectile, BlockHitResult blockHitResult) {
         ((IRicochet)getProjectile(projectile)).setHangTime(0);
+    }
+
+    default void handleStackDamage(PersistentProjectileEntity projectile) {
+        if (projectile.getWorld() instanceof ServerWorld world && ((IRicochet)projectile).getRicochetHitEntities().size() >= 1) {
+            ((IRicochet)projectile).asItemStack().damage(1, world.random, projectile.getOwner() instanceof ServerPlayerEntity serverPlayer ? serverPlayer : null);
+        }
     }
 
 }

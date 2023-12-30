@@ -4,24 +4,28 @@
   "package": "illyena.gilding.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "block.ChiseledBookshelfBlockMixin",
     "block.FlowableFluidAccessor",
     "block.FlowableFluidMixin",
+    "block.entity.ChiseledBookshelfBlockEntityMixin",
+    "client.gui.widget.PressableWidgetAccessor",
     "command.ArgumentTypesAccessor",
     "enchantment.LoyaltyEnchantmentMixin",
     "enchantment.PowerEnchantmentMixin",
     "enchantment.PunchEnchantmentMixin",
-    "block.entity.ChiseledBookshelfBlockEntityMixin",
     "entity.FallingBlockEntityMixin",
     "entity.ItemEntityMixin",
     "entity.PlayerEntityMixin",
-    "item.BlockItemAccessor"
+    "item.BlockItemAccessor",
+    "worldgen.SimpleStructurePieceAccessor"
   ],
   "client": [
     "client.KeyboardMixin",
     "client.gui.screen.CreateWorldScreenMixin",
     "client.gui.screen.MoreTabMixin",
     "client.gui.screen.ScreenAccessor",
-    "client.gui.screen.TabNavigationWidgetMixin"
+    "client.gui.screen.TabNavigationWidgetMixin",
+    "client.gui.screen.TitleScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1

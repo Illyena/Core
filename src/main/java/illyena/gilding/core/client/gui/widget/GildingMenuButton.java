@@ -2,6 +2,7 @@ package illyena.gilding.core.client.gui.widget;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import illyena.gilding.core.client.gui.screen.GildingMenuScreen;
+import illyena.gilding.mixin.client.gui.widget.PressableWidgetAccessor;
 import net.fabricmc.fabric.api.client.screen.v1.Screens;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
@@ -28,7 +29,7 @@ import static illyena.gilding.core.config.GildingConfigOptions.*;
 
 public class GildingMenuButton extends ButtonWidget {
     public static final ItemStack ICON = Blocks.GILDED_BLACKSTONE.asItem().getDefaultStack();
-    public static final Text GILDING_MENU_BUTTON_TEXT = Text.translatable("menu." + SUPER_MOD_ID + ".button").formatted(Formatting.ITALIC);
+    private static final Text GILDING_MENU_BUTTON_TOOLTIP = Text.translatable("tooltip." + SUPER_MOD_ID + ".button").formatted(Formatting.ITALIC);
 
     public GildingMenuButton(int x, int y, @Nullable Text tooltip) {
         super(x, y, 20, 20, Text.empty(), GildingMenuButton::click, Supplier::get);
@@ -41,7 +42,7 @@ public class GildingMenuButton extends ButtonWidget {
         context.setShaderColor(1.0F, 1.0F, 1.0F, this.alpha);
         RenderSystem.enableBlend();
         RenderSystem.enableDepthTest();
-        context.drawNineSlicedTexture(WIDGETS_TEXTURE, this.getX(), this.getY(), this.getWidth(), this.getHeight(), 20, 4, 200, 20, 0, this.getTextureY());
+        context.drawNineSlicedTexture(WIDGETS_TEXTURE, this.getX(), this.getY(), this.getWidth(), this.getHeight(), 20, 4, 200, 20, 0, ((PressableWidgetAccessor)this).callGetTextureY());
         context.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         context.drawItem(ICON, this.getX() + 2 , this.getY() + 2);
         int i = this.active ? 16777215 : 10526880;
@@ -87,7 +88,7 @@ public class GildingMenuButton extends ButtonWidget {
                     });
                     if (reference[0] != null) {
                         Screens.getButtons(screen).add(gildingButtonIndex,
-                                new GildingMenuButton(reference[0].getX() + offsetX + (onLeft ? -20 : reference[0].getWidth()), buttonsY, GILDING_MENU_BUTTON_TEXT));
+                                new GildingMenuButton(reference[0].getX() + offsetX + (onLeft ? -20 : reference[0].getWidth()), buttonsY, GILDING_MENU_BUTTON_TOOLTIP));
                     }
                 }
 

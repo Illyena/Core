@@ -1,12 +1,12 @@
 package illyena.gilding;
 
 import illyena.gilding.compat.Mod;
-import illyena.gilding.config.ConfigManager;
 import illyena.gilding.config.command.ConfigArguments;
 import illyena.gilding.config.command.ConfigCommand;
 import illyena.gilding.config.network.ConfigNetworking;
 import illyena.gilding.core.config.GildingConfigOptions;
 import illyena.gilding.core.enchantment.GildingEnchantments;
+import illyena.gilding.core.loot.condition.GildingLootConditionTypes;
 import illyena.gilding.core.networking.GildingPackets;
 import illyena.gilding.core.particle.GildingParticles;
 import illyena.gilding.worldgen.ModdedWorldGen;
@@ -18,7 +18,7 @@ import org.apache.logging.log4j.Logger;
 public class GildingInit implements ModInitializer {
     public static final String SUPER_MOD_ID = "gilding";
     public static final String SUPER_MOD_NAME = "Gilding";
-    public static final String VERSION = Mod.getVersion(SUPER_MOD_ID);
+    public static final String VERSION = Mod.getModVersion(SUPER_MOD_ID);
 
     public static final Logger LOGGER = LogManager.getLogger(SUPER_MOD_NAME);
 
@@ -29,7 +29,6 @@ public class GildingInit implements ModInitializer {
         ConfigNetworking.registerC2SPackets();
         ConfigArguments.registerArgumentTypes();
         ConfigCommand.registerConfigCommand();
-        ConfigManager.initializeConfig();
 
         LOGGER.info("Welcome to the {} Mod!", SUPER_MOD_NAME);
 
@@ -38,7 +37,7 @@ public class GildingInit implements ModInitializer {
 
         GildingPackets.registerC2SPackets();
         ModdedWorldGen.registerWorldGen();
-
+        GildingLootConditionTypes.callLootConditions();
     }
 
     public static Text translationKeyOf(String type, String key) {

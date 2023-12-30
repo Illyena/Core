@@ -18,7 +18,6 @@ import java.io.*;
 import static illyena.gilding.GildingInit.LOGGER;
 import static illyena.gilding.GildingInit.SUPER_MOD_ID;
 
-
 public class ConfigManager {
     private static File file;
 
@@ -55,7 +54,7 @@ public class ConfigManager {
             }
             if (file.exists()) {
                 BufferedReader br = new BufferedReader(new FileReader(file));
-                JsonObject json = (new JsonParser().parse(br).getAsJsonObject());
+                JsonObject json = JsonParser.parseReader(br).getAsJsonObject();
 
                 for (ConfigOption<?> configOption : ConfigOption.CONFIG) {
                     JsonElement jsonElement = json.get(configOption.getId().getNamespace() + "." + configOption.getKey());
@@ -78,7 +77,7 @@ public class ConfigManager {
                                     Enum<?> found = enumConfig.getValueFromString(primitive.getAsString());
 
                                     if (found != null) {
-                                        ConfigOption.ConfigOptionStorage.setEnum(enumConfig.getKey(), found); //todo set Enum
+                                        ConfigOption.ConfigOptionStorage.setEnum(enumConfig.getKey(), found);
                                     }
                                 }
                             }
@@ -96,7 +95,6 @@ public class ConfigManager {
         prepareConfigFile();
 
         JsonObject config = new JsonObject();
-
 
         for (ConfigOption<?> configOption : ConfigOption.CONFIG) {
             String name = configOption.getId().getNamespace() + "." + configOption.getKey();
@@ -117,5 +115,5 @@ public class ConfigManager {
             e.printStackTrace();
         }
     }
-}
 
+}

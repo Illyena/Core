@@ -14,6 +14,7 @@ import java.util.concurrent.CompletableFuture;
 
 import static illyena.gilding.GildingInit.SUPER_MOD_ID;
 
+@SuppressWarnings("unused")
 public class GildingBlockTagGenerator extends FabricTagProvider<Block> {
     public static final TagKey<Block> MAGIC_MINEABLE        = TagKey.of(Registries.BLOCK.getKey(), new Identifier(SUPER_MOD_ID, "mineable/magic"));
 
@@ -188,4 +189,5 @@ public class GildingBlockTagGenerator extends FabricTagProvider<Block> {
 //        getOrCreateTagBuilder(BlockTags.SNOW_LAYER_CANNOT_SURVIVE_ON);
 //        getOrCreateTagBuilder(BlockTags.SNOW_LAYER_CAN_SURVIVE_ON);
     }
+
 }

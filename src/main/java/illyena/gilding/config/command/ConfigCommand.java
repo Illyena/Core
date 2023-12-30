@@ -22,6 +22,7 @@ import java.util.List;
 import static illyena.gilding.GildingInit.SUPER_MOD_ID;
 
 public class ConfigCommand {
+
     public static void registerConfigCommand() {
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> register(dispatcher));
     }
@@ -88,7 +89,6 @@ public class ConfigCommand {
         } else {
             throw new CommandException(ConfigArguments.ConfigModIdArgument.tkIncompatibleMod(modId));
         }
-
     }
 
     private static void setInt(CommandContext<ServerCommandSource> context, ConfigOption<?> option, String value) {

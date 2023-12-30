@@ -10,6 +10,11 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.io.File;
+
+/**
+ * provides utility access to {@link MinecraftClient#takePanorama(File, int, int)}
+ */
 @Mixin(Keyboard.class)
 public class KeyboardMixin {
     @Shadow @Final private MinecraftClient client;
@@ -20,6 +25,5 @@ public class KeyboardMixin {
             this.client.takePanorama(this.client.runDirectory, 1024, 1024);
         }
     }
-
 
 }

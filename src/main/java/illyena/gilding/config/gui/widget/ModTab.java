@@ -19,8 +19,6 @@ public class ModTab extends GridScreenTab {
                 adder.add(config.createButton(this.grid.getX(), this.grid.getY(), 150));
             }
         }
-
     }
 
 }
-

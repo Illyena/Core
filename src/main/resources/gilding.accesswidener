@@ -16,9 +16,6 @@ mutable field net/minecraft/structure/pool/StructurePool elementCounts Ljava/uti
 extendable class net/minecraft/world/gen/chunk/placement/RandomSpreadStructurePlacement
 extendable class net/minecraft/world/gen/chunk/placement/ConcentricRingsStructurePlacement
 
-#ModButtonWidget
-extendable method net/minecraft/client/gui/widget/PressableWidget getTextureY ()I
-
 #MoreTabMixin
 accessible class net/minecraft/client/gui/screen/world/CreateWorldScreen$MoreTab
 

@@ -3,12 +3,15 @@ package illyena.gilding.config.gui;
 import illyena.gilding.config.ConfigManager;
 import illyena.gilding.config.network.ConfigNetworking;
 import illyena.gilding.config.option.ConfigOption;
+import illyena.gilding.core.client.gui.screen.SharedBackground;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.minecraft.SharedConstants;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Element;
+import net.minecraft.client.gui.RotatingCubeMapRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.TitleScreen;
 import net.minecraft.client.gui.tooltip.Tooltip;
@@ -17,25 +20,30 @@ import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.MathHelper;
 
 import java.awt.*;
 import java.util.List;
 import java.util.*;
 
-import static illyena.gilding.GildingInit.SUPER_MOD_ID;
-import static illyena.gilding.GildingInit.translationKeyOf;
+import static illyena.gilding.GildingInit.*;
 
 @Environment(EnvType.CLIENT)
-public abstract class ConfigScreen extends Screen {
+public abstract class ConfigScreen extends Screen implements SharedBackground {
+    private static final Text WORLD_GEN_INFO = translationKeyOf("menu", "config_menu.world_gen.info");
+    private static final Text NO_SERVER_TOOLTIP = translationKeyOf("tooltip", "config_menu.no_server");
+
+    protected RotatingCubeMapRenderer backgroundRenderer;
+    protected boolean doBackgroundFade;
+    protected long backgroundFadeStart;
     protected Screen parent;
     protected String modId;
 
-    Map< Element, ConfigOption<?>> map = new HashMap<>();
-    Text WORLD_GEN_INFO = translationKeyOf("menu", "world_gen_config.info");
+    protected Map< Element, ConfigOption<?>> map = new HashMap<>();
 
-    protected ConfigScreen(String modId, Screen parent) {
-        super(Text.translatable("menu." + modId + ".title"));
+    protected ConfigScreen(String modId, Screen parent, Text title) {
+        super(title);
         this.parent = parent;
         this.modId = modId;
     }
@@ -60,13 +68,11 @@ public abstract class ConfigScreen extends Screen {
     }
 
     protected void initBackWidget(int l) {
-        assert this.client != null;
         this.addDrawableChild(ButtonWidget.builder(ScreenTexts.BACK, button -> this.client.setScreen(this.parent))
                 .dimensions(this.width / 2 - 100, l + 72 + 12, 98, 20).build());
     }
 
     protected void initReturnWidget(int l) {
-        assert this.client != null;
         if (this.client.world != null) {
             this.addDrawableChild(ButtonWidget.builder(Text.translatable("menu.returnToGame"), button -> this.close())
                     .dimensions(this.width / 2 + 2, l + 72 + 12, 98, 20).build());
@@ -77,7 +83,6 @@ public abstract class ConfigScreen extends Screen {
     }
 
     protected void initMultiWidgets(String modId) {
-        assert this.client != null;
         int i = 0;
         for (ConfigOption<?> config : getConfigs(modId)) {
             int j = this.width / 2 - 155 + i % 2 * 160;
@@ -94,7 +99,6 @@ public abstract class ConfigScreen extends Screen {
     }
 
     protected void initSync() {
-        assert this.client != null;
         if (this.client.world != null) {
             ClientPlayNetworking.send(ConfigNetworking.CONFIG_RETRIEVE_C2S, PacketByteBufs.create());
         }
@@ -109,15 +113,12 @@ public abstract class ConfigScreen extends Screen {
     }
 
     protected ClickableWidget createDeadButton(ConfigOption<?> config, int x, int y, int width) {
-        Text NO_SERVER_TEXT = Text.translatable("menu." + SUPER_MOD_ID + ".no_server.tooltip");
         return ButtonWidget.builder(config.getButtonText(), button -> { })
-                .dimensions(x, y, width, 20).tooltip(Tooltip.of(NO_SERVER_TEXT)).build();
+                .dimensions(x, y, width, 20).tooltip(Tooltip.of(NO_SERVER_TOOLTIP)).build();
     }
 
     @Override
-    public void removed() {
-        ConfigManager.save();
-    }
+    public void removed() { ConfigManager.save(); }
 
     public void close() {
         ConfigOption.getConfigs(this.modId).forEach(ConfigOption::sync);
@@ -125,9 +126,20 @@ public abstract class ConfigScreen extends Screen {
     }
 
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        float g = 1.0f;
+        if (this.backgroundFadeStart == 0L && this.doBackgroundFade) {
+            this.backgroundFadeStart = Util.getMeasuringTimeMs();
+        }
+
+        float f = this.doBackgroundFade ? (Util.getMeasuringTimeMs() - this.backgroundFadeStart) / 1000.0f : 1.0f;
+        this.getBackgroundRenderer().render(delta, MathHelper.clamp(f, 0.0f, 1.0f));
+
+        float g = this.doBackgroundFade ? MathHelper.clamp(f - 1.0f, 0.0f, 1.0f) : 1.0f;
         int l = MathHelper.ceil(g * 255.0F) << 24;
         if ((l & -67108864) != 0) {
+            this.renderText(context, mouseX, mouseY, delta, g, l);
+            String string = "Minecraft: " + SharedConstants.getGameVersion().getName() + ", " + SUPER_MOD_NAME + ": " + VERSION;
+            context.drawTextWithShadow(this.textRenderer, string, 2, this.height - 10, 16777215 | l);
+
             for (Element element : this.children()) {
                 if (element instanceof ClickableWidget clickable) {
                     clickable.setAlpha(g);
@@ -138,10 +150,13 @@ public abstract class ConfigScreen extends Screen {
         }
     }
 
+    protected abstract void renderText(DrawContext context, int mouseX, int mouseY, float delta, float alpha, int time);
+
     private void drawInfo(ClickableWidget widget, DrawContext context) {
         if (this.map.get(widget) != null) {
-            if (this.map.get(widget).getAccessType() == ConfigOption.AccessType.WORLD_GEN) {
-                context.drawTextWithShadow(this.textRenderer, WORLD_GEN_INFO, widget.getX() + 4, widget.getY() + 22, Color.GRAY.getRGB());
+            switch (this.map.get(widget).getAccessType()) {
+                case WORLD_GEN -> context.drawTextWithShadow(this.textRenderer, WORLD_GEN_INFO, widget.getX() + 4, widget.getY() + 22, Color.GRAY.getRGB());
+                default -> { }
             }
         }
     }

@@ -24,6 +24,7 @@ import java.util.concurrent.CompletableFuture;
 import static illyena.gilding.GildingInit.SUPER_MOD_ID;
 
 public class ConfigArguments {
+
     public static void registerArgumentTypes() {
         ArgumentTypesAccessor.callRegister(Registries.COMMAND_ARGUMENT_TYPE, "modid", ConfigModIdArgument.class, ConstantArgumentSerializer.of(ConfigModIdArgument::configModId));
         ArgumentTypesAccessor.callRegister(Registries.COMMAND_ARGUMENT_TYPE, "option", ConfigOptionsArgument.class, ConstantArgumentSerializer.of(ConfigOptionsArgument::configOptions));
@@ -47,7 +48,6 @@ public class ConfigArguments {
                     return string;
                 } else throw new DynamicCommandExceptionType(string1 -> tkUnloadedMod((String) string1)).create(string);
             } else throw new DynamicCommandExceptionType(string2 -> tkIncompatibleMod((String) string2)).create(string);
-
         }
 
         public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
@@ -66,10 +66,9 @@ public class ConfigArguments {
 
     public static class ConfigOptionsArgument implements ArgumentType<ConfigOption<?>> {
         public static final String NAME = "settings";
-        DynamicCommandExceptionType NO_SUCH_OPTION = new DynamicCommandExceptionType(string1 -> Text.translatable("argument." + SUPER_MOD_ID + ".not_option", string1));
+        private static final DynamicCommandExceptionType NO_SUCH_OPTION = new DynamicCommandExceptionType(string1 -> Text.translatable("argument." + SUPER_MOD_ID + ".not_option", string1));
 
-        private ConfigOptionsArgument() {
-        }
+        private ConfigOptionsArgument() { }
 
         public static ConfigOptionsArgument configOptions() {
             return new ConfigOptionsArgument();
@@ -112,6 +111,7 @@ public class ConfigArguments {
         public static Text tkNotOption(String modId, String option) {
             return Text.translatable("argument." + SUPER_MOD_ID + ".not_option", option, modId);
         }
+
     }
 
 }

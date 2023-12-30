@@ -16,7 +16,7 @@ public class GildingConfigOptions implements Mod.Configs {
     public static final IntegerConfigOption IN_GAME_MENU_CONFIG_BUTTON_OFFSET = new IntegerConfigOption(SUPER_MOD_ID, "gm_config_button_offset", 4, -80, 80, ConfigOption.AccessType.BOTH);
 
     public static final EnumConfigOption<ModdedWorldGenButton.Type> MODDED_WORLD_GEN_BUTTON_TYPE = new EnumConfigOption<>(SUPER_MOD_ID, "mwg_button_type", ModdedWorldGenButton.Type.BUTTON, ConfigOption.AccessType.BOTH,
-            translationKeyOf("tooltip", "mwg_button_config"));
+            translationKeyOf("tooltip", "option.mwg_button_config"));
     public static final IntegerConfigOption MODDED_WORLD_GEN_BUTTON_ROW = new IntegerConfigOption(SUPER_MOD_ID, "mwg_button_row", 3, 1, 5, ConfigOption.AccessType.BOTH);
 
 }

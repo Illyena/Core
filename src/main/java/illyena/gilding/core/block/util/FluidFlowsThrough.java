@@ -74,6 +74,7 @@ import net.minecraft.world.WorldAccess;
  *      } }
  *</pre>
  */
+@SuppressWarnings("UnnecessaryModifier")
 public interface FluidFlowsThrough extends Waterloggable {
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
     public static final IntProperty WATER_LEVEL = Properties.LEVEL_8;
@@ -96,7 +97,6 @@ public interface FluidFlowsThrough extends Waterloggable {
             return true;
 
         } else return false;
-
     }
 
     public default ItemStack tryDrainFluid(WorldAccess world, BlockPos pos, BlockState state) {
@@ -107,7 +107,6 @@ public interface FluidFlowsThrough extends Waterloggable {
         } else {
             return ItemStack.EMPTY;
         }
-
     }
 
 }

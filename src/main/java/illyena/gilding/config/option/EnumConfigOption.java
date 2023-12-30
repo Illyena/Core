@@ -14,6 +14,7 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 
+@SuppressWarnings("unused")
 public class EnumConfigOption<E extends Enum<E>> extends ConfigOption<Enum<E>> {
     private final String translationKey;
     private final Class<E> enumClass;
@@ -35,12 +36,12 @@ public class EnumConfigOption<E extends Enum<E>> extends ConfigOption<Enum<E>> {
     }
 
     public void setValue(Enum<E> value) {
-        ConfigOptionStorage.setEnum(key, value);
+        ConfigOptionStorage.setEnum(this.key, value);
         this.markDirty();
     }
 
-    public <T extends Enum<T>> void setValue(PacketByteBuf ignored,T value) {
-        ConfigOptionStorage.setEnum(key, value);
+    public <T extends Enum<T>> void setValue(PacketByteBuf ignored, T value) {
+        ConfigOptionStorage.setEnum(this.key, value);
         this.markDirty();
     }
 
@@ -49,29 +50,29 @@ public class EnumConfigOption<E extends Enum<E>> extends ConfigOption<Enum<E>> {
         this.sync(source);
     }
 
-    public void cycleValue() { ConfigOptionStorage.cycleEnum(key, enumClass); }
+    public void cycleValue() { ConfigOptionStorage.cycleEnum(this.key, this.enumClass); }
 
-    public void cycleValue(int amount) { ConfigOptionStorage.cycleEnum(key, enumClass, amount); }
+    public void cycleValue(int amount) { ConfigOptionStorage.cycleEnum(this.key, this.enumClass, amount); }
 
-    public E getValue() { return ConfigOptionStorage.getEnum(key, enumClass); }
+    public E getValue() { return ConfigOptionStorage.getEnum(this.key, this.enumClass); }
 
     public Class<E> getEnumClass() { return this.enumClass; }
 
-    public Enum<E> getDefaultValue() { return defaultValue; }
+    public Enum<E> getDefaultValue() { return this.defaultValue; }
 
     @Override
     public Text getValueText() { return this.getValueText(this.getValue()); }
 
     private Text getValueText(E value) { return Text.literal(value.name()); }
 
-    public Text getButtonText() { return Text.translatable(translationKey); }
+    public Text getButtonText() { return Text.translatable(this.translationKey); }
 
     @Environment(EnvType.CLIENT)
     public ClickableWidget createButton(int x, int y, int width) {
         return CyclingButtonWidget.builder(o -> this.getValueText()).values(this.enumClass.getEnumConstants())
-                .tooltip(tt -> this.getValue() instanceof HasTooltip value? Tooltip.of(value.getTooltipText()) : Tooltip.of(tooltip))
+                .tooltip(factory -> this.getValue() instanceof HasTooltip value? Tooltip.of(value.getTooltipText()) : Tooltip.of(this.tooltip))
                 .initially(this.getValue())
-                .build(x, y, width, 20, Text.translatable(translationKey), ((button, value) -> {
+                .build(x, y, width, 20, Text.translatable(this.translationKey), ((button, value) -> {
                     this.cycleValue();
                     button.setValue(this.getValue());
                 }));
@@ -100,4 +101,5 @@ public class EnumConfigOption<E extends Enum<E>> extends ConfigOption<Enum<E>> {
         }
         return _enum;
     }
+
 }

@@ -20,4 +20,5 @@ public class MoreTabMixin extends GridScreenTab {
     private void onInit(CreateWorldScreen createWorldScreen, CallbackInfo ci, GridWidget.Adder adder) {
         ModdedWorldGenButton.moreTabConfig(createWorldScreen, adder);
     }
+
 }

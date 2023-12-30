@@ -17,34 +17,34 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(ItemEntity.class)
 public abstract class ItemEntityMixin {
-    ItemEntity itemEntity = (ItemEntity) (Object) this;
     @Shadow private int health;
     @Shadow private int itemAge;
     @Shadow public abstract ItemStack getStack();
 
     @Inject(method = "tick", at = @At("TAIL"), locals = LocalCapture.CAPTURE_FAILEXCEPTION)
     private void onTick(CallbackInfo ci) {
-        Item item = this.itemEntity.getStack().getItem();
-        boolean bl = this.itemEntity.getY() <= this.itemEntity.getWorld().getBottomY();
-        if (!this.itemEntity.getWorld().isClient() && item instanceof IUndestroyable) {
+        ItemEntity itemEntity = (ItemEntity)(Object)this;
+        Item item = itemEntity.getStack().getItem();
+        boolean bl = itemEntity.getY() <= itemEntity.getWorld().getBottomY();
+        if (!itemEntity.getWorld().isClient() && item instanceof IUndestroyable) {
             if (item instanceof BlockEntityItem blockEntityItem) {
                 if ((this.itemAge >= 250 && this.itemAge < 5999) || bl) {
-                    BlockPos blockPos = new BlockPos(this.itemEntity.getBlockPos().getX(), this.itemEntity.getWorld().getBottomY() + 1, this.itemEntity.getBlockPos().getZ());
-                    if (blockEntityItem.toBlock(this.itemEntity.getStack(), this.itemEntity.getWorld(), this.itemEntity, bl ? blockPos : this.itemEntity.getBlockPos(), 0)) {
-                        this.itemEntity.discard();
+                    BlockPos blockPos = new BlockPos(itemEntity.getBlockPos().getX(), itemEntity.getWorld().getBottomY() + 1, itemEntity.getBlockPos().getZ());
+                    if (blockEntityItem.toBlock(itemEntity.getStack(), itemEntity.getWorld(), itemEntity, bl ? blockPos : itemEntity.getBlockPos(), 0)) {
+                        itemEntity.discard();
                     } else {
-                        this.itemEntity.setNeverDespawn();
+                        itemEntity.setNeverDespawn();
                         if (bl) {
-                            this.itemEntity.setVelocity(this.itemEntity.getVelocity().getX(), 0, this.itemEntity.getVelocity().getZ());
-                            this.itemEntity.setNoGravity(true);
+                            itemEntity.setVelocity(itemEntity.getVelocity().getX(), 0, itemEntity.getVelocity().getZ());
+                            itemEntity.setNoGravity(true);
                         }
                     }
                 }
             } else {
-                this.itemEntity.setNeverDespawn();
+                itemEntity.setNeverDespawn();
                 if (bl) {
-                    this.itemEntity.setVelocity(this.itemEntity.getVelocity().getX(), 0, this.itemEntity.getVelocity().getZ());
-                    this.itemEntity.setNoGravity(true);
+                    itemEntity.setVelocity(itemEntity.getVelocity().getX(), 0, itemEntity.getVelocity().getZ());
+                    itemEntity.setNoGravity(true);
                 }
             }
         }
@@ -52,17 +52,18 @@ public abstract class ItemEntityMixin {
 
     @Inject(method = "damage", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/ItemEntity;getStack()Lnet/minecraft/item/ItemStack;", ordinal = 3), locals = LocalCapture.CAPTURE_FAILEXCEPTION, cancellable = true)
     private void onDamage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
+        ItemEntity itemEntity = (ItemEntity)(Object)this;
         Item item = this.getStack().getItem();
         if (item instanceof IUndestroyable) {
             this.health = Math.max(1, this.health - 1);
             if (item instanceof BlockEntityItem blockEntityItem) {
-                if (blockEntityItem.toBlock(this.itemEntity.getStack(), this.itemEntity.getWorld(), this.itemEntity, this.itemEntity.getBlockPos(), 0)) {
-                    this.itemEntity.discard();
+                if (blockEntityItem.toBlock(itemEntity.getStack(), itemEntity.getWorld(), itemEntity, itemEntity.getBlockPos(), 0)) {
+                    itemEntity.discard();
                 }
             }
+            cir.setReturnValue(true);
+            cir.cancel();
         }
-        cir.setReturnValue(true);
-        cir.cancel();
     }
 
 }

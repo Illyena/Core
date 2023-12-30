@@ -4,12 +4,16 @@ import illyena.gilding.core.block.util.LimitedFallingBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.FallingBlockEntity;
+import net.minecraft.entity.ItemEntity;
+import net.minecraft.item.ItemConvertible;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
@@ -33,6 +37,12 @@ public class FallingBlockEntityMixin {
             limitedFallingBlock.action();
             ci.cancel();
         }
+    }
+
+    /** drops {@link ItemEntity} with {@link ItemStack} nbt data */
+    @Redirect(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/FallingBlockEntity;dropItem(Lnet/minecraft/item/ItemConvertible;)Lnet/minecraft/entity/ItemEntity;"))
+    private ItemEntity redirectDropItem(FallingBlockEntity instance, ItemConvertible itemConvertible) {
+        return instance.dropStack(LimitedFallingBlock.asItemStack(instance));
     }
 
 }

@@ -23,6 +23,7 @@ import java.util.*;
 
 import static illyena.gilding.GildingInit.SUPER_MOD_ID;
 
+@SuppressWarnings("unused")
 public abstract class ConfigOption<T> {
     public static final RegistryKey<Registry<ConfigOption>> CONFIG_KEY = RegistryKey.ofRegistry(new Identifier(SUPER_MOD_ID, "config"));
     public static final Registry<ConfigOption> CONFIG = FabricRegistryBuilder.createSimple(CONFIG_KEY)
@@ -72,7 +73,6 @@ public abstract class ConfigOption<T> {
 
     public abstract Text getValueText();
 
-
     public void markDirty() { this.setDirty(true); }
 
     private void setDirty(boolean dirty) { this.dirty = dirty; }
@@ -84,7 +84,7 @@ public abstract class ConfigOption<T> {
     public abstract ClickableWidget createButton(int x, int y, int width);
 
     public void sync() {
-        if (this.isDirty()) {
+        if (this.isDirty() && ClientPlayNetworking.canSend(ConfigNetworking.CONFIG_SYNC_C2S)) {
             PacketByteBuf data = PacketByteBufs.create();
             data.writeIdentifier(this.id);
             switch (this.type) {
@@ -114,7 +114,6 @@ public abstract class ConfigOption<T> {
             }
             this.setDirty(false);
         }
-
     }
 
     public enum Type {
@@ -133,6 +132,7 @@ public abstract class ConfigOption<T> {
         WORLD_GEN;
 
         AccessType() { }
+
     }
 
     public static class ConfigOptionStorage {
@@ -185,4 +185,5 @@ public abstract class ConfigOption<T> {
         }
 
     }
+
 }

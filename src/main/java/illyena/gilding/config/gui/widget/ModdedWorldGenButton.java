@@ -47,7 +47,9 @@ public class ModdedWorldGenButton {
         Type () {  }
 
         public Text getTooltipText() {
-            return translationKeyOf("tooltip", "mwg_button_config." + this.name().toLowerCase());
+            return translationKeyOf("tooltip", "option.mwg_button_config." + this.name().toLowerCase());
         }
+
     }
+
 }

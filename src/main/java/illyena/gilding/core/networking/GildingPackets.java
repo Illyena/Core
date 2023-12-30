@@ -16,4 +16,5 @@ public class GildingPackets {
     public static void registerS2CPackets() {
 
     }
+
 }

@@ -18,7 +18,6 @@ public class CreateWorldScreenMixin {
         if (GildingConfigOptions.MODDED_WORLD_GEN_BUTTON_TYPE.getValue() == ModdedWorldGenButton.Type.TAB) {
             return TabNavigationWidget.builder(tabManager, width).tabs(new ModTab());
         } else return TabNavigationWidget.builder(tabManager, width);
-
     }
 
 }

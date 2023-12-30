@@ -32,17 +32,19 @@ public class ConfigNetworking {
     }
 
     public static class ConfigRetrieveC2SPacket {
+
         public static void receive(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler,
                                                        PacketByteBuf buf, PacketSender responseSender) {
             server.getRegistryManager().get(ConfigOption.CONFIG.getKey()).forEach(config -> {
                 config.markDirty();
                 config.sync(server);
             });
-
         }
+
     }
 
     public static class ConfigSyncC2SPacket {
+
         public static void receive(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler,
                                                        PacketByteBuf buf, PacketSender responseSender) {
             ConfigOption<?> config = ConfigOption.getConfig(buf.readIdentifier());
@@ -54,9 +56,11 @@ public class ConfigNetworking {
                 enumConfig.setValue(buf, buf.readEnumConstant(enumConfig.getEnumClass()));
             }
         }
+
     }
 
     public static class ConfigSyncS2CPacket{
+
         public static void receive(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {
             ConfigOption<?> config = ConfigOption.getConfig(buf.readIdentifier());
             if (config instanceof IntegerConfigOption intConfig) {
@@ -67,6 +71,7 @@ public class ConfigNetworking {
                 enumConfig.setValue(buf, buf.readEnumConstant(enumConfig.getEnumClass()));
             }
         }
+
     }
 
 }
