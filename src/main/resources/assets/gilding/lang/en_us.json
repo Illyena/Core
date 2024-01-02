@@ -28,7 +28,7 @@
   "argument.gilding.not_option": "%s option is not available in the specified mod",
   "argument.gilding.settings": "%s settings",
   "argument.gilding.set_success": "%s's %s set to %s",
-  "key.category.gilding.gilding": "Gilding KeyBindings",
+  "key.category.gilding": "Gilding KeyBindings",
   "key.gilding.throw": "Throw",
 
   "enchantment.gilding.ricochet": "Ricochet",

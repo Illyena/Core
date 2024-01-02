@@ -22,6 +22,7 @@ import net.minecraft.util.Identifier;
 
 import static illyena.gilding.GildingInit.SUPER_MOD_ID;
 
+@SuppressWarnings("unused")
 @Environment(EnvType.CLIENT)
 public class GildingClientInit implements ClientModInitializer {
     public static final Screen GILDING_CONFIG_SCREEN = Mod.ModScreens.registerConfigScreen(SUPER_MOD_ID, new GildingConfigMenu());
