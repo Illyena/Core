@@ -64,6 +64,8 @@ public abstract class ConfigOption<T> {
 
     public abstract T getDefaultValue();
 
+    public abstract boolean validate(T value);
+
     public abstract void setValue(T value);
 
     public abstract void setFromArgument(CommandContext<ServerCommandSource> context) throws CommandSyntaxException;

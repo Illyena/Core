@@ -1,17 +1,18 @@
 package illyena.gilding.mixin.entity;
 
 import illyena.gilding.core.item.IUndestroyable;
+import illyena.gilding.core.util.data.GildingItemTagGenerator;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Hand;
 import net.minecraft.util.math.MathHelper;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 /**
  * Mixin that allows custom shields to be damaged, and to be disabled with axes.
@@ -27,20 +28,19 @@ public class PlayerEntityMixin {
         }
     }
 
-    @Inject(at = @At(value = "HEAD"), method = "damageShield(F)V", locals = LocalCapture.CAPTURE_FAILHARD)
-    private void damageShield(float amount, CallbackInfo callBackInfo) {
-        PlayerEntity player = (PlayerEntity) (Object) this;
-        ItemStack activeItem = player.getActiveItem();
+    @Redirect(method = "damageShield", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;isOf(Lnet/minecraft/item/Item;)Z"))
+    private boolean redirectIsOf(ItemStack instance, Item item) {
+        return instance.isOf(item) || instance.isIn(GildingItemTagGenerator.SHIELDS);
+    }
 
-        if (activeItem.getItem() instanceof IUndestroyable) {
-            if (amount >= 3.0F) {
-                int i = 1 + MathHelper.floor(amount);
-                i = MathHelper.clamp(i, 0, activeItem.getMaxDamage() - activeItem.getDamage() -1 );
-                Hand hand = player.getActiveHand();
+    @ModifyArg(method = "damageShield", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;damage(ILnet/minecraft/entity/LivingEntity;Ljava/util/function/Consumer;)V"), index = 0)
+    private int modifyI(int amount) {
+        PlayerEntity player = (PlayerEntity)(Object)this;
+        ItemStack activeStack = player.getActiveItem();
+        if (activeStack.getItem() instanceof IUndestroyable) {
+            return MathHelper.clamp(amount, 0, activeStack.getMaxDamage() - activeStack.getDamage() - 1);
+        } else return amount;
 
-                activeItem.damage(i, (LivingEntity) player, ((playerEntity) -> player.sendToolBreakStatus(hand)));
-            }
-        }
     }
 
 }

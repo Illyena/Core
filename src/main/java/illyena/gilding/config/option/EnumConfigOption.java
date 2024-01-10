@@ -17,6 +17,7 @@ import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 
+import java.util.Arrays;
 import java.util.List;
 
 @SuppressWarnings("unused")
@@ -64,6 +65,11 @@ public class EnumConfigOption<E extends Enum<E>> extends ConfigOption<Enum<E>> {
     public Class<E> getEnumClass() { return this.enumClass; }
 
     public Enum<E> getDefaultValue() { return this.defaultValue; }
+
+    @Override
+    public boolean validate(Enum<E> value) {
+        return Arrays.asList(this.enumClass.getEnumConstants()).contains(value);
+    }
 
     @Override
     public Text getValueText() { return this.getValueText(this.getValue()); }

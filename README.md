@@ -1,10 +1,8 @@
-<p><h1 align="center" style="color:gold"> GILDING <br>
+<p><h1 align="center" style="color:maroon"><img src="src/main/resources/assets/gilding/textures/gui/title/gilding.png" width="400"> <br>
 </h1>
-<br>
-<br>
 <h2 align="center">
 <a href="https://fabricmc.net"><img src="https://cdn.discordapp.com/attachments/705864145169416313/969720133998239794/fabric_supported.png" width="200"></a> <br>
-<a href="https://github.com/Illyena/Avengers/blob/1.20.1-dev/LICENSE.md"><img src="https:shields.io/github/license/Illyena/Avengers"></a>
+<a href="https://github.com/Illyena/Gilding-core/blob/1.18.2/LICENSE"><img src="https:shields.io/github/license/Illyena/Gilding-core"></a>
 </h2>
 
 ## Description:
@@ -22,30 +20,38 @@ Please install an instance of Fabric Loader for your client (and the server if p
 This mod requires you to also install:
 
 -[Fabric API](https://modrinth.com/mod/fabric-api) <br>
--[Gilding-core](https://modrinth.com/mod/Gilding-core)
+-[ModMenu](https://modrinth.com/mod/modmenu)
 
 
 ### Please report any issues to the Github repository
-[![issues](https://shields.io/github/issues/Illyena/Avengers)](https://github.com/Illyena/Avengers/issues)
+[![issues](https://shields.io/github/issues/Illyena/Gilding-core)](https://github.com/Illyena/Gilding-core/issues)
 
 ### For Developers:
 [![jitpack](https://jitpack.io/v/Illyena/Gilding-core.svg)](https://jitpack.io/#Illyena/Gilding-core) <br>
 add the following to your `build.gradle` file
 ```gradle
 repositories {
+    ...
+    
     maven { url 'https://jitpack.io' }
 }
 dependencies {
-   modImplementation "com.github.Illyena:Gilding-core:${project.minecraft_version}v${project.avengers_version}"
+    ...    
+    
+    modImplementation ("com.github.Illyena:Gilding-core-mc${project.minecraft_version}:${project.gilding_version}") {
+        exclude(group: "net.fabricmc.fabric-api")
+    }
 }
 ```
 
 add the following to your `gradle.properties` file
 ```gradle
 #Dependencies
-    gilding_version=1.2.0
+    ...
+
+    gilding_version=0.3.0
 ```
 
 
 ### License
-This mod is available under the [![GitHub](https://img.shields.io/github/license/Illyena/Avengers)](https://github.com/Illyena/Avengers/blob/1.20.1-dev/LICENSE)
+This mod is available under the [![GitHub](https://img.shields.io/github/license/Illyena/Gilding-core)](https://github.com/Illyena/Gilding-core/blob/1.18.2/LICENSE)

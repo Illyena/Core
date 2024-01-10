@@ -63,6 +63,9 @@ public class BooleanConfigOption extends ConfigOption<Boolean> {
 
     public Boolean getDefaultValue() { return this.defaultValue; }
 
+    @Override
+    public boolean validate(Boolean value) { return BOOLEAN_VALUES.contains(value); }
+
     public Text getValueText() { return this.getValue() ? this.enabledText : this.disabledText; }
 
     public Text getButtonText() {

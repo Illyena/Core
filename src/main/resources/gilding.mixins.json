@@ -13,6 +13,8 @@
     "entity.ItemEntityMixin",
     "entity.PlayerEntityMixin",
     "item.BlockItemAccessor",
+    "server.scoreboard.ScoreboardAccessor",
+    "server.world.ServerWorldMixin",
     "worldgen.SimpleStructurePieceAccessor",
     "worldgen.StructureFeatureAccessor"
   ],

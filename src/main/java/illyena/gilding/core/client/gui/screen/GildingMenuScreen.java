@@ -28,7 +28,7 @@ public class GildingMenuScreen extends Screen implements SharedBackground {
     private static final TranslatableText TITLE = translationKeyOf("menu", "title");
     private static final TranslatableText CONFIG_BUTTON = translationKeyOf("menu", "config.button");
     private static final TranslatableText MOD_MENU_BUTTON = new TranslatableText("menu." + ModMenu.MOD_ID + ".button");
-    private static final TranslatableText MOD_INACTIVE_TOOLTIP = translationKeyOf("tooltip", "button.inactive_mod");
+    public static final TranslatableText MOD_INACTIVE_TOOLTIP = translationKeyOf("tooltip", "button.inactive_mod");
 
     private static final CubeMapRenderer PANORAMA_CUBE_MAP = new CubeMapRenderer(new Identifier("textures/gui/title/background/panorama"));
     private final RotatingCubeMapRenderer backgroundRenderer;

@@ -83,6 +83,8 @@ public class IntegerConfigOption extends ConfigOption<Integer> {
 
     public Integer getDefaultValue() { return this.defaultValue; }
 
+    public boolean validate(Integer value) { return value <= this.maxValue && value >= this.minValue; }
+
     public int getMinValue() { return this.minValue; }
 
     public int getMaxValue() { return this.maxValue; }
