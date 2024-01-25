@@ -23,6 +23,7 @@ public class GildingBlockTagGenerator extends FabricTagProvider<Block> {
     public static final TagKey<Block> HOGLIN_REPELLENTS             = TagKey.of(Registry.BLOCK_KEY, new Identifier(SUPER_MOD_ID, "hoglin_repellents"));
     public static final TagKey<Block> GUARDED_BY_PIGLINS            = TagKey.of(Registry.BLOCK_KEY, new Identifier(SUPER_MOD_ID, "guarded_by_piglins"));
     public static final TagKey<Block> OCCLUDES_VIBRATION_SIGNALS    = TagKey.of(Registry.BLOCK_KEY, new Identifier(SUPER_MOD_ID, "occludes_vibration_signals"));
+    public static final TagKey<Block> SHOVEL_MINEABLE               = TagKey.of(Registry.BLOCK_KEY, new Identifier(SUPER_MOD_ID, "mineable/shovel"));
     public static final TagKey<Block> FEATURES_CANNOT_REPLACE       = TagKey.of(Registry.BLOCK_KEY, new Identifier(SUPER_MOD_ID, "features_cannot_replace"));
     public static final TagKey<Block> GEODE_INVALID_BLOCKS          = TagKey.of(Registry.BLOCK_KEY, new Identifier(SUPER_MOD_ID, "geode_invalid_blocks"));
 
@@ -152,7 +153,7 @@ public class GildingBlockTagGenerator extends FabricTagProvider<Block> {
 //        getOrCreateTagBuilder(BlockTags.AXE_MINEABLE);
 //        getOrCreateTagBuilder(BlockTags.HOE_MINEABLE);
 //        getOrCreateTagBuilder(BlockTags.PICKAXE_MINEABLE);
-//        getOrCreateTagBuilder(BlockTags.SHOVEL_MINEABLE);
+          getOrCreateTagBuilder(BlockTags.SHOVEL_MINEABLE).addOptionalTag(SHOVEL_MINEABLE);
 //        getOrCreateTagBuilder(BlockTags.NEEDS_DIAMOND_TOOL);
 //        getOrCreateTagBuilder(BlockTags.NEEDS_IRON_TOOL);
 //        getOrCreateTagBuilder(BlockTags.NEEDS_STONE_TOOL);

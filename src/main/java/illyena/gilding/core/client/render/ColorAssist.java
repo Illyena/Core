@@ -30,10 +30,10 @@ public class ColorAssist {
 
     }
 
-    public static float[] getJebRGB(float tick, float tickDelta) {
+    public static float[] getJebRGB(float tick, float tickDelta, float multiplier) {
         float[] color;
 
-        float segmentTime = 25.0f;
+        float segmentTime = 25.0f * multiplier;
         int previousColorIndex = (int) (Math.floor(tick / segmentTime) % DyeColor.values().length);
         int nextIndex = previousColorIndex + 1 < DyeColor.values().length ? previousColorIndex + 1 : 0;
 
@@ -50,8 +50,8 @@ public class ColorAssist {
 
     }
 
-    public static int getJebInt(int ticks, float tickDelta) {
-        float[] jeb = getJebRGB(ticks, tickDelta);
+    public static int getJebInt(int ticks, float tickDelta, float multiplier) {
+        float[] jeb = getJebRGB(ticks, tickDelta, multiplier);
         return new Color(jeb[0], jeb[1], jeb[2]).getRGB();
     }
 

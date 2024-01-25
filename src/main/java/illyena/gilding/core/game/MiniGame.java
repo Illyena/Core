@@ -65,7 +65,6 @@ public abstract class MiniGame {
                 boolean active = this.gameActive;
                 this.gameActive = this.world.isChunkLoaded(this.center);
                 if (!this.gameActive) {
-                    this.invalidate();
                     return;
                 }
                 ++this.currentTime;
